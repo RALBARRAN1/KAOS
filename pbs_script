@@ -1,0 +1,36 @@
+#!/bin/bash
+# This is comment
+#PBS -q normalq
+# PBS -q gpuq
+# Not necessary to set wall time, 
+# longq: 120 hours, 10 nodes (with 36proc for each), maximum 1 longq in queue per user
+# normalq: 24 hours, 10 nodes, maximum 4 normalq in queue per user
+#PBS -l walltime=24:00:00
+#PBS -l nodes=6:ppn=36
+# PBS -l nodes=node005:ppn=36+node006:ppn=36+node009:ppn=36+node012:ppn=36+node014:ppn=36+node015:ppn=36
+# PBS -l nodes=node069:ppn=36+node068:ppn=36+node064:ppn=36+node062:ppn=36+node061:ppn=36+node060:ppn=36
+# PBS -l nodes=node058:ppn=36+node057:ppn=36+node055:ppn=36+node053:ppn=36+node052:ppn=36
+#PBS -N 3DKMIOVV0FticrV0scINPUTa0
+# In you want to send job status to e-mail:
+#PBS -M robert.albarran@my.erau.edu
+#PBS -m aeb
+cd $PBS_O_WORKDIR
+
+# PBS -l mem=160000mb
+#PBS -e /home2/albarrar/IONCODEncENA/pbs_errors.out
+#PBS -o /home2/albarrar/IONCODEncENA/pbs_output.out
+
+# cd $PBS_O_WORKDIR
+# echo $PBS_O_WORKDIR
+
+# Load modules during job submission!
+# module unload openmpi/gcc/64/1.10.3
+module load openmpi/gcc8/64/3.1.2
+module load gcc/8.3.0
+# ulimit -s 10240
+# ulimit -c unlimited
+# set stacksize unlimited
+# set heapsize unlimited
+
+# Run the program
+mpirun --mca mpi_warn_on_fork 0 -np $PBS_NP ./3DKMIOexecfileVV0FticrV0scINPUTa0

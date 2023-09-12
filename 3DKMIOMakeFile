@@ -1,0 +1,194 @@
+objects= _ModelInput.o _KineticMainParams.o _1_SimParameterization.o _2_1_DensityProfileA1.o _2_2_DensityProfileA2.o _2_DensityProfileA.o _3_1_GaussianRNG.o _3_2_PoissonRNG.o _4_DensityProfileB.o _5_DipolePolynomialSolver.o _6_VelocityDistribution.o _6_1_MBVelocityDistribution.o _7_InitialConditions.o _8_1_1_1_IonNeutralCollisions.o _8_1_1_0_WaveHeating.o _8_1_1_KineticUpdateA.o _8_1_2_KineticUpdateB.o _8_1_3_KineticUpdateC.o _8_1_4_RK4DipolePolynomialSolver.o _8_1_KineticRK4Update.o _8_3_ParticleCounts.o _8_3_1_IonParticleCounts.o _8_3_2_ENAParticleCounts.o _8_4_1_IonDistributionFunctions.o _8_4_2_ENADistributionFunctions.o _8_4_DistributionFunctions.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_1_ZerothIonMoment.o _8_6_2_FirstPerpIonMoment.o _8_6_3_FirstParIonMoment.o _8_6_4_SecondIonMoment.o _8_6_5_SecondPerpIonMoment.o _8_6_6_SecondParIonMoment.o _8_6_6_1_IonNeutralCollisionFrequencyA.o _8_6_6_2_IonNeutralCollisionFrequencyB.o _8_7_AmbipolarEfield.o _8_7_1_MomentFilter.o _8_7_2_Gravfield.o _8_8_PotentialStructure.o _8_9_NonUniform3DIntegrator.o _8_10_1_ZerothENAMoment.o _8_10_2_FirstPENAMoment.o _8_10_3_FirstQENAMoment.o _8_10_4_FirstPHIENAMoment.o _8_10_5_SecondENAMoment.o _8_10_6_SecondPENAMoment.o _8_10_7_SecondQENAMoment.o _8_10_8_SecondPHIENAMoment.o _8_0_1_DataExport1.o _8_0_2_DataExport2.o _8_0_4_DataTypeAllocA.o _8_0_5_DataTypeAllocB.o _8_0_6_DataTypeReAllocA.o _8_0_7_1_BCReIndex.o _8_0_7_BoundaryConditions.o _8_0_0_1_KineticSolverA.o _8_0_0_2_KineticSolverB.o _8_KineticSolver.o _9_MPIReduceSum.o _KineticMain.o
+
+comp= mpif90
+switch= -Ofast
+
+3DKMIOexecfileVV0FticrV0scINPUTa0: $(objects)
+	$(comp) -o 3DKMIOexecfileVV0FticrV0scINPUTa0 $(switch) $(objects)
+
+_ModelInput.o: _ModelInput.f90
+	$(comp) $(switch) -c _ModelInput.f90 -o _ModelInput.o
+
+_KineticMainParams.o: _ModelInput.o _KineticMainParams.f90
+	$(comp) $(switch) -c _KineticMainParams.f90 -o _KineticMainParams.o
+
+_1_SimParameterization.o: _KineticMainParams.o _1_SimParameterization.f90
+	$(comp) $(switch) -c _1_SimParameterization.f90 -o _1_SimParameterization.o
+
+_2_1_DensityProfileA1.o: _KineticMainParams.o _9_MPIReduceSum.o _2_1_DensityProfileA1.f90
+	$(comp) $(switch) -c _2_1_DensityProfileA1.f90 -o _2_1_DensityProfileA1.o
+
+_2_2_DensityProfileA2.o: _KineticMainParams.o _9_MPIReduceSum.o _2_2_DensityProfileA2.f90
+	$(comp) $(switch) -c _2_2_DensityProfileA2.f90 -o _2_2_DensityProfileA2.o
+
+_2_DensityProfileA.o: _KineticMainParams.o _2_1_DensityProfileA1.o _2_2_DensityProfileA2.o _2_DensityProfileA.f90
+	$(comp) $(switch) -c _2_DensityProfileA.f90 -o _2_DensityProfileA.o
+
+_3_1_GaussianRNG.o: _KineticMainParams.o _3_1_GaussianRNG.f90
+	$(comp) $(switch) -c _3_1_GaussianRNG.f90 -o _3_1_GaussianRNG.o
+
+_3_2_PoissonRNG.o: _KineticMainParams.o _3_2_PoissonRNG.f90
+	$(comp) $(switch) -c _3_2_PoissonRNG.f90 -o _3_2_PoissonRNG.o
+
+_4_DensityProfileB.o: _KineticMainParams.o _4_DensityProfileB.f90
+	$(comp) $(switch) -c _4_DensityProfileB.f90 -o _4_DensityProfileB.o
+
+_5_DipolePolynomialSolver.o: _KineticMainParams.o _5_DipolePolynomialSolver.f90
+	$(comp) $(switch) -c _5_DipolePolynomialSolver.f90 -o _5_DipolePolynomialSolver.o
+
+_6_1_MBVelocityDistribution.o: _KineticMainParams.o _3_1_GaussianRNG.o _6_1_MBVelocityDistribution.f90
+	$(comp) $(switch) -c _6_1_MBVelocityDistribution.f90 -o _6_1_MBVelocityDistribution.o
+
+_6_VelocityDistribution.o: _KineticMainParams.o _6_1_MBVelocityDistribution.o _6_VelocityDistribution.f90
+	$(comp) $(switch) -c _6_VelocityDistribution.f90 -o _6_VelocityDistribution.o
+
+_7_InitialConditions.o: _KineticMainParams.o _8_1_4_RK4DipolePolynomialSolver.o _7_InitialConditions.f90
+	$(comp) $(switch) -c _7_InitialConditions.f90 -o _7_InitialConditions.o
+
+_8_1_1_1_IonNeutralCollisions.o: _KineticMainParams.o _8_1_1_1_IonNeutralCollisions.f90
+	$(comp) $(switch) -c _8_1_1_1_IonNeutralCollisions.f90 -o _8_1_1_1_IonNeutralCollisions.o
+
+_8_1_1_0_WaveHeating.o: _KineticMainParams.o _3_1_GaussianRNG.o _8_1_1_0_WaveHeating.f90
+	$(comp) $(switch) -c _8_1_1_0_WaveHeating.f90 -o _8_1_1_0_WaveHeating.o
+
+_8_1_1_KineticUpdateA.o: _KineticMainParams.o _8_1_1_0_WaveHeating.o _8_1_1_KineticUpdateA.f90
+	$(comp) $(switch) -c _8_1_1_KineticUpdateA.f90 -o _8_1_1_KineticUpdateA.o
+
+_8_1_2_KineticUpdateB.o: _KineticMainParams.o _8_1_2_KineticUpdateB.f90
+	$(comp) $(switch) -c _8_1_2_KineticUpdateB.f90 -o _8_1_2_KineticUpdateB.o
+
+_8_1_3_KineticUpdateC.o: _KineticMainParams.o _8_1_3_KineticUpdateC.f90
+	$(comp) $(switch) -c _8_1_3_KineticUpdateC.f90 -o _8_1_3_KineticUpdateC.o
+
+_8_1_4_RK4DipolePolynomialSolver.o: _KineticMainParams.o _8_1_4_RK4DipolePolynomialSolver.f90
+	$(comp) $(switch) -c _8_1_4_RK4DipolePolynomialSolver.f90 -o _8_1_4_RK4DipolePolynomialSolver.o
+
+_8_1_KineticRK4Update.o: _KineticMainParams.o _8_1_1_KineticUpdateA.o _8_1_2_KineticUpdateB.o _8_1_3_KineticUpdateC.o _8_1_4_RK4DipolePolynomialSolver.o _8_1_KineticRK4Update.f90
+	$(comp) $(switch) -c _8_1_KineticRK4Update.f90 -o _8_1_KineticRK4Update.o
+
+_8_3_ParticleCounts.o: _KineticMainParams.o _9_MPIReduceSum.o _8_3_1_IonParticleCounts.o _8_3_2_ENAParticleCounts.o _8_3_ParticleCounts.f90
+	$(comp) $(switch) -c _8_3_ParticleCounts.f90 -o _8_3_ParticleCounts.o
+
+_8_3_1_IonParticleCounts.o: _KineticMainParams.o _9_MPIReduceSum.o _8_3_1_IonParticleCounts.f90
+	$(comp) $(switch) -c _8_3_1_IonParticleCounts.f90 -o _8_3_1_IonParticleCounts.o
+
+_8_3_2_ENAParticleCounts.o: _KineticMainParams.o _9_MPIReduceSum.o _8_3_2_ENAParticleCounts.f90
+	$(comp) $(switch) -c _8_3_2_ENAParticleCounts.f90 -o _8_3_2_ENAParticleCounts.o
+
+_8_4_1_IonDistributionFunctions.o: _KineticMainParams.o _8_4_1_IonDistributionFunctions.f90
+	$(comp) $(switch) -c _8_4_1_IonDistributionFunctions.f90 -o _8_4_1_IonDistributionFunctions.o
+
+_8_4_2_ENADistributionFunctions.o: _KineticMainParams.o _8_4_2_ENADistributionFunctions.f90
+	$(comp) $(switch) -c _8_4_2_ENADistributionFunctions.f90 -o _8_4_2_ENADistributionFunctions.o
+
+_8_4_DistributionFunctions.o: _KineticMainParams.o _8_4_1_IonDistributionFunctions.o _8_4_2_ENADistributionFunctions.o _8_4_DistributionFunctions.f90
+	$(comp) $(switch) -c _8_4_DistributionFunctions.f90 -o _8_4_DistributionFunctions.o
+
+_8_5_NonUniform2DIntegrator.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.f90
+	$(comp) $(switch) -c _8_5_NonUniform2DIntegrator.f90 -o _8_5_NonUniform2DIntegrator.o
+
+_8_5_1_NonUniform3DIonIntegrator.o: _KineticMainParams.o _8_5_1_NonUniform3DIonIntegrator.f90
+	$(comp) $(switch) -c _8_5_1_NonUniform3DIonIntegrator.f90 -o _8_5_1_NonUniform3DIonIntegrator.o
+
+_8_6_1_ZerothIonMoment.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_1_ZerothIonMoment.f90
+	$(comp) $(switch) -c _8_6_1_ZerothIonMoment.f90 -o _8_6_1_ZerothIonMoment.o
+
+_8_6_2_FirstPerpIonMoment.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_2_FirstPerpIonMoment.f90
+	$(comp) $(switch) -c _8_6_2_FirstPerpIonMoment.f90 -o _8_6_2_FirstPerpIonMoment.o
+
+_8_6_3_FirstParIonMoment.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_3_FirstParIonMoment.f90
+	$(comp) $(switch) -c _8_6_3_FirstParIonMoment.f90 -o _8_6_3_FirstParIonMoment.o
+
+_8_6_4_SecondIonMoment.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_4_SecondIonMoment.f90
+	$(comp) $(switch) -c _8_6_4_SecondIonMoment.f90 -o _8_6_4_SecondIonMoment.o
+
+_8_6_5_SecondPerpIonMoment.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_5_SecondPerpIonMoment.f90
+	$(comp) $(switch) -c _8_6_5_SecondPerpIonMoment.f90 -o _8_6_5_SecondPerpIonMoment.o
+
+_8_6_6_SecondParIonMoment.o: _KineticMainParams.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_6_1_IonNeutralCollisionFrequencyA.o _8_6_6_2_IonNeutralCollisionFrequencyB.o _8_6_6_SecondParIonMoment.f90
+	$(comp) $(switch) -c _8_6_6_SecondParIonMoment.f90 -o _8_6_6_SecondParIonMoment.o
+
+_8_6_6_1_IonNeutralCollisionFrequencyA.o: _KineticMainParams.o _8_7_1_MomentFilter.o _3_1_GaussianRNG.o _3_2_PoissonRNG.o _8_6_6_1_IonNeutralCollisionFrequencyA.f90
+	$(comp) $(switch) -c _8_6_6_1_IonNeutralCollisionFrequencyA.f90 -o _8_6_6_1_IonNeutralCollisionFrequencyA.o
+
+_8_6_6_2_IonNeutralCollisionFrequencyB.o: _KineticMainParams.o _8_6_6_2_IonNeutralCollisionFrequencyB.f90
+	$(comp) $(switch) -c _8_6_6_2_IonNeutralCollisionFrequencyB.f90 -o _8_6_6_2_IonNeutralCollisionFrequencyB.o
+
+_8_7_1_MomentFilter.o: _KineticMainParams.o _8_7_1_MomentFilter.f90
+	$(comp) $(switch) -c _8_7_1_MomentFilter.f90 -o _8_7_1_MomentFilter.o
+
+_8_7_2_Gravfield.o: _KineticMainParams.o _8_7_2_Gravfield.f90
+	$(comp) $(switch) -c _8_7_2_Gravfield.f90 -o _8_7_2_Gravfield.o
+
+_8_7_AmbipolarEfield.o: _KineticMainParams.o _8_7_1_MomentFilter.o _8_7_AmbipolarEfield.f90
+	$(comp) $(switch) -c _8_7_AmbipolarEfield.f90 -o _8_7_AmbipolarEfield.o
+
+_8_8_PotentialStructure.o: _KineticMainParams.o _8_8_PotentialStructure.f90
+	$(comp) $(switch) -c _8_8_PotentialStructure.f90 -o _8_8_PotentialStructure.o
+
+_8_9_NonUniform3DIntegrator.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.f90
+	$(comp) $(switch) -c _8_9_NonUniform3DIntegrator.f90 -o _8_9_NonUniform3DIntegrator.o
+
+_8_10_1_ZerothENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_1_ZerothENAMoment.f90
+	$(comp) $(switch) -c _8_10_1_ZerothENAMoment.f90 -o _8_10_1_ZerothENAMoment.o
+
+_8_10_2_FirstPENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_2_FirstPENAMoment.f90
+	$(comp) $(switch) -c _8_10_2_FirstPENAMoment.f90 -o _8_10_2_FirstPENAMoment.o
+
+_8_10_3_FirstQENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_3_FirstQENAMoment.f90
+	$(comp) $(switch) -c _8_10_3_FirstQENAMoment.f90 -o _8_10_3_FirstQENAMoment.o
+
+_8_10_4_FirstPHIENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_4_FirstPHIENAMoment.f90
+	$(comp) $(switch) -c _8_10_4_FirstPHIENAMoment.f90 -o _8_10_4_FirstPHIENAMoment.o
+
+_8_10_5_SecondENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_5_SecondENAMoment.f90
+	$(comp) $(switch) -c _8_10_5_SecondENAMoment.f90 -o _8_10_5_SecondENAMoment.o
+
+_8_10_6_SecondPENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_6_SecondPENAMoment.f90
+	$(comp) $(switch) -c _8_10_6_SecondPENAMoment.f90 -o _8_10_6_SecondPENAMoment.o
+
+_8_10_7_SecondQENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_7_SecondQENAMoment.f90
+	$(comp) $(switch) -c _8_10_7_SecondQENAMoment.f90 -o _8_10_7_SecondQENAMoment.o
+
+_8_10_8_SecondPHIENAMoment.o: _KineticMainParams.o _8_9_NonUniform3DIntegrator.o _8_10_8_SecondPHIENAMoment.f90
+	$(comp) $(switch) -c _8_10_8_SecondPHIENAMoment.f90 -o _8_10_8_SecondPHIENAMoment.o
+
+_8_0_1_DataExport1.o: _KineticMainParams.o _8_0_1_DataExport1.f90
+	$(comp) $(switch) -c _8_0_1_DataExport1.f90 -o _8_0_1_DataExport1.o
+
+_8_0_2_DataExport2.o: _KineticMainParams.o _8_0_2_DataExport2.f90
+	$(comp) $(switch) -c _8_0_2_DataExport2.f90 -o _8_0_2_DataExport2.o
+
+_8_0_4_DataTypeAllocA.o: _KineticMainParams.o _8_0_4_DataTypeAllocA.f90
+	$(comp) $(switch) -c _8_0_4_DataTypeAllocA.f90 -o _8_0_4_DataTypeAllocA.o
+
+_8_0_5_DataTypeAllocB.o: _KineticMainParams.o _8_0_5_DataTypeAllocB.f90
+	$(comp) $(switch) -c _8_0_5_DataTypeAllocB.f90 -o _8_0_5_DataTypeAllocB.o
+
+_8_0_6_DataTypeReAllocA.o: _KineticMainParams.o _8_0_6_DataTypeReAllocA.f90
+	$(comp) $(switch) -c _8_0_6_DataTypeReAllocA.f90 -o _8_0_6_DataTypeReAllocA.o
+
+_8_0_7_1_BCReIndex.o: _KineticMainParams.o _8_0_7_1_BCReIndex.f90
+	$(comp) $(switch) -c _8_0_7_1_BCReIndex.f90 -o _8_0_7_1_BCReIndex.o
+
+_8_0_7_BoundaryConditions.o: _KineticMainParams.o _8_0_7_1_BCReIndex.o _8_0_4_DataTypeAllocA.o _8_0_6_DataTypeReAllocA.o _9_MPIReduceSum.o _8_0_7_BoundaryConditions.f90
+	$(comp) $(switch) -c _8_0_7_BoundaryConditions.f90 -o _8_0_7_BoundaryConditions.o
+
+_9_MPIReduceSum.o: _KineticMainParams.o _9_MPIReduceSum.f90
+	$(comp) $(switch) -c _9_MPIReduceSum.f90 -o _9_MPIReduceSum.o
+
+_8_0_0_1_KineticSolverA.o: _KineticMainParams.o _8_1_KineticRK4Update.o _8_3_ParticleCounts.o _8_4_DistributionFunctions.o _8_6_1_ZerothIonMoment.o _8_6_2_FirstPerpIonMoment.o _8_6_3_FirstParIonMoment.o _8_6_4_SecondIonMoment.o _8_6_5_SecondPerpIonMoment.o _8_6_6_SecondParIonMoment.o _8_7_AmbipolarEfield.o _8_7_2_Gravfield.o _8_8_PotentialStructure.o _8_0_1_DataExport1.o _8_0_2_DataExport2.o  _8_0_0_1_KineticSolverA.f90
+	$(comp) $(switch) -c _8_0_0_1_KineticSolverA.f90 -o _8_0_0_1_KineticSolverA.o
+
+_8_0_0_2_KineticSolverB.o: _KineticMainParams.o _8_1_4_RK4DipolePolynomialSolver.o _6_1_MBVelocityDistribution.o _8_1_KineticRK4Update.o _8_3_ParticleCounts.o _8_4_DistributionFunctions.o _8_6_1_ZerothIonMoment.o _8_6_2_FirstPerpIonMoment.o _8_6_3_FirstParIonMoment.o _8_6_4_SecondIonMoment.o _8_6_5_SecondPerpIonMoment.o _8_6_6_SecondParIonMoment.o _8_7_AmbipolarEfield.o _8_7_2_Gravfield.o _8_8_PotentialStructure.o _8_10_1_ZerothENAMoment.o _8_10_2_FirstPENAMoment.o _8_10_3_FirstQENAMoment.o _8_10_4_FirstPHIENAMoment.o _8_10_5_SecondENAMoment.o _8_10_6_SecondPENAMoment.o _8_10_7_SecondQENAMoment.o _8_10_8_SecondPHIENAMoment.o _8_0_2_DataExport2.o  _8_0_0_2_KineticSolverB.f90
+	$(comp) $(switch) -c _8_0_0_2_KineticSolverB.f90 -o _8_0_0_2_KineticSolverB.o
+
+_8_KineticSolver.o: _KineticMainParams.o _8_0_5_DataTypeAllocB.o _8_1_1_1_IonNeutralCollisions.o _8_0_7_BoundaryConditions.o _8_0_0_1_KineticSolverA.o _8_0_0_2_KineticSolverB.o _8_KineticSolver.f90
+	$(comp) $(switch) -c _8_KineticSolver.f90 -o _8_KineticSolver.o
+	
+_KineticMain.o: _KineticMainParams.o _1_SimParameterization.o _2_DensityProfileA.o _4_DensityProfileB.o _5_DipolePolynomialSolver.o _6_VelocityDistribution.o _7_InitialConditions.o _8_KineticSolver.o
+	$(comp) $(switch) -c _KineticMain.f90 -o _KineticMain.o
+
+clean:
+	rm *.mod
+	rm *.o
