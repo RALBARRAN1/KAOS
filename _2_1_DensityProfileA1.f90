@@ -323,11 +323,11 @@ contains
 
 		    ! Broadcast total particle number to all ranks
 		    call mpi_barrier(MPI_COMM_WORLD, ierr)
-		    call mpi_bcast(SpecieT(s)%FluxTubeT(f)%NsT(1), 1, &
+		    call mpi_bcast(SpecieT(s)%FluxTubeT(f)%NsT(1), int(1), &
 		      MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 		    call mpi_barrier(MPI_COMM_WORLD, ierr)
-		    call mpi_bcast(SpecieT(s)%FluxTubeT(f)%NsFARRpT(:), SpecieT(s)%FluxTubeT(f)%NqICT(1), &
+		    call mpi_bcast(SpecieT(s)%FluxTubeT(f)%NsFARRpT(:), int(SpecieT(s)%FluxTubeT(f)%NqICT(1)), &
 		      MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 		    ! ----------------------------------------------------
@@ -387,7 +387,7 @@ contains
 		      end do
 
 		      call mpi_barrier(MPI_COMM_WORLD, ierr)
-		      call mpi_bcast(nsnormCNeut0(:), ((NqUB(1)- NqLB(1))+ 3), &
+		      call mpi_bcast(nsnormCNeut0(:), int((NqUB(1)- NqLB(1))+ 3), &
 		        MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 		    end if

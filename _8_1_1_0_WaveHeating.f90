@@ -79,14 +79,14 @@ contains
 				(((2d0*pi*(sqrt(Vperp1(j)**2d0+ Vperp2(j)**2d0)))/(OmegaGk1(1))) >= lambdaPerp(1))) then
 				SigmaPerp(1)= (2d0*pi*(sqrt(Vperp1(j)**2d0+ Vperp2(j)**2d0)))/(lambdaPerp(1)*OmegaGk1(1))
 			end if
-			
+
 			DPerp1(1)= ((SpecieT(s)%qsT(1)**2d0/(2d0*SpecieT(s)%msT(1)**2d0))* &
 				(XiPerp1(1)*EtaLH(1))*(S0(1))* &
 				(OmegaGk1(1)/OmegaG0(1))**(-ChiPerp1(1)))*(SigmaPerp(1)**(-3d0))
 			DPerp2(1)= ((SpecieT(s)%qsT(1)**2d0/(2d0*SpecieT(s)%msT(1)**2d0))* &
 				(XiPerp2(1)*EtaLH(1))*(S0(1))* &
 				(OmegaGk1(1)/OmegaG0(1))**(-ChiPerp2(1)))*(SigmaPerp(1)**(-3d0))
-			
+
 			! ----------------------------------------------------
 
 			! COMPUTE WAVE-PARTICLE INTERACTION TIME FROM (Schulz and Lanzerotti '74):
@@ -120,11 +120,11 @@ contains
 
 			! Heat ions by ICR only if simulation time-step is less than ICR interaction time
 			!if (SpecieT(s)%FluxTubeT(f)%hT(1) <= tauPerp(1)) then
-			
+
 			! if ICRCOHERENCEflag == 1
 				! Scale Vperp speed kicks [m/s] to ICR interaction time
-                                DVperp(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
-					sqrt(2d0*(DPerp1(1)+ DPerp2(1))*tauPerp(1))*GammaPerp1(1)
+        !DVperp(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
+					!sqrt(2d0*(DPerp1(1)+ DPerp2(1))*tauPerp(1))*GammaPerp1(1)
 
 			! if ICRCOHERENCEflag == 0
 				! Scale Vperp speed kicks [m/s] to ICR interaction time
@@ -141,16 +141,16 @@ contains
 			!end if
 
 			! ----------------------------------------------------
-			
+
 			! Set coherent wave heating flag here
 			! if ICRCOHERENCEflag == 1
-			
-			! Compute VperpN and random gyro-angle and Vperp1N and Vperp2N accordingly			
+
+			! Compute VperpN and random gyro-angle and Vperp1N and Vperp2N accordingly
 			!VperpN(j)= Vperp(j)+ DVperp(1)
 			!RNgyroangle(1)= ...
 			!Vperp1N(j)= ...
 			!Vperp2N(j)= ...
-			
+
 			! if ICRCOHERENCEflag == 0
 			Vperp1N(j)= Vperp1(j)+ DVperp1(1)
 			Vperp2N(j)= Vperp2(j)+ DVperp2(1)
