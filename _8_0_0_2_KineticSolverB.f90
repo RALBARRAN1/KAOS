@@ -812,6 +812,84 @@ contains
 					Vy(j)= VyN(j)
 					Vz(j)= VzN(j)
 
+					! ----------------------------------------------------
+
+					! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+					if (isnan(x(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' x VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(y(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' y VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(z(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' z VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vperp1(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vperp1 VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vperp2(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vperp2 VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vperp(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vperp VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vx(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vx VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vy(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vy VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vz(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vz VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					! ----------------------------------------------------
+
 				end do
 
 				! ----------------------------------------------------
@@ -834,6 +912,82 @@ contains
 					! ----------------------------------------------------
 
 					call KineticRK4UpdateSub
+
+					! ----------------------------------------------------
+
+					! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+					if (isnan(xN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' xN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(yN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' yN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(zN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' zN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vperp1N(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vperp1N VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(Vperp2N(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' Vperp2N VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(VperpN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' VperpN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(VxN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' VxN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(VyN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' VyN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
+
+					if (isnan(VzN(j)) .eqv. .true.) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' VzN VALUE IS NAN FOR SPECIE= ', s, &
+							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+							' IN KINETIC SOLVER B SUBROUTINE' &
+							// achar(27) // '[0m.'
+					end if
 
 					! ----------------------------------------------------
 
@@ -866,6 +1020,28 @@ contains
 
 			! ----------------------------------------------------
 
+			! DIAGNOSTIC FLAG FOR NON-ZERO GRID CELLS IN SPIN-UP:
+
+			if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. (rank == 0)) then
+				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
+							do Qind= NqLB(1), NqUB(1), 1
+								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
+									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+										' SPIN-UP SIMULATION HAS ZERO DENSITY AT FINAL TIME FOR SPECIE= ', &
+										s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' &
+										// achar(27) // '[0m.'
+								end if
+							end do
+						end if
+					end if
+				end do
+			end if
+
+			! ----------------------------------------------------
+
 			! Compute ambipolar and parallel electric fields
 			call AmbipolarEfieldSub
 			call GravfieldSub
@@ -894,7 +1070,9 @@ contains
 					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)) .and. &
 					((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 					(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
+
 					call DataExport2Sub
+
 				end if
 			end do
 

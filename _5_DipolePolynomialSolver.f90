@@ -160,7 +160,7 @@ contains
 							zfinalIC(1)= 0d0
 						end if
 
-						! Note: Get final (q, p) value and let phid= -phi to compare with initial input.
+						! Note: Get final (q, p) value and let phid= phi to compare with initial input.
 
 						qfinalIC(1)= (RE**2d0)*cos(thetafinalIC(1))/(rfinalIC(1)**2d0)
 						pfinalIC(1)= rfinalIC(1)/(RE*(sin(thetafinalIC(1))**2d0))

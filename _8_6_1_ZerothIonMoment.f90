@@ -163,22 +163,6 @@ contains
 
 							if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn) == 0d0) then
 								SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)= 0d0
-
-								! ----------------------------------------------------
-
-								! DIAGNOSTIC FLAG FOR ZERO LOWER BOUNDARY DENSITY:
-
-								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-										' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-										', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
-										' ION MOMENT SUBROUTINE' &
-										// achar(27) // '[0m.'
-								end if
-
-								! ----------------------------------------------------
-
 							else if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn) /= 0d0) then
 								SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)= MM(1)
 							end if
@@ -186,6 +170,16 @@ contains
 							! ----------------------------------------------------
 
 							! DIAGNOSTIC FLAGS FOR MOMENT CONSISTENCY:
+
+							if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
+									SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind), &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
+									', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+									' ION MOMENT SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
 
 							if (((sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%F2PerpphRTp(:, :, :, nn)) /= 0d0) .and. &
 								(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) .or. &

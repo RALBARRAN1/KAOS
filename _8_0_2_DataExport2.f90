@@ -45,12 +45,14 @@ contains
 			write(expint) SpecieT(s)%FluxTubeT(f)%TimeT(nn)
 			close(expint)
 
-			TeNTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TeNTfort.bin')))
-			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
-				adjustl(adjustr(TeNTfile))), &
-				status= 'replace', form= 'unformatted', access= 'stream')
-			write(expint) SpecieT(s)%FluxTubeT(f)%TeNT(nn)
-			close(expint)
+			!do Qind= NqLB(1), NqUB(1), 1
+			!	TeNTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TeNTfort.bin')))
+			!	open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+			!		adjustl(adjustr(TeNTfile))), &
+			!		status= 'replace', form= 'unformatted', access= 'stream')
+			!	write(expint) SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)
+			!	close(expint)
+			!end do
 
 		end if
 
@@ -72,6 +74,13 @@ contains
 							adjustl(adjustr(sstring) // '_' // &
 							adjustl(adjustr(fstring) // '_' // &
 							adjustl(adjustr(Qindstring) // '_')))))
+
+						TeNTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TeNTfort.bin')))
+						open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+							adjustl(adjustr(TeNTfile))), &
+							status= 'replace', form= 'unformatted', access= 'stream')
+						write(expint) SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)
+						close(expint)
 
 						N2PerpphRTfile= adjustl(adjustr(expstring) // &
 							adjustl(adjustr('N2PerpphRTfort.bin')))

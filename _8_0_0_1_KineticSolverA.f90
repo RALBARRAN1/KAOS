@@ -328,6 +328,28 @@ contains
 
 			! ----------------------------------------------------
 
+			! DIAGNOSTIC FLAG FOR NON-ZERO GRID CELLS IN SPIN-UP:
+
+			if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. (rank == 0)) then
+				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
+							do Qind= NqLB(1), NqUB(1), 1
+								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
+									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+										' SPIN-UP SIMULATION HAS ZERO DENSITY AT FINAL TIME FOR SPECIE= ', &
+										s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER A SUBROUTINE' &
+										// achar(27) // '[0m.'
+								end if
+							end do
+						end if
+					end if
+				end do
+			end if
+
+			! ----------------------------------------------------
+
 			! Compute ambipolar and parallel electric fields
 			call AmbipolarEfieldSub
 			call GravfieldSub

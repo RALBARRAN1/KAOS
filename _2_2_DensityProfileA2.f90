@@ -158,7 +158,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! Compute number of initial particles per mpi rank
+			! Compute number of initial particles per MPI rank
 			do s= 1, Stot, 1
 				do f= 1, SpecieT(s)%NfT(1), 1
 

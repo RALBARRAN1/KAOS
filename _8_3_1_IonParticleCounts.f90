@@ -343,8 +343,8 @@ contains
 													N2PerpphReNormT(nn, Vperp1ind, Vperp2ind, Vparind)= jcount
 											jloopiv2: do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 												if (ENAflag(j) .eqv. .false.) then
-												if ((Vperp1ind == Vperp1indk1(j)) .and. (Vperp2ind == Vperp2indk1(j)) &
-												 	.and. (Vparind == Vparindk1(j)) .and. (Qind == Qindk1(j))) then
+													if ((Vperp1ind == Vperp1indk1(j)) .and. (Vperp2ind == Vperp2indk1(j)) &
+												 		.and. (Vparind == Vparindk1(j)) .and. (Qind == Qindk1(j))) then
 
 														jcount= jcount+ 1d0
 														SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
@@ -525,10 +525,20 @@ contains
 
 						if (rank == 0) then
 							if (Qind == NqLB(1)) then
+								!do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
+								!	do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
+								!		do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
+								!			if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp(Vperp1ind, Vperp2ind, Vparind, nn) == 0d0) then
+								!				write(*, *) SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp(Vperp1ind, Vperp2ind, Vparind, nn)
+								!			end if
+								!		end do
+								!	end do
+								!end do
 								if (sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp(:, :, :, nn)) == 0d0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' ZERO LOWER BOUNDARY ION COUNT SUM N2PerpphRTp= ', &
 										sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp(:, :, :, nn)), &
+										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn), &
 										' SPECIE= ', s, ', FLUX TUBE= ', f, &
 										', Qind= ', Qind, ', AND STATISTICAL TIME-STEP= ', nn, &
 										' IN ION PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'

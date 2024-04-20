@@ -188,12 +188,12 @@ contains
 			call AMzsub(AMzk2p(1), SpecieT(s)%msT(1), muk2(1), &
 				dBdsk2(1), thetak2(1), ellk2(1))
 
-			if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-				AMpark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AMxk2p(1)* &
+			if (qk2(1) <= 0d0) then  ! N Mag Hemisphere
+				AMpark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AMxk2p(1)* &
 					cos(phik2(1))+ AMyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
 					AMzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			else if (qk2(1) > 0d0) then ! N Mag Hemisphere
-				AMpark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AMxk2p(1)* &
+			else if (qk2(1) > 0d0) then ! S Mag Hemisphere
+				AMpark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AMxk2p(1)* &
 					cos(phik2(1))+ AMyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
 					AMzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
 			end if
@@ -214,8 +214,8 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk2(1) <= 0) .and. (AMpark2(1) > 0d0)) .or. &
-				((qk2(1) > 0) .and. (AMpark2(1) < 0d0))) then
+			if (((qk2(1) <= 0) .and. (AMpark2(1) < 0d0)) .or. &
+				((qk2(1) > 0) .and. (AMpark2(1) > 0d0))) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
 					' AMpark2= ', AMpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
@@ -321,19 +321,21 @@ contains
 
 		if ((SpecieT(s)%FluxTubeT(f)%GRAVflagT(1) == 1) .and. (ENAflag(j) .eqv. .false.)) then
 
-			if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-				AGmagSk2(1)= 1d0
-			else if (qk2(1) > 0d0) then ! N Mag Hemisphere
-				AGmagSk2(1)= -1d0
+			call AGxsub(AGxk2p(1), AGmag(j), thetak2(1), phik2(1), ellk2(1))
+			call AGysub(AGyk2p(1), AGmag(j), thetak2(1), phik2(1), ellk2(1))
+			call AGzsub(AGzk2p(1), AGmag(j), thetak2(1), ellk2(1))
+
+			if (qk2(1) <= 0d0) then  ! N Mag Hemisphere
+				AGpark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AGxk2p(1)* &
+					cos(phik2(1))+ AGyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+					AGzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
+			end if
+			if (qk2(1) > 0d0) then  ! S Mag Hemisphere
+				AGpark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AGxk2p(1)* &
+					cos(phik2(1))+ AGyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+					AGzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
 			end if
 
-			call AGxsub(AGxk2p(1), AGmagSk2(1), AGmag(j), thetak2(1), phik2(1), ellk2(1))
-			call AGysub(AGyk2p(1), AGmagSk2(1), AGmag(j), thetak2(1), phik2(1), ellk2(1))
-			call AGzsub(AGzk2p(1), AGmagSk2(1), AGmag(j), thetak2(1), ellk2(1))
-
-			AGpark2(1)= 3d0*cos(thetak2(1))*sin(thetak2(1))*(AGxk2p(1)* &
-				cos(phik2(1))+ AGyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-				AGzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1))
 			AGpk2(1)= 0d0
 			AGphik2(1)= 0d0
 
@@ -350,8 +352,8 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk2(1) <= 0) .and. (AGpark2(1) < 0d0)) .or. &
-				((qk2(1) > 0) .and. (AGpark2(1) > 0d0))) then
+			if (((qk2(1) <= 0) .and. (AGpark2(1) > 0d0)) .or. &
+				((qk2(1) > 0) .and. (AGpark2(1) < 0d0))) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
 					' AGpark2= ', AGpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
@@ -379,8 +381,8 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk2(1) <= 0) .and. (AGpark2(1) < 0d0)) .or. &
-				((qk2(1) > 0) .and. (AGpark2(1) > 0d0))) then
+			if (((qk2(1) <= 0) .and. (AGpark2(1) > 0d0)) .or. &
+				((qk2(1) > 0) .and. (AGpark2(1) < 0d0))) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
 					' AGpark2= ', AGpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
@@ -488,24 +490,29 @@ contains
 		if ((SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 1) &
 			.and. (ENAflag(j) .eqv. .false.)) then
 
+			call AEAxsub(AEAxk2p(1), AEAmag(j), thetak2(1), phik2(1), ellk2(1))
+			call AEAysub(AEAyk2p(1), AEAmag(j), thetak2(1), phik2(1), ellk2(1))
+			call AEAzsub(AEAzk2p(1), AEAmag(j), thetak2(1), ellk2(1))
+
 			if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
-				if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-					AEAmagSk2(1)= -1d0
-				else if (qk2(1) > 0d0) then ! N Mag Hemisphere
-					AEAmagSk2(1)= 1d0
+				if (qk2(1) <= 0d0) then  ! N Mag Hemisphere
+					AEApark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
+						cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+						AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
+				end if
+				if (qk2(1) > 0d0) then  ! S Mag Hemisphere
+					AEApark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
+						cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+						AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
 				end if
 			end if
+
 			if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
-				AEAmagSk2(1)= 1d0
+				AEApark2(1)= 3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
+					cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+					AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1))
 			end if
 
-			call AEAxsub(AEAxk2p(1), AEAmagSk2(1), AEAmag(j), thetak2(1), phik2(1), ellk2(1))
-			call AEAysub(AEAyk2p(1), AEAmagSk2(1), AEAmag(j), thetak2(1), phik2(1), ellk2(1))
-			call AEAzsub(AEAzk2p(1), AEAmagSk2(1), AEAmag(j), thetak2(1), ellk2(1))
-
-			AEApark2(1)= 3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
-				cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-				AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1))
 			AEApk2(1)= 0d0
 			AEAphik2(1)= 0d0
 
@@ -523,8 +530,8 @@ contains
 			! DIAGNOSTIC FLAGS FOR PROPER AMBIPOLAR ACCELERATION SIGN:
 
 			if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
-				if (((qk2(1) <= 0) .and. (AEApark2(1) > 0d0)) .or. &
-					((qk2(1) > 0) .and. (AEApark2(1) < 0d0))) then
+				if (((qk2(1) <= 0) .and. (AEApark2(1) < 0d0)) .or. &
+					((qk2(1) > 0) .and. (AEApark2(1) > 0d0))) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
 						' AEApark2= ', AEApark2(1), 'qk2= ', qk2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
 						', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
@@ -634,26 +641,28 @@ contains
 		if ((SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) &
 			.and. (ENAflag(j) .eqv. .false.)) then
 
-			if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-				AEPmagSk2(1)= 1d0
-			else if (qk2(1) > 0d0) then ! N Mag Hemisphere
-				AEPmagSk2(1)= -1d0
-			end if
-
 			if (n < EParlim) then
 				AEPmag(j)= 0d0
 			end if
 			if (n >= EParlim) then
 				AEPmag(j)= AEPmag(j)
 			end if
-			
-			call AEPxsub(AEPxk2p(1), AEPmagSk2(1), AEPmag(j), thetak2(1), phik2(1), ellk2(1))
-			call AEPysub(AEPyk2p(1), AEPmagSk2(1), AEPmag(j), thetak2(1), phik2(1), ellk2(1))
-			call AEPzsub(AEPzk2p(1), AEPmagSk2(1), AEPmag(j), thetak2(1), ellk2(1))
 
-			AEPpark2(1)= 3d0*cos(thetak2(1))*sin(thetak2(1))*(AEPxk2p(1)* &
-				cos(phik2(1))+ AEPyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-				AEPzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1))
+			call AEPxsub(AEPxk2p(1), AEPmag(j), thetak2(1), phik2(1), ellk2(1))
+			call AEPysub(AEPyk2p(1), AEPmag(j), thetak2(1), phik2(1), ellk2(1))
+			call AEPzsub(AEPzk2p(1), AEPmag(j), thetak2(1), ellk2(1))
+
+			if (qk2(1) <= 0d0) then  ! N Mag Hemisphere
+				AEPpark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEPxk2p(1)* &
+					cos(phik2(1))+ AEPyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+					AEPzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
+			end if
+			if (qk2(1) > 0d0) then  ! S Mag Hemisphere
+				AEPpark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEPxk2p(1)* &
+					cos(phik2(1))+ AEPyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
+					AEPzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
+			end if
+
 			AEPpk2(1)= 0d0
 			AEPphik2(1)= 0d0
 
@@ -670,8 +679,8 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk2(1) <= 0) .and. (AEPpark2(1) < 0d0)) .or. &
-				((qk2(1) > 0) .and. (AEPpark2(1) > 0d0))) then
+			if (((qk2(1) <= 0) .and. (AEPpark2(1) > 0d0)) .or. &
+				((qk2(1) > 0) .and. (AEPpark2(1) < 0d0))) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
 					' AEPpark2= ', AEPpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &

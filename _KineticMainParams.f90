@@ -40,32 +40,43 @@ character(50) :: Nsstring, sstring, fstring, Qindstring, Vperp1indstring, Vperp2
 ! Define all simulation real-time values and strings
 real(kind= dp) :: TotEnd, S1End, S2End, S3End, S4End, S5End, S6End, S7End, S811End, &
 	S812End, S813End, S81End, S83End, S84End, S861End, S862End, S863End, &
- S864End, S865End, S866End, S87End, S88End, S8End, SDE2End, SDE3End, KS0End
+	S864End, S865End, S866End, S87End, S88End, S8End, SDE2End, SDE3End, KS0End
 
 character(50) :: Totstring, S1string, S2string, S3string, S4string, S5string, &
 	S6string, S7string, S811string, S812string, S813string, S81string, S82string, &
 	S83string, S84string, S861string, S862string, S863string, S864string, S865string, &
 	S866string, S87string, S88string, S8string, SDE2string, SDE3string, KS0string
 
+! ----------------- 0 CONFIGURATION-SPACE GRID GENERATOR -----------------
+
+real(kind= dp) :: NVperp1GpF, NVperp2GpF
+integer(kind= dp) :: VperpNlinRange, Vperp12NlinRange, VparNlinRange, VpphiNlinRange, VqNlinRange
+real(kind= dp) :: Vperp12sigmaFac
+real(kind= dp) :: NVpGpF, NVqGpF, NVphiGpF
+real(kind= dp) :: VpphisigmaFac, VqsigmaFac
+real(kind= dp) :: TsPerp, TsPar, Vperp12sigma, Vperpsigma, Vparsigma
+real(kind= dp) :: mNeut, Vpphisigma, Vqsigma
+
+! ----------------- 0_1 GRID DIPOLE POLYNOMIAL SOLVER -----------------
+
+! Define all grid quartic dipole polynomial solver variables
+real(kind= dp), dimension(1) :: pGridIn, qGridIn, ApGrid, BpGrid, CpGrid, DpGrid, &
+	AbGrid, BbGrid, CbGrid, D3Grid, D4Grid, AbbGrid, BbbGrid, DeltaGrid, EpsilonGrid, sigmaGrid, &
+	muGrid, piiGrid, r3Grid, theta3Grid, qtest3Grid, ptest3Grid, rGridOut, thetaGridOut, &
+	phiGridOut, xGridOut, yGridOut, zGridOut, qGridOut, pGridOut
+complex(kind= dp), dimension(1) :: ThetapGrid, nuGrid, gamma3Grid, sigma23Grid
+
+! ----------------- 0_0 VELOCITY-SPACE GRID GENERATOR -----------------
+
+real(kind= dp) :: VpGCtest, VqGCtest
+
 ! ----------------- 1 SIMULATION PARAMETERIZATION -----------------
 
-! Define number of particle species and flux tubes
-integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
-integer(kind= dp), dimension(1) :: Nf ! Number of flux tubes per particle species
-integer(kind= dp), dimension(:), allocatable :: Nfp
-
-! Define imported ion and ENA config-space grid dimensions from MATLAB
-integer(kind= dp), dimension(:, :), allocatable :: NqGp
-integer(kind= dp), dimension(1) :: NqG ! Number of config-space grid cells
-real(kind= dp), dimension(:, :), allocatable :: HiCratioMeanp, Tep
-real(kind= dp), dimension(1) :: HiCratioMean, Te
-
-! Define imported ion phase-space grid dimensions from MATLAB
-integer(kind= dp), dimension(:, :, :), allocatable :: NVperp1Gp, NVperp2Gp, NVperpGp, NVparGp
-integer(kind= dp), dimension(1) :: NVperp1G, NVperp2G, NVperpG, NVparG ! Number of ion vel-space grid cells
-real(kind= dp) :: Vperp12NlinRange, VparNlinRange, Vperp12Gridlinspace, Vperp12sigma, Vperp12sigmaFac, &
-	VparGridlinspace, Vparsigma, VparsigmaFac, VpphiNlinRange, VqNlinRange, &
-	VpphiGridlinspace, Vpphisigma, VpphisigmaFac, VqGridlinspace, Vqsigma, VqsigmaFac
+! Vel-space metric factors (local FA Cartesian coords., where Vperp1= Vy= Vp, Vperp2= Vx= Vphid)
+real(kind= dp), parameter :: hVperp1= 1d0
+real(kind= dp), parameter :: hVperp2= 1d0
+real(kind= dp), parameter :: hVperp= 1d0
+real(kind= dp), parameter :: hVpar= 1d0
 
 ! Define imported reference density parameters
 integer(kind= dp) :: nsnormCLBInput, nsnormCUBInput
@@ -73,47 +84,11 @@ integer(kind= dp) :: LBREPLENISHflagInput, UBREPLENISHflagInput
 real(kind= dp), dimension(:), allocatable :: DensityInput, TemperatureInput, &
 	EAInertialInput, EAPressureInput, EAmagInput
 
-! Define imported ENA phase-space grid dimensions from MATLAB
-integer(kind= dp), dimension(:, :, :), allocatable :: NVpGp, NVqGp, NVphiGp
-integer(kind= dp), dimension(1) :: NVpG, NVqG, NVphiG ! Number of ENA vel-space grid cells
-
 ! Define all simulation time parameters
 real(kind= dp), dimension(1) :: h
 integer(kind= dp), dimension(1) :: NNt, ndatfac, Q0NNt, Q0ndatfac
 real(kind= dp), dimension(1) :: IonNoiseLimit, ENANoiseLimit
 integer(kind= dp), parameter :: dt= 1d0
-
-! Define imported particle masses and charges from MATLAB
-real(kind= dp), dimension(1) :: ms, qs
-integer(kind= dp), dimension(1) :: Qindns0
-real(kind= dp), dimension(:), allocatable :: msp, qsp
-integer(kind= dp), dimension(:), allocatable :: Qindns0p
-
-! Define imported initial temperatures and configuration-space grid parameters from MATLAB
-real(kind= dp), dimension(:, :, :), allocatable :: hq, dq, qGCp, hqCp, dpCp, dqCp, dphiCp, &
-	TsPerpp, TsParp, rGCp, phiGCp, thetaGCp, ellGCp, qGLp, qGHp, pGCp, d3xCp
-real(kind= dp), dimension(1) :: qGC, hqC, dpC, dqC, dphiC, TsPerp, TsPar, &
-	rGC, phiGC, thetaGC, ellGC, qGL, qGH, pGC, d3xC
-
-! Define imported ion velocity-space grid parameters from MATLAB
-real(kind= dp), dimension(:), allocatable :: VperpGLpp, VperpGHpp, VperpGCpp, dVperpGpp, &
-	VparGLpp, VparGHpp, VparGCpp, dVparGpp, d3vCpp
-real(kind= dp), dimension(:, :), allocatable :: VperpGLp, VperpGHp, VperpGCp, dVperpGp, &
-	VparGLp, VparGHp, VparGCp, dVparGp, d3vCp
-real(kind= dp), dimension(:), allocatable :: Vperp1GLpp, Vperp1GHpp, Vperp1GCpp, dVperp1Gpp, &
-	Vperp2GLpp, Vperp2GHpp, Vperp2GCpp, dVperp2Gpp, VparGL2pp, VparGH2pp, VparGC2pp, dVparG2pp, d3vC2pp
-real(kind= dp), dimension(:, :, :), allocatable :: Vperp1GLp, Vperp1GHp, Vperp1GCp, dVperp1Gp, &
-	Vperp2GLp, Vperp2GHp, Vperp2GCp, dVperp2Gp, VparGL2p, VparGH2p, VparGC2p, dVparG2p, d3vC2p
-real(kind= dp), dimension(1) :: dVperpG, VperpGL, VperpGH, VperpGC, Vperp1GL, Vperp1GH, Vperp1GC, dVperp1G, &
-	Vperp2GL, Vperp2GH, Vperp2GC, dVperp2G, VparGL, VparGH, VparGC, dVparG, d3vC
-
-! Define imported ENA velocity-space grid parameters from MATLAB
-real(kind= dp), dimension(:), allocatable :: VpGLpp, VpGHpp, VpGCpp, VqGLpp, VqGHpp, VqGCpp, &
-	VphiGLpp, VphiGHpp, VphiGCpp, hVpCpp, hVqCpp, hVphiCpp, dVpCpp, dVqCpp, dVphiCpp, d33vCpp
-real(kind= dp), dimension(:, :, :), allocatable :: VpGLp, VpGHp, VpGCp, VqGLp, VqGHp, VqGCp, &
-	VphiGLp, VphiGHp, VphiGCp, hVpCp, hVqCp, hVphiCp, dVpCp, dVqCp, dVphiCp, d33vCp
-real(kind= dp), dimension(1) :: VpGL, VpGH, VpGC, VqGL, VqGH, VqGC, VphiGL, VphiGH, VphiGC, &
-	hVpC, hVqC, hVphiC, dVpC, dVqC, dVphiC, d33vC
 
 ! Define range of configuration-space field-aligned grid cells
 integer(kind= dp), dimension(1) :: NqIC, NqLB, NqUB
@@ -218,11 +193,11 @@ real(kind= dp), dimension(:), allocatable :: Vphi, Vp, VphiTMP, VpTMP
 real(kind= dp), dimension(1) :: rk1, pk1, qk1, Rperpk1, &
 	Bmagk1, OmegaGk1, dBdsk1, muk1, AMxk1p, AMyk1p, AMzk1p, AMxk1, AMyk1, AMzk1, AMpark1, AMpk1, AMphik1, &
 	AGxk1p, AGyk1p, AGzk1p, AGxk1, AGyk1, AGzk1, AGpark1, AGpk1, AGphik1, &
-	AEAxk1p, AEAyk1p, AEAzk1p, AEAxk1, AEAyk1, AEAzk1, AEApark1, AEApk1, AEAphik1, AEAmagSk1, AGmagSk1, &
-	AEPxk1p, AEPyk1p, AEPzk1p, AEPxk1, AEPyk1, AEPzk1, AEPpark1, AEPpk1, AEPphik1, AEPmagSk1, &
+	AEAxk1p, AEAyk1p, AEAzk1p, AEAxk1, AEAyk1, AEAzk1, AEApark1, AEApk1, AEAphik1, &
+	AEPxk1p, AEPyk1p, AEPzk1p, AEPxk1, AEPyk1, AEPzk1, AEPpark1, AEPpk1, AEPphik1, &
 	Axk1, Ayk1, Azk1, Vr, Vtheta, EpsilonPar, &
 	EpsilonPerp, alpha, VxR, VyR, VzR, lambdaPerp, EtaLH, XiPerp1, XiPerp2, S0, OmegaG0, ChiPerp1, &
-	ChiPerp2, GammaPerp1, GammaPerp2, SigmaPerp, DPerp1, DPerp2, DVPerp1, DVPerp2, &
+	ChiPerp2, GammaPerp1, GammaPerp2, SigmaPerp, DPerp1, DPerp2, DVPerp1icr, DVPerp2icr, &
 	epsPerp, tauPerp
 integer(kind= dp), dimension(:), allocatable :: Qindk1, Qindk0, Vparindk1, Vperpindk1, Vperp1indk1, Vperp2indk1, &
 	Vparindk0, Vperpindk0, Vperp1indk0, Vperp2indk0, Vpindk1, Vqindk1, Vphiindk1
@@ -237,8 +212,8 @@ real(kind= dp), dimension(1) :: rk2, thetak2, phik2, qk2, pk2, &
 	Rperpk2, ellk2, Bmagk2, OmegaGk2, dBdsk2, muk2, &
 	AMxk2p, AMyk2p, AMzk2p, AMxk2, AMyk2, AMzk2, AMpark2, AMpk2, AMphik2, &
 	AGxk2p, AGyk2p, AGzk2p, AGxk2, AGyk2, AGzk2, AGpark2, AGpk2, AGphik2, &
-	AEAxk2p, AEAyk2p, AEAzk2p, AEAxk2, AEAyk2, AEAzk2, AEApark2, AEApk2, AEAphik2, AEAmagSk2, AGmagSk2, &
-	AEPxk2p, AEPyk2p, AEPzk2p, AEPxk2, AEPyk2, AEPzk2, AEPpark2, AEPpk2, AEPphik2, AEPmagSk2, &
+	AEAxk2p, AEAyk2p, AEAzk2p, AEAxk2, AEAyk2, AEAzk2, AEApark2, AEApk2, AEAphik2, &
+	AEPxk2p, AEPyk2p, AEPzk2p, AEPxk2, AEPyk2, AEPzk2, AEPpark2, AEPpk2, AEPphik2, &
 	Axk2, Ayk2, Azk2
 
 ! ----------------- 8_1_3 KINETIC UPDATE C-----------------
@@ -248,8 +223,8 @@ real(kind= dp), dimension(:), allocatable :: pk4, rk4, thetak4, phik4, ellk4, qk
 real(kind= dp), dimension(1) ::  Rperpk4, Bmagk4, OmegaGk4, dBdsk4, muk4, &
 	AMxk4p, AMyk4p, AMzk4p, AMxk4, AMyk4, AMzk4, AMpark4, AMpk4, AMphik4, &
 	AGxk4p, AGyk4p, AGzk4p, AGxk4, AGyk4, AGzk4, AGpark4, AGpk4, AGphik4, &
-	AEAxk4p, AEAyk4p, AEAzk4p, AEAxk4, AEAyk4, AEAzk4, AEApark4, AEApk4, AEAphik4, AEAmagSk4, AGmagSk4, &
-	AEPxk4p, AEPyk4p, AEPzk4p, AEPxk4, AEPyk4, AEPzk4, AEPpark4, AEPpk4, AEPphik4, AEPmagSk4, &
+	AEAxk4p, AEAyk4p, AEAzk4p, AEAxk4, AEAyk4, AEAzk4, AEApark4, AEApk4, AEAphik4, &
+	AEPxk4p, AEPyk4p, AEPzk4p, AEPxk4, AEPyk4, AEPzk4, AEPpark4, AEPpk4, AEPphik4, &
 	Axk4, Ayk4, Azk4
 
 ! ----------------- 8_1_4 RK4 DIPOLE POLYNOMIAL SOLVER -----------------
@@ -379,7 +354,7 @@ character(50) :: RNtest1file, RNtest2file, NsnTfile, NsnRRTfile, NqLBoutfluxIonR
 
 type V3Celltype ! Vel-space grid cell derived data type: rank 3, indices [s, f, Qind, (Vpind, Vqind, Vphiind)]
 	! Simulation Parameterization:
-	real(kind= dp), dimension(1) :: VpGLT, VpGHT, VpGCT, VqGLT, VqGHT, VqGCT, &
+	real(kind= dp), dimension(1) :: VpGLT, VpGHT, VpGCT, VqGLT, VqGHT, VqGCT, VrGCT, VthetaGCT, VellGCT, &
 		VphiGLT, VphiGHT, VphiGCT, hVpCT, hVqCT, hVphiCT, dVpCT, dVqCT, dVphiCT, d33vCT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NphENART
@@ -405,8 +380,9 @@ end type V2PerpCelltype
 
 type VCelltype ! Vel-space grid cell derived data type: rank 2, indices [s, f, Qind, (Vperpind, Vparind)]
   ! Simulation Parameterization:
-	real(kind= dp), dimension(1) :: dVperpGT, dVparGT, VperpGLT, VperpGHT, VperpGCT, &
-		VparGLT, VparGHT, VparGCT, d3vCT
+	real(kind= dp), dimension(1) :: dVperpGT, dVparGT, dVthetaGT, VperpGLT, VperpGHT, VperpGCT, &
+		VparGLT, VparGHT, VparGCT, d3vCT, hVthetaCT
+	real(kind= dp), dimension(1) :: VperpGT, VparGT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NphRT
 	! Ion Distribution Functions:
@@ -432,8 +408,8 @@ end type QCellICtype
 
 type QCell0type ! Config-space initialization grid cell derived data type: rank 1, indices [s, f, Qind0]
 	! Simulation Parameterization:
-	real(kind= dp), dimension(1) :: qGC0T, hqC0T, dpC0T, dqC0T, dphiC0T, Ts0T, TsPerp0T, TsPar0T, &
-		rGC0T, phiGC0T, thetaGC0T, ellGC0T, qGL0T, qGH0T, pGC0T, d3xC0T
+	real(kind= dp), dimension(1) :: qGC0T, hqC0T, dpC0T, dqC0T, dphiC0T, rGC0T, phiGC0T, thetaGC0T, ellGC0T, &
+		qGL0T, qGH0T, pGC0T, d3xC0T, TsPerp0T, TsPar0T, Ts0T
 	! Density Profile A:
 	real(kind= dp), dimension(1) :: nsnormCT
 	real(kind= dp), dimension(1) :: nsnormCNeut0T
@@ -444,10 +420,17 @@ type QCelltype ! Config-space grid cell derived data type: rank 1, indices [s, f
   ! Simulation Parameterization:
 	real(kind= dp), dimension(1) :: DensityInputT, TemperatureInputT, &
 		EAInertialInputT, EAPressureInputT, EAmagInputT
-	integer(kind= dp), dimension(1) :: NVperp1GT, NVperp2GT, NVperpGT, NVparGT
-	integer(kind= dp), dimension(1) :: NVpGT, NVqGT, NVphiGT
+	integer(kind= dp), dimension(1) :: NVperp1GpT, NVperp2GpT, NVperpGpT, NVparGpT, NVperp1GT, NVperp2GT, NVperpGT, NVparGT, &
+		NVpGpT, NVpGT, NVqGpT, NVqGT, NVphiGpT, NVphiGT
+	real(kind= dp), dimension(1) :: Vperp1GAT, Vperp1GBT, VperpGAT, VperpGBT, VparGAT, VparGBT, &
+		VpGAT, VpGBT, VphiGAT, VphiGBT, VqGAT, VqGBT
+	real(kind= dp), dimension(:), allocatable :: Vperp1GpT, Vperp2GpT, VperpGpT, &
+		dVperp1GpT, dVperp2GpT, dVperpGpT, VparGp1T, VparGp2T, VparGpT, dVparGpT, VpGp1T, VpGp2T, VpGpT, VphiGp1T, VphiGp2T, VphiGpT, &
+		VqGp1T, VqGp2T, VqGpT, dVpGpT, dVphiGpT, dVqGpT
+	real(kind= dp), dimension(:, :, :), allocatable :: Vperp1GT, Vperp2GT, VpGT, VqGT, VphiGT, VparGT
 	real(kind= dp), dimension(1) :: qGCT, hqCT, dpCT, dqCT, dphiCT, TsT, TsPerpT, TsParT, rGCT, &
 		phiGCT, thetaGCT, ellGCT, qGLT, qGHT, pGCT, d3xCT
+	real(kind= dp), dimension(:), allocatable :: TeNT
 	real(kind= dp), dimension(1) :: lambdaPerppT, EtaLHpT, XiPerp1pT, XiPerp2pT, S0pT, &
 		OmegaG0pT, ChiPerp1pT, ChiPerp2pT
 	! Density Profile A:
@@ -473,12 +456,16 @@ end type QCelltype
 
 type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
   ! Simulation Parameterization:
+	integer(kind= dp), dimension(1) :: NqGpT, NqGT, NqG0T
+	real(kind= dp), dimension(:), allocatable :: pGT, qGT, rGridOutT, thetaGridOutT, phiGridOutT, &
+		xGridOutT, yGridOutT, zGridOutT
+	real(kind= dp), dimension(:), allocatable :: hpC0T, hphiC0T, &
+		Te0T, rGL0T, rGH0T, phiGL0T, phiGH0T, thetaGL0T, thetaGH0T, ellGL0T, ellGH0T, &
+		xGC0T, xGL0T, xGH0T, yGC0T, yGL0T, yGH0T, zGC0T, zGL0T, zGH0T
 	integer(kind= dp), dimension(1) :: nsnormCLBInputT, nsnormCUBInputT
 	real(kind= dp), dimension(:), allocatable :: ellqCT
 	real(kind= dp), dimension(1) :: SUMellqCT
-	integer(kind= dp), dimension(1) :: NqGT, NqG0T
-	real(kind= dp), dimension(:), allocatable :: TeNT
-	real(kind= dp), dimension(1) :: HiCratioMeanT, TeT, LBNominalDensityT, UBNominalDensityT, &
+	real(kind= dp), dimension(1) :: LBNominalDensityT, UBNominalDensityT, &
 		d3xCLBT, d3xCUBT, sigmaLBT, sigmaUBT
 	real(kind= dp), dimension(1) :: AT, BT, hT
 	integer(kind= dp), dimension(1) :: NtT, NNtT, ndatfacT, Q0NNtT, Q0ndatfacT
@@ -487,7 +474,7 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 		LBCONDITIONflagT, UBCONDITIONflagT, LBREPLENISHflagT, UBREPLENISHflagT, &
 		DENSITYPROFILEflagT, STATICINJECTIONflagT, DENSITYOUTPUTflagT, DENSITYINPUTflagT, &
 		ICRflagT, MIRRORflagT, GRAVflagT, EAMBSELFCONSISTflagT, EAMBSIGNflagT, EAMBflagT, &
-		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, &
+		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, SYMVPARflagT, &
 		ION2VPERPflagT, PHASEIONDISTRIBflagT, PHASEDENSITYIONMOMENTflagT, &
 		PHASEVELPERPIONMOMENTflagT, PHASEVELPARIONMOMENTflagT, PHASEENERGYIONMOMENTflagT, &
 		PHASEENERGYPERPIONMOMENTflagT, PHASEENERGYPARIONMOMENTflagT, PHASEENERGYPERPIONMOMENTCENTERflagT, &
@@ -558,9 +545,9 @@ end type FluxTubetype
 
 type Specietype ! Particle species number derived data type: rank 1, index [s]
  	! Simulation Parameterization:
-    integer(kind= dp), dimension(1) :: NfT
-    real(kind= dp), dimension(1) :: msT, qsT
-		integer(kind= dp), dimension(1) :: Qindns0T
+  integer(kind= dp), dimension(1) :: NfT
+  real(kind= dp), dimension(1) :: msT, qsT
+	integer(kind= dp), dimension(1) :: Qindns0T
 	! Density Profile A:
 	integer(kind= dp), dimension(1) :: NsRRTotpST
 	integer(kind= dp), dimension(:), allocatable :: NsRRTotpT
@@ -692,28 +679,26 @@ end subroutine AMzsub
 
 ! DEFINE GRAVITATIONAL FORCE PARTICLE ACCELERATION TERMS:
 
-subroutine AGxsub(AGx, AGmagS, AGmag, theta, phi, ell)
+subroutine AGxsub(AGx, AGmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AGx
-	real(kind= dp), intent(in) :: AGmagS, AGmag, theta, phi, ell
-		AGx= AGmagS*abs(AGmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AGmag, theta, phi, ell
+		AGx= abs(AGmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AGxsub
 
-subroutine AGysub(AGy, AGmagS, AGmag, theta, phi, ell)
+subroutine AGysub(AGy, AGmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AGy
-	real(kind= dp), intent(in) :: AGmagS, AGmag, theta, phi, ell
-		AGy= AGmagS*abs(AGmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AGmag, theta, phi, ell
+		AGy= abs(AGmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AGysub
 
-subroutine AGzsub(AGz, AGmagS, AGmag, theta, ell)
+subroutine AGzsub(AGz, AGmag, theta, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AGz
-	real(kind= dp), intent(in) :: AGmagS, AGmag, theta, ell
-		AGz= AGmagS*abs(AGmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AGmag, theta, ell
+		AGz= abs(AGmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 end subroutine AGzsub
-
-
 
 subroutine AGENAxsub(AGx, mNeut, r, theta, phi)
 	implicit none
@@ -740,39 +725,39 @@ end subroutine AGENAzsub
 
 ! DEFINE AMBIPOLAR ELECTRIC FIELD PARTICLE ACCELERATION TERMS:
 
-subroutine AEAxsub(AEAx, AEAmagS, AEAmag, theta, phi, ell)
+subroutine AEAxsub(AEAx, AEAmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEAx
-	real(kind= dp), intent(in) :: AEAmagS, AEAmag, theta, phi, ell
+	real(kind= dp), intent(in) :: AEAmag, theta, phi, ell
 		if (EAMBSIGNflag == 0) then
-			AEAx= AEAmagS*abs(AEAmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAx= abs(AEAmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 		if (EAMBSIGNflag == 1) then
-			AEAx= AEAmagS*AEAmag*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAx= AEAmag*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 end subroutine AEAxsub
 
-subroutine AEAysub(AEAy, AEAmagS, AEAmag, theta, phi, ell)
+subroutine AEAysub(AEAy, AEAmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEAy
-	real(kind= dp), intent(in) :: AEAmagS, AEAmag, theta, phi, ell
+	real(kind= dp), intent(in) :: AEAmag, theta, phi, ell
 		if (EAMBSIGNflag == 0) then
-			AEAy= AEAmagS*abs(AEAmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAy= abs(AEAmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 		if (EAMBSIGNflag == 1) then
-			AEAy= AEAmagS*AEAmag*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAy= AEAmag*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 end subroutine AEAysub
 
-subroutine AEAzsub(AEAz, AEAmagS, AEAmag, theta, ell)
+subroutine AEAzsub(AEAz, AEAmag, theta, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEAz
-	real(kind= dp), intent(in) :: AEAmagS, AEAmag, theta, ell
+	real(kind= dp), intent(in) :: AEAmag, theta, ell
 		if (EAMBSIGNflag == 0) then
-			AEAz= AEAmagS*abs(AEAmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+			AEAz= abs(AEAmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 		end if
 		if (EAMBSIGNflag == 1) then
-			AEAz= AEAmagS*AEAmag*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+			AEAz= AEAmag*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 		end if
 end subroutine AEAzsub
 
@@ -780,25 +765,25 @@ end subroutine AEAzsub
 
 ! DEFINE PARALLEL ELECTRIC FIELD PARTICLE ACCELERATION TERMS:
 
-subroutine AEPxsub(AEPx, AEPmagS, AEPmag, theta, phi, ell)
+subroutine AEPxsub(AEPx, AEPmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEPx
-	real(kind= dp), intent(in) :: AEPmagS, AEPmag, theta, phi, ell
-		AEPx= AEPmagS*abs(AEPmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AEPmag, theta, phi, ell
+		AEPx= abs(AEPmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AEPxsub
 
-subroutine AEPysub(AEPy, AEPmagS, AEPmag, theta, phi, ell)
+subroutine AEPysub(AEPy, AEPmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEPy
-	real(kind= dp), intent(in) :: AEPmagS, AEPmag, theta, phi, ell
-		AEPy= AEPmagS*abs(AEPmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AEPmag, theta, phi, ell
+		AEPy= abs(AEPmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AEPysub
 
-subroutine AEPzsub(AEPz, AEPmagS, AEPmag, theta, ell)
+subroutine AEPzsub(AEPz, AEPmag, theta, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEPz
-	real(kind= dp), intent(in) :: AEPmagS, AEPmag, theta, ell
-		AEPz= AEPmagS*abs(AEPmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AEPmag, theta, ell
+		AEPz= abs(AEPmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 end subroutine AEPzsub
 
 ! ----------------------------------------------------

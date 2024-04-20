@@ -31,7 +31,9 @@ contains
     ! ----------------------------------------------------
 
 		allocate(SpecieT(s)%FluxTubeT(f)%TimeT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-		allocate(SpecieT(s)%FluxTubeT(f)%TeNT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+		do Qind= NqLB(1), NqUB(1), 1
+			allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+		end do
 
 		! ----------------------------------------------------
 
@@ -103,29 +105,30 @@ contains
 
 					allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 						N2PerpphReNormT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), &
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), &
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)))
 
 					if (rank == 0) then
 		        allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		          N2PerpphReNormRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), &
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), &
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)))
 
 		        allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp( &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), &
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), &
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), &
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), &
 		          SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
 
-		        do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
-							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
-			          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
-			              allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-			                V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%N2PerpphRT( &
-			                SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+		        do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
+							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
+			          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
+
+			              allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT( &
+											Vperp1ind, Vperp2ind, Vparind)%N2PerpphRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+
 			          end do
 							end do
 		        end do
@@ -136,22 +139,22 @@ contains
 
 					allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 						NphReNormT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), &
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)))
 
 					if (rank == 0) then
 		        allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		          NphReNormRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), &
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)))
 
 		        allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NphRTp( &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-		          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), &
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), &
+		          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), &
 		          SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
 
-		        do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
-		          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
+		        do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), 1
+		          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 		              allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		                VCellT(Vperpind, Vparind)%NphRT( &
 		                SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
@@ -255,25 +258,25 @@ contains
 
 				allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
           NphReNormENAT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)))
+          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), &
+          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), &
+          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1)))
 
 				if (rank == 0) then
 					allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 	          NphReNormENART(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-	          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-	          SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)))
+	          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), &
+	          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), &
+	          SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1)))
 
           allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NphENARTp( &
-            SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-            SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-            SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1), &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), &
             SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-	        do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), 1
-	          do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1
-	            do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1), 1
+	        do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
+	          do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
+	            do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
 	                allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 	                  V3CellT(Vpind, Vqind, Vphiind)%NphENART( &
 	                  SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
@@ -330,14 +333,14 @@ contains
 
 	        if (rank == 0) then
 	          allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-	            F2PerpphRTp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-	            SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), &
+	            F2PerpphRTp(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), &
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), &
+	            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), &
 	            SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
 
-		        do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
-							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
-			          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
+		        do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
+							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
+			          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 		              allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		                V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT( &
 		                SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
@@ -351,11 +354,11 @@ contains
 
 					if (rank == 0) then
 						allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							FphRTp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), &
+							FphRTp(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), &
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), &
 							SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
-							do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
+						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), 1
+							do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 								allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%FphRT( &
 									SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
@@ -376,14 +379,14 @@ contains
       if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
         if (rank == 0) then
           allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-            FphENARTp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-            SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-            SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1), &
+            FphENARTp(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), &
             SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
         end if
-        do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), 1
-          do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1
-            do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1), 1
+        do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
+          do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
+            do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
               if (rank == 0) then
                 allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
                   V3CellT(Vpind, Vqind, Vphiind)%FphENART( &
@@ -412,9 +415,9 @@ contains
 				if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
 
 					if (rank == 0) then
-		        do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
-							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
-			          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
+		        do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
+							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
+			          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 		              allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		                V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%g02PerpphRT( &
 		                SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
@@ -426,8 +429,8 @@ contains
 				else
 
 					if (rank == 0) then
-						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
-		          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
+						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), 1
+		          do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 
 		              allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		                VCellT(Vperpind, Vparind)%g0phRT( &
@@ -586,7 +589,7 @@ contains
     ! ALLOCATE PARALLEL ELECTRIC FIELD VARIABLES IN DERIVED DATA TYPES:
 
     if (rank == 0) then
-      allocate(SpecieT(s)%FluxTubeT(f)%PhiParRT(((NqUB(1)- NqLB(1))+ 1)))      
+      allocate(SpecieT(s)%FluxTubeT(f)%PhiParRT(((NqUB(1)- NqLB(1))+ 1)))
     end if
     allocate(SpecieT(s)%FluxTubeT(f)%EPmagRT(((NqUB(1)- NqLB(1))+ 1)))
 
@@ -596,9 +599,9 @@ contains
 
     if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
       do Qind= NqLB(1), NqUB(1), 1
-        do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), 1
-          do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1
-            do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1), 1
+        do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
+          do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
+            do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
               if (rank == 0) then
                 allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
                   V3CellT(Vpind, Vqind, Vphiind)%g0phENART( &

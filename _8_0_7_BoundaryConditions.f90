@@ -710,7 +710,7 @@ contains
 
         ! ----------------------------------------------------
 
-        ! UPDATE TOTAl NUMBER OF PARTICLES PER PROCESSOR AND RE-ALLOCATE VARIABLES:
+        ! UPDATE TOTAL NUMBER OF PARTICLES PER PROCESSOR AND RE-ALLOCATE VARIABLES:
 
         ! ----------------------------------------------------
 

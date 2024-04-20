@@ -124,7 +124,7 @@ contains
   		zfinalRK4(1)= 0d0
   	end if
 
-  	! Note: Get final (q, p) value and let phid= -phi to compare with initial input.
+  	! Note: Get final (q, p) value and let phid= phi to compare with initial input.
 
   	qfinalRK4(1)= (RE**2d0)*cos(thetafinalRK4(1))/(rfinalRK4(1)**2d0)
   	pfinalRK4(1)= rfinalRK4(1)/(RE*(sin(thetafinalRK4(1))**2d0))
@@ -155,6 +155,30 @@ contains
 
   	! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSION, SIZES AND
   	! FINITE VALUES:
+
+		if ((isnan(real(rfinalRK4(1))) .eqv. .true.) .or. &
+  		(size(rfinalRK4(:)) /= 1)) then
+  		write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rfinalRK4 HAS', &
+  			' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+  			', FLUX TUBE= ', f, ', AND PARTICLE= ', j, &
+        ' IN RK4 DIPOLE POLYNOMIAL SOLVER SUBROUTINE' // achar(27) // '[0m.'
+  	end if
+
+		if ((isnan(real(thetafinalRK4(1))) .eqv. .true.) .or. &
+  		(size(thetafinalRK4(:)) /= 1)) then
+  		write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetafinalRK4 HAS', &
+  			' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+  			', FLUX TUBE= ', f, ', AND PARTICLE= ', j, &
+        ' IN RK4 DIPOLE POLYNOMIAL SOLVER SUBROUTINE' // achar(27) // '[0m.'
+  	end if
+
+		if ((isnan(real(phifinalRK4(1))) .eqv. .true.) .or. &
+  		(size(phifinalRK4(:)) /= 1)) then
+  		write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phifinalRK4 HAS', &
+  			' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+  			', FLUX TUBE= ', f, ', AND PARTICLE= ', j, &
+        ' IN RK4 DIPOLE POLYNOMIAL SOLVER SUBROUTINE' // achar(27) // '[0m.'
+  	end if
 
   	if ((isnan(real(xfinalRK4(1))) .eqv. .true.) .or. &
   		(size(xfinalRK4(:)) /= 1)) then

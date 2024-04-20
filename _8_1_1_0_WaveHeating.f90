@@ -128,15 +128,15 @@ contains
 
 			! if ICRCOHERENCEflag == 0
 				! Scale Vperp speed kicks [m/s] to ICR interaction time
-				DVperp1(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
+				DVperp1icr(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
 					sqrt(2d0*DPerp1(1)*tauPerp(1))*GammaPerp1(1)
-				DVperp2(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
+				DVperp2icr(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
 					sqrt(2d0*DPerp2(1)*tauPerp(1))*GammaPerp2(1)
 
 			!else if (SpecieT(s)%FluxTubeT(f)%hT(1) > tauPerp(1)) then
 
-			!	DVperp1(1)= 0d0
-			!	DVperp2(1)= 0d0
+			!	DVperp1icr(1)= 0d0
+			!	DVperp2icr(1)= 0d0
 
 			!end if
 
@@ -152,8 +152,8 @@ contains
 			!Vperp2N(j)= ...
 
 			! if ICRCOHERENCEflag == 0
-			Vperp1N(j)= Vperp1(j)+ DVperp1(1)
-			Vperp2N(j)= Vperp2(j)+ DVperp2(1)
+			Vperp1N(j)= Vperp1(j)+ DVperp1icr(1)
+			Vperp2N(j)= Vperp2(j)+ DVperp2icr(1)
 			VperpN(j)= abs(sqrt(Vperp1N(j)**2d0+ Vperp2N(j)**2d0))
 
 			! ----------------------------------------------------
@@ -316,17 +316,17 @@ contains
 					' SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
-			if ((isnan(real(DVPerp1(1))) .eqv. .true.) .or. &
-				(size(DVPerp1(:)) /= 1)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DVPerp1= ', DVPerp1(1), &
+			if ((isnan(real(DVperp1icr(1))) .eqv. .true.) .or. &
+				(size(DVperp1icr(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DVperp1icr= ', DVperp1icr(1), &
 					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A', &
 					' SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
-			if ((isnan(real(DVPerp2(1))) .eqv. .true.) .or. &
-				(size(DVPerp2(:)) /= 1)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DVPerp2= ', DVPerp2(1), &
+			if ((isnan(real(DVperp2icr(1))) .eqv. .true.) .or. &
+				(size(DVperp2icr(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DVperp2icr= ', DVperp2icr(1), &
 					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A', &
 					' SUBROUTINE' // achar(27) // '[0m.'

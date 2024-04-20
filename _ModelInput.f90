@@ -17,22 +17,20 @@ complex(kind= dp) :: i ! Square-root of -1
 
 ! ----------------- I/O PATHS -----------------
 
-! Define these I/O paths with local CPU simulations:
-! Note: Set (1) Grid directory (created in MATLAB), (2) Export data directory, (3) Spin-up initialization data directory
+! Define I/O paths:
 
-character(*), parameter :: dataimportdir= '/Users/robertalbarran/Desktop/FULLDESKTOP/KMIOGridW0F2/'
-character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/FULLDESKTOP/KMIOData/'
-character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/FULLDESKTOP/KMIODensityInput/'
+integer(kind= dp), parameter :: SPINUP= 1 ! KAOS Spinup (=1)
 
-! Define these I/O paths with M1 Ultra CPU simulations:
-!character(*), parameter :: dataimportdir= '/Users/robertalbarran/Desktop/KMIOGridW0F1/'
-!character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KMIODataW0F1ncscOUTPUTa0/'
-!character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KMIODensityW0F1ncscOUTPUTa0/'
+!write(*, *) SPINUP
 
-! Define these I/O paths with VEGA CPU simulations:
-!character(*), parameter :: dataimportdir= '/home2/albarrar/KMIOGridVV0Ft/'
-!character(*), parameter :: dataexportdir= '/home2/albarrar/KMIODataVV0FticrV0epar6scINPUTa4p/'
-!character(*), parameter :: Densitydatadir= '/home2/albarrar/KMIODensityVV0FtncscOUTPUTa0/'
+!if (SPINUP == 1) then
+  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
+!end if
+!if (SPINUP == 0) then
+  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
+!end if
+
+character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDensityInput/'
 
 ! ----------------- PHYSICAL CONSTANTS -----------------
 
@@ -45,8 +43,6 @@ real(kind= dp), parameter :: GG= 667d-13 ! Universal gravitational constant [N m
 real(kind= dp), parameter :: ME= 598d22 ! Earth mass [kg]
 real(kind= dp), parameter :: RE= 638d4 ! Earth radius [m]
 real(kind= dp), parameter :: melec= 9.109d-31 ! Electron mass [kg]
-real(kind= dp) mNeut ! O neutral mass [kg]
-real(kind= dp) TNeut ! O neutral temperature [K] from NRLMSISE-00
 
 ! ----------------- TIME PARAMETERS -----------------
 
@@ -61,6 +57,12 @@ integer(kind= dp), parameter :: IONNOISEflag= 0
 
 ! Set ion moment export (leave =1)
 integer(kind= dp), parameter :: FLUIDIONEXPORTflag= 1
+
+! Set symmetric +/- parallel velocity space grid for ions and ENAs (leave =1)
+integer(kind= dp), parameter :: SYMVPARflag= 1
+
+! Set 2D perpendicular velocity space grid for ions and ENAs (leave =1)
+integer(kind= dp), parameter :: ION2VPERPflag= 1
 
 ! ----------------- BOUNDARY CONDITIONS FLAGS -----------------
 
@@ -82,11 +84,21 @@ integer(kind= dp), parameter :: DENSITYPROFILEflag= 1
 ! Set initial velocities of injected ions equal to zero (leave =0)
 integer(kind= dp), parameter :: STATICINJECTIONflag= 0
 
-! Set (=1) for spin-up simulations (output initial conditions)
-integer(kind= dp), parameter :: DENSITYOUTPUTflag= 1
+! Set (=1) for spin-up simulations (output initial conditions, i.e. spin up simulation (=1))
+!if (SPINUP == 1) then
+  integer(kind= dp), parameter :: DENSITYOUTPUTflag= 1
+!end if
+!if (SPINUP == 0) then
+  !integer(kind= dp), parameter :: DENSITYOUTPUTflag= 0
+!end if
 
-! Set (=1) for non spin-up simulations (input initial conditions from spin-up)
-integer(kind= dp), parameter :: DENSITYINPUTflag= 0
+! Set (=1) for non spin-up simulations (input initial conditions from spin-up, i.e. spin up simulation (=0))
+!if (SPINUP == 1) then
+  integer(kind= dp), parameter :: DENSITYINPUTflag= 0
+!end if
+!if (SPINUP == 0) then
+  !integer(kind= dp), parameter :: DENSITYINPUTflag= 1
+!end if
 
 ! ----------------- ION FORCE FLAGS -----------------
 
@@ -119,11 +131,8 @@ integer(kind= dp), parameter :: EPARflag= 0
 
 ! ----------------- ION MOMENT FLAGS -----------------
 
-! Set sliding average filter along flux-tube to moments (for smooth ambipolar electric field, etc) (leave =1) 
-integer(kind= dp), parameter :: MOMENTFILTERflag= 1 
-
-! Set 2D perpendicular velocity space grid (leave =1)
-integer(kind= dp), parameter :: ION2VPERPflag= 1
+! Set sliding average filter along flux-tube to moments (for smooth ambipolar electric field, etc) (leave =1)
+integer(kind= dp), parameter :: MOMENTFILTERflag= 1
 
 ! Set ion distribution function computation (leave =1)
 integer(kind= dp), parameter :: PHASEIONDISTRIBflag= 1
@@ -146,7 +155,7 @@ integer(kind= dp), parameter :: PHASEENERGYPERPIONMOMENTflag= 1
 ! Set ion par energy computation (leave =1)
 integer(kind= dp), parameter :: PHASEENERGYPARIONMOMENTflag= 1
 
-! Set ion perp energy centering by perp velocity (leave =0) 
+! Set ion perp energy centering by perp velocity (leave =0)
 integer(kind= dp), parameter :: PHASEENERGYPERPIONMOMENTCENTERflag= 0
 
 ! Set ion par energy centering by par velocity (leave =1)
@@ -160,21 +169,55 @@ integer(kind= dp), parameter :: FLUIDIONREFflag= 0
 ! Set ENA production
 integer(kind= dp), parameter :: QEXCHANGEflag= 0
 
-! Set ENA velocity space count filter 
+! Set ENA velocity space count filter
 integer(kind= dp), parameter :: ENANOISEflag= 0
+
+! ----------------- ION AND ENA PHASE-SPACE GRID PARAMETERS -----------------
+
+! Define number of particle species and flux tubes
+integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
+integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
+real(kind= dp), parameter :: Lshell= 5d0 ! Initial L-shell
+real(kind= dp), parameter :: qGA= 0.8d0 ! Set lower boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
+real(kind= dp), parameter :: qGB= 0.05d0 ! Set upper boundary q value (negative for NMH)
+
+integer(kind= dp) :: SMagHemFlag
+real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
+real(kind= dp), parameter :: qO= 1.602d-19 ! O+ Charge [C]
+
+integer(kind= dp), parameter :: dq= 1d0 ! dq length of config cells
+integer(kind= dp), parameter :: ddVperp1= 1d0 ! dVperp1 length of config cells
+integer(kind= dp), parameter :: ddVperp2= 1d0 ! dVperp2 length of config cells
+integer(kind= dp), parameter :: ddVperp= 1d0 ! dVperp length of config cells
+integer(kind= dp), parameter :: ddVpar= 1d0 ! dVpar length of config cells
+integer(kind= dp), parameter :: ddVp= 1d0 ! dVp length of config cells
+integer(kind= dp), parameter :: ddVq= 1d0 ! dVq length of config cells
+integer(kind= dp), parameter :: ddVphi= 1d0 ! dVphi length of config cells
+
+integer(kind= dp) :: NqGpF ! Preliminary number of Q Grid Cells (including lower and upper boundary ghost cells i.e. +3)
+
+real(kind= dp), parameter :: NVparGpF= 30d0 ! Preliminary number of Vpar Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
+real(kind= dp), parameter :: NVperpGpF= 30d0 ! Preliminary number of Vperp Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
+real(kind= dp), parameter :: VperpsigmaFac= 25d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
+real(kind= dp), parameter :: VparsigmaFac= 25d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
+
+real(kind= dp), parameter :: Ti= 2.5d3 ! Ion initialization temperature [K]
+real(kind= dp), parameter :: Te= 2.5d3 ! Electron initialization temperature [K]
+real(kind= dp), parameter :: TNeut= 848d0 ! O neutral temperature [K] from NRLMSISE-00
 
 ! ----------------- ION INITIALIZATION PARAMETERS -----------------
 ! Note: change lower boundary cell (NqICA) and upper boundary cell (NqICB) and macro-particle normalization constant (nsnormfac) such that no cells are empty
 
-integer(kind= dp), parameter :: NqICA= 1d0
-integer(kind= dp), parameter :: NqICB= 25d0
-real(kind= dp), parameter :: nsnormfac= 9.5d13 ! (W0F2)
+integer(kind= dp), parameter :: NqICA= 1d0 ! Leave =1 (change grid to adjust)
+integer(kind= dp), parameter :: NqICB= 15d0
+
+real(kind= dp), parameter :: nsnormfac= 9.5d13 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
 real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
 real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]
 real(kind= dp), parameter :: dns0= 1d0 ! Multiplicative factor of reference ion density
 
-real(kind= dp), parameter :: zns0= RE+ 389d3 ! RE+ 370.78d3 ! Initial ion density profile reference altitude [km] 
+real(kind= dp), parameter :: zns0= RE+ 389d3 ! RE+ 370.78d3 ! Initial ion density profile reference altitude [km]
 real(kind= dp), parameter :: ns0= 1d7*dns0 ! (W0F2) ! Initial ion density profile reference density at zns0 [m-3]
 
 ! ----------------- NEUTRAL OXYGEN INITIALIZATION PARAMETERS -----------------
@@ -189,7 +232,7 @@ real(kind= dp), parameter :: EtaLHp= 0.125d0 ! Fraction of LH polarized ELF wave
 real(kind= dp), parameter :: XiPerp1p= 0.5d0 ! Fraction of LH Polarized ELF wave power along ePerp1
 real(kind= dp), parameter :: XiPerp2p= 0.5d0 ! Fraction of LH Polarized ELF wave power along ePerp2
 
-real(kind= dp), parameter :: lambdaPerpp= 0d0 ! VLF wavelength at local gyrofrequency [m] (set to zero for long wavelength limit)
+real(kind= dp), parameter :: lambdaPerpp= 0d0 ! VLF wavelength at local gyrofrequency [m] (set to zero for infinite wavelength limit)
 
 real(kind= dp), parameter :: f0p= 6.5d0 ! 72.5333d0 ! Reference heating gyrofrequency [Hz]
 real(kind= dp), parameter :: S0p= 5d-7 ! 1.9052d-10 ! Reference Wave Spectral Energy Density in [(V^2/m^2)/Hz]

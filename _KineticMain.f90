@@ -54,7 +54,7 @@ if (rank == 0) then
 			write(Totstring, '(i10)')  nint(TotEnd)
 			write(*, *) trim('%%%%%% RANK= ' // adjustl(rankstring)) // &
 				trim(', TOTAL CPU TIME= ' // adjustl(Totstring)) // &
-				trim(' s. 3D-KMIO SIMULATION COMPLETE %%%%%%')
+				trim(' s. KAOS SIMULATION COMPLETE %%%%%%')
 		end do
 	end do
 end if

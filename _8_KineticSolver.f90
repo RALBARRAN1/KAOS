@@ -53,21 +53,30 @@ contains
 
 					! ----------------------------------------------------
 
+					! UPDATE PHASE-SPACE GRID PER FEDUCIARY ExB DRIFING COLD PARTICLE:
+
+					! FIXME Insert GridGeneratorSub here
+
+
+					! ----------------------------------------------------
+
 					! UPDATE ELECTRON TEMPERATURE IN TIME:
 
 					do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 						if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
 							(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-							if ((n == 1) .and. (nn == 1)) then
-								SpecieT(s)%FluxTubeT(f)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%TeT(1)
-							else
-								if (SpecieT(s)%FluxTubeT(f)%TeNT(nn) < dNTeEND) then
-									SpecieT(s)%FluxTubeT(f)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%TeNT(nn- 1)+ dNTe
+							do Qind= NqLB(1), NqUB(1), 1
+								if ((n == 1) .and. (nn == 1)) then
+									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%Te0T(Qind)
+								else
+									if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn) < dNTeEND) then
+										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn- 1)+ dNTe
+									end if
+									if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn) > dNTeEND) then
+										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn- 1)
+									end if
 								end if
-								if (SpecieT(s)%FluxTubeT(f)%TeNT(nn) > dNTeEND) then
-									SpecieT(s)%FluxTubeT(f)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%TeNT(nn- 1)
-								end if
-							end if
+							end do
 						end if
 					end do
 

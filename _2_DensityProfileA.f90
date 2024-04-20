@@ -61,14 +61,14 @@ contains
 						ICbb(1)= sum(ICbbp(1:Qind))
 	          gC(1)= ICbb(1)- IC0bb(1)
 
-						if (SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 1) then
+						if (qGA <= 0d0) then ! SMH
 		          argC(1)= (SpecieT(s)%msT(1)*gC(1))/ &
-		           	(kB*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1)+ SpecieT(s)%FluxTubeT(f)%TeT(1)))
+		           	(kB*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1)+ SpecieT(s)%FluxTubeT(f)%Te0T(Qind)))
 						end if
 
-						if (SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 0) then
-							argC(1)= (SpecieT(s)%msT(1)*gC(1))/ &
-		           	(kB*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1)+ SpecieT(s)%FluxTubeT(f)%TeT(1)))
+						if (qGA > 0d0) then ! NMH
+		          argC(1)= -(SpecieT(s)%msT(1)*gC(1))/ &
+		           	(kB*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1)+ SpecieT(s)%FluxTubeT(f)%Te0T(Qind)))
 						end if
 
 						nsC(1)= SpecieT(s)%FluxTubeT(f)%ns0T(1)* &
@@ -309,6 +309,19 @@ contains
 						end if
 					end if
 
+					if (rank == 0) then
+						do Qind= NqLB(1), NqUB(1)- 1, 1
+							if (SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind) <= SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' NON-DECREASING PARTICLE NUMBERS WITH ALTITUDE', &
+									', NsFARpT(Qind)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind), &
+									', NsFARpT(Qind+ 1)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1), &
+									' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
+									' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
+							end if
+						end do
+					end if
+
 					! ----------------------------------------------------
 
 			end do
@@ -322,6 +335,11 @@ contains
 
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
+
+				allocate(SpecieT(s)%FluxTubeT(f)%rGCTp(NqUB(1)- NqLB(1)+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%hqCTp(NqUB(1)- NqLB(1)+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%dqCTp(NqUB(1)- NqLB(1)+ 1))
+
 				do Qind= NqLB(1), NqUB(1), 1
 
 					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)

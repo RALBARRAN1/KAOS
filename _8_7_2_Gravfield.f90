@@ -136,7 +136,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Southern Magnetic Hemisphere
+					! Compute Gravitational field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -457,7 +457,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Northern Magnetic Hemisphere
+					! Compute Gravitational field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -821,7 +821,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Southern Magnetic Hemisphere
+					! Compute Gravitational field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -980,7 +980,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Northern Magnetic Hemisphere
+					! Compute Gravitational field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1

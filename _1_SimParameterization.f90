@@ -9,6 +9,8 @@ module SimParameterization
 ! ----------------------------------------------------
 
 use KineticMainParams
+use ConfigGridGenerator
+use VelGridGenerator
 
 ! ----------------------------------------------------
 
@@ -29,50 +31,8 @@ contains
 
 		! ALLOCATE PARTICLE SPECIES DERIVED DATA TYPE:
 
+		i= (0, 1) ! Define sqrt(-1)
 		allocate(SpecieT(Stot))
-
-		! ----------------------------------------------------
-
-		! IMPORT NUMBER OF FLUX TUBES PER PARTICLE SPECIES FROM MATLAB:
-
-		! ----------------------------------------------------
-
-		allocate(Nfp(Stot))
-
-		! ----------------------------------------------------
-
-		do s= 1, Stot, 1
-			write(sstring, '(I5)') s
-
-			! ----------------------------------------------------
-
-			open (unit= 0, file= dataimportdir // adjustl(adjustr(sstring) // '_' // 'Nfmat.bin'), &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) Nfp(s)
-			close(0)
-
-			Nf(1)= Nfp(s)
-
-			SpecieT(s)%NfT= Nf ! Create nested derived data types
-
-			! ----------------------------------------------------
-
-			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-			if ((Nf(1) /= SpecieT(s)%NfT(1)) .or. (size(SpecieT(s)%NfT(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%NfT(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NfT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-			end if
-
-			! ----------------------------------------------------
-
-		end do
-
-		! ----------------------------------------------------
-
-		deallocate(Nfp)
 
 		! ----------------------------------------------------
 
@@ -80,6 +40,7 @@ contains
 
 		do s= 1, Stot, 1
 
+			SpecieT(s)%NfT(1)= Nf
 			allocate(SpecieT(s)%FluxTubeT(SpecieT(s)%NfT(1)))
 
 		end do
@@ -97,56 +58,11 @@ contains
 					! Starting and ending Q cell for density initialization
 					! (including selected cells and does not include lower boundary ghost cell)
 
-					! For VISIONS-1 CS:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 36d0
-
-					! For (Barakat '83) VS01:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 26d0
-
-					! For (Barakat '83) VS02:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 36d0
-
-					! For (Barghouthi '98) VS03 VS04:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 26d0
-
-					! For (Barghouthi '97 case1 and Crew '90, Barghouthi '97 case2) VS1 VS2:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 15d0
-
-					! For (Barghouthi '94) VS3:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 26d0
-
-					! For (Wilson '90) VS4:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 26d0
-
-					! For (Wilson '92 case1) VS5:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 16d0
-
-					! For (Wilson '92 case2) VS6:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 12d0
-
-					! For (Wu '02 and Brown '95) VS8 VS9 VS10 VS11 VS12:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 31d0
-
-					! For (Wu '02 and Brown '95) VS8 VS9 VS10 VS11 VS12:
-					!NqICA(1)= 1d0
-					!NqICB(1)= 31d0
-
-					! For Parametric Study:
-					!NqICA(1)= 1d0 ! T1
-					!NqICB(1)= 2d0 ! 19d0 ! T1
-
 					NqLB(1)= NqICA
 					NqUB(1)= NqICB
+
+					NqGpF= (NqUB(1)- NqLB(1)+ 4)
+
 				end if
 
 				NqIC(1)= abs(NqICB- NqICA)+ 1d0 ! Q cell range for density initialization
@@ -215,60 +131,6 @@ contains
 
 				! ----------------------------------------------------
 
-				! For (Barakat '83 case1 and case2) VS01 VS02:
-				!(Ti= 3000 K, Te= 3000 K) and (Ti= 3000 K, Te= 10000 K):
-				!zns0(1)= RE+ 10870d3 ! Reference O+ r value [m]
-				!ns0(1)= 5d7 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Barghouthi '98 case1 and case2) VS03 VS04:
-				!(Ti= 3000 K, Te= 3000 K):
-				!zns0(1)= RE+ 10870d3 ! Reference O+ r value [m]
-				!ns0(1)= 1d8 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Barghouthi '97 case1 and Crew '90, Barghouthi '97 case2) VS1 VS2:
-				!(Ti= 2321 K, Te= 1000 K):
-				!zns0(1)= RE+ 7656d3 ! Reference O+ r value [m]
-				!ns0(1)= 5d9 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Barghouthi '94) VS3:
-				!(Ti= 3000 K, Te= 3000 K):
-				!zns0(1)= RE+ 10846d3 ! Reference O+ r value [m]
-				!ns0(1)= 1d8 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Wilson '90) VS4:
-				!(Ti= 3000 K, Te= 3000 K):
-				!zns0(1)= RE+ 10846d3 ! Reference O+ r value [m]
-				!ns0(1)= 5d7 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Wilson '92 case1) VS5:
-				!(Ti= 3000 K, Te= 3000 K):
-				!zns0(1)= RE+ 1000d3 ! Reference O+ r value [m]
-				!ns0(1)= 5d10 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Wilson '92 case2) VS6:
-				!(Ti= 2000 K, Te= 2000 K):
-				!zns0(1)= RE+ 1000d3 ! Reference O+ r value [m]
-				!ns0(1)= 1d10 ! Reference O+ number density at zns0 [m^-3]
-
-				! For (Wu '02 and Brown '95) VS8 VS9 VS10 VS11 VS12:
-				!(Ti= 8000 K, Te= 8000 K):
-				!zns0(1)= RE+ 3*RE ! Reference O+ r value [m]
-				!ns0(1)= 1d6 ! Reference O+ number density at zns0 [m^-3]
-
-				if (s == 1) then
-					!nsnormfac(1)= 6.2d15 ! Macro-particle density norm. const. (inversely proportional to density)
-					!nsnormfac(1)= 4.05d12 ! For (Barakat '83 case1) VS01
-					!nsnormfac(1)= 9.95d12 ! For (Barakat '83 case2) VS02
-					!nsnormfac(1)= 8.10d12 ! For (Barghouthi '98 case1 and case2) VS03 VS04
-					!nsnormfac(1)= 2.5d14 ! For (Barghouthi '97 case1 and Crew '90, Barghouthi '97 case2) VS1 VS2
-					!nsnormfac(1)= 3.21d14 ! For (Barghouthi '97 case1 and Crew '90, Barghouthi '97 case2) VS1 VS2
-					!nsnormfac(1)= 8.1d12 ! For (Barghouthi '94) VS3
-					!nsnormfac(1)= 4.05d12 ! For (Wilson '90) VS4
-					!nsnormfac(1)= 6.37d14 ! For (Wilson '92 case1) VS5
-					!nsnormfac(1)= 9.85d13 ! For (Wilson '92 case2) VS6
-					!nsnormfac(1)= 2.22d10 ! For (Wu '02 and Brown '95) VS8 VS9 VS10 VS11 VS12
-				end if
-
 				SpecieT(s)%FluxTubeT(f)%zns0T= zns0 ! Create nested derived data types
 				SpecieT(s)%FluxTubeT(f)%ns0T= ns0
 				SpecieT(s)%FluxTubeT(f)%nsnormfacT= nsnormfac
@@ -332,113 +194,6 @@ contains
 
 		! ----------------------------------------------------
 
-		! IMPORT ALL CONFIGURATION-SPACE GRID DIMENSIONS FROM MATLAB:
-
-		do s= 1, Stot, 1
-			write(sstring, '(I5)') s
-
-			! ----------------------------------------------------
-
-			allocate(NqGp(Stot, SpecieT(s)%NfT(1)), HiCratioMeanp(Stot, SpecieT(s)%NfT(1)), &
-				Tep(Stot, SpecieT(s)%NfT(1)))
-
-			! ----------------------------------------------------
-
-			do f= 1, SpecieT(s)%NfT(1), 1
-				write(fstring, '(I5)') f
-
-				! ----------------------------------------------------
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'NqGmat.bin')), status= 'old', form= 'unformatted', access= 'stream')
-				read(0) NqGp(s, f)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'HiCratioMeanmat.bin')), status= 'old', form= 'unformatted', access= 'stream')
-				read(0) HiCratioMeanp(s, f)
-				close(0)
-
-				open (unit= expint, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'Temat.bin')), status= 'old', form= 'unformatted', access= 'stream')
-				read(expint) Tep(s, f)
-				close(expint)
-
-				NqG(1)= NqGp(s, f)
-				HiCratioMean(1)= HiCratioMeanp(s, f)
-				Te(1)= Tep(s, f)
-
-				SpecieT(s)%FluxTubeT(f)%NqGT= NqG ! Create nested derived data types
-				SpecieT(s)%FluxTubeT(f)%HiCratioMeanT= HiCratioMean
-				SpecieT(s)%FluxTubeT(f)%TeT= Te
-
-				! Re-index to account for lower and upper ghost cells (non-computational domain)
-				SpecieT(s)%FluxTubeT(f)%NqG0T(1)= SpecieT(s)%FluxTubeT(f)%NqGT(1)
-				SpecieT(s)%FluxTubeT(f)%NqGT(1)= SpecieT(s)%FluxTubeT(f)%NqGT(1)- 2d0
-
-				! ----------------------------------------------------
-
-				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-				if ((NqG(1) /= SpecieT(s)%FluxTubeT(f)%NqG0T(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NqG0T(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqG0T(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((NqG(1) /= SpecieT(s)%FluxTubeT(f)%NqGT(1)+ 2d0) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NqGT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqGT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((HiCratioMean(1) /= SpecieT(s)%FluxTubeT(f)%HiCratioMeanT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%HiCratioMeanT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%HiCratioMeanT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' HiCratioMeanT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((Te(1) /= SpecieT(s)%FluxTubeT(f)%TeT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%TeT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%TeT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TeT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if (SpecieT(s)%FluxTubeT(f)%TeT(1) > dNTeEND) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-						' INITIAL TeT IS GREATER THAN Te CAP FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-				! ----------------------------------------------------
-
-			end do
-
-			! ----------------------------------------------------
-
-			deallocate(NqGp, HiCratioMeanp, Tep)
-
-			! ----------------------------------------------------
-
-		end do
-
-		! ----------------------------------------------------
-
 		! ALLOCATE CONFIGURATION-SPACE DERIVED DATA TYPES NESTED IN FLUX TUBE TYPES NESTED IN
 		! PARTICLE SPECIES TYPE:
 
@@ -455,60 +210,93 @@ contains
 
 		! ----------------------------------------------------
 
-		! IMPORT PARTICLE MASS, CHARGE, AND ATOMIC RADIUS PER PARTICLE SPECIES FROM MATLAB:
-
-		allocate(Qindns0p(Stot), msp(Stot), qsp(Stot))
+		! CONSTRUCT INITIAL CONFIGURATION-SPACE GRID:
 
 		do s= 1, Stot, 1
-			write(sstring, '(I5)') s
+			do f= 1, SpecieT(s)%NfT(1), 1
 
-			! ----------------------------------------------------
+				call ConfigGridGeneratorSub
 
-			open (unit= 0, file= dataimportdir &
-				// adjustl(adjustr(sstring) // '_' // 'Qindns0mat.bin'), &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) Qindns0p(s)
-			close(0)
+			end do
+		end do
 
-			open (unit= 0, file= dataimportdir &
-				// adjustl(adjustr(sstring) // '_' // 'msmat.bin'), &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) msp(s)
-			close(0)
+		! ----------------------------------------------------
 
-			open (unit= 0, file= dataimportdir &
-				// adjustl(adjustr(sstring) // '_' // 'qsmat.bin'), &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) qsp(s)
-			close(0)
+		! CONFIGURATION-SPACE GRID DIMENSIONS:
 
-			Qindns0(1)= Qindns0p(s)
-			ms(1)= msp(s)
-			qs(1)= qsp(s)
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
 
-			SpecieT(s)%Qindns0T= Qindns0 ! Create nested derived data types
-			SpecieT(s)%msT= ms
-			SpecieT(s)%qsT= qs
+				! ----------------------------------------------------
+
+				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%NqG0T(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqG0T(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+						' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%NqGT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqGT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+						' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				do Qind= NqLB(1), NqUB(1)+ 2, 1
+					if ((size(SpecieT(s)%FluxTubeT(f)%Te0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqG0T(1)) .or. &
+						(isnan(real(SpecieT(s)%FluxTubeT(f)%Te0T(Qind))) .eqv. .true.)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Te0T HAS', &
+							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (SpecieT(s)%FluxTubeT(f)%Te0T(Qind) > dNTeEND) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' INITIAL Te0T IS GREATER THAN Te CAP FOR SPECIE= ', s, &
+							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+				end do
+
+				! ----------------------------------------------------
+
+			end do
+		end do
+
+		! ----------------------------------------------------
+
+		! PARTICLE MASS, CHARGE, AND ATOMIC RADIUS PER PARTICLE SPECIES:
+
+		do s= 1, Stot, 1
+
+			SpecieT(s)%msT= mO
+			SpecieT(s)%qsT= qO
 
 			! ----------------------------------------------------
 
 			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-			if ((Qindns0(1) /= SpecieT(s)%Qindns0T(1)) .or. (size(SpecieT(s)%Qindns0T(:)) /= 1) .or. &
+			if ((size(SpecieT(s)%Qindns0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%Qindns0T(1))) .eqv. .true.)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0T HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
-			if ((ms(1) /= SpecieT(s)%msT(1)) .or. (size(SpecieT(s)%msT(:)) /= 1) .or. &
+			if ((mO /= SpecieT(s)%msT(1)) .or. (size(SpecieT(s)%msT(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%msT(1))) .eqv. .true.)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' msT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
-			if ((qs(1) /= SpecieT(s)%qsT(1)) .or. (size(SpecieT(s)%qsT(:)) /= 1) .or. &
+			if ((qO /= SpecieT(s)%qsT(1)) .or. (size(SpecieT(s)%qsT(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%qsT(1))) .eqv. .true.)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qsT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -519,218 +307,38 @@ contains
 
 		end do
 
-		deallocate(Qindns0p, msp, qsp)
-
 		! ----------------------------------------------------
 
-		! IMPORT ALL PARTICLE SPECIES INITIAL TEMPERATURES AND CONFIGURATION-SPACE GRID
- 		! PARAMETERS FROM MATLAB:
+		! PARTICLE SPECIES INITIAL TEMPERATURES AND CONFIGURATION-SPACE GRID
+ 		! PARAMETERS:
 
 		do s= 1, Stot, 1
-			write(sstring, '(I5)') s
 			do f= 1, SpecieT(s)%NfT(1), 1
-				write(fstring, '(I5)') f
-
-				! ----------------------------------------------------
-
-				allocate(qGCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					hqCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					dpCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					dqCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					dphiCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					TsPerpp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					TsParp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					rGCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					phiGCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					thetaGCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					ellGCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					qGLp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					qGHp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					pGCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					d3xCp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 3)), &
-					SpecieT(s)%FluxTubeT(f)%rGCTp(((NqUB(1)- NqLB(1))+ 3)), &
-					SpecieT(s)%FluxTubeT(f)%hqCTp(((NqUB(1)- NqLB(1))+ 3)), &
-					SpecieT(s)%FluxTubeT(f)%dqCTp(((NqUB(1)- NqLB(1))+ 3)))
 
 				! ----------------------------------------------------
 
 				! COMPUTE TOTAL FIELD-LINE ARC LENGTH:
 
-				allocate(hq(Stot, SpecieT(s)%NfT(1), SpecieT(s)%FluxTubeT(f)%NqG0T(1)), &
-					dq(Stot, SpecieT(s)%NfT(1), SpecieT(s)%FluxTubeT(f)%NqG0T(1)))
 				allocate(SpecieT(s)%FluxTubeT(f)%ellqCT(SpecieT(s)%FluxTubeT(f)%NqG0T(1)))
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'hqCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) hq(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'dqCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) dq(s, f, :)
-				close(0)
-
-				SpecieT(s)%FluxTubeT(f)%ellqCT(:)= hq(s, f, :)*dq(s, f, :)
+				SpecieT(s)%FluxTubeT(f)%ellqCT(:)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1)*SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1)
 				SpecieT(s)%FluxTubeT(f)%SUMellqCT(1)= sum(SpecieT(s)%FluxTubeT(f)%ellqCT(:))
 
 				! ----------------------------------------------------
 
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'qGCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) qGCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'hqCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) hqCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'dpCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) dpCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'dqCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) dqCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'dphiCmat.bin')), &
-					status= 'old', form= 'unformatted', access= 'stream')
-				read(0) dphiCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'TsPerpmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) TsPerpp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'TsParmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) TsParp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'rGCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) rGCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'phiGCmat.bin')), &
-					status= 'old', form= 'unformatted', access= 'stream')
-				read(0) phiGCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'thetaGCmat.bin')), &
-					status= 'old', form= 'unformatted', access= 'stream')
-				read(0) thetaGCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'ellGCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) ellGCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'qGLmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) qGLp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'qGHmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) qGHp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'pGCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) pGCp(s, f, :)
-				close(0)
-
-				open (unit= 0, file= dataimportdir &
-					// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-					// '_' // 'd3xCmat.bin')), status= 'old', &
-					form= 'unformatted', access= 'stream')
-				read(0) d3xCp(s, f, :)
-				close(0)
-
 				do Qind= NqLB(1), NqUB(1)+ 2, 1
-					write(Qindstring, '(I5)') Qind
 
 					! ----------------------------------------------------
 
-					qGC(1)= qGCp(s, f, Qind)
-					hqC(1)= hqCp(s, f, Qind)
-					dpC(1)= dpCp(s, f, Qind)
-					dqC(1)= dqCp(s, f, Qind)
-					dphiC(1)= dphiCp(s, f, Qind)
-					TsPerp(1)= TsPerpp(s, f, Qind)
-					TsPar(1)= TsParp(s, f, Qind)
-					rGC(1)= rGCp(s, f, Qind)
-					phiGC(1)= phiGCp(s, f, Qind)
-					thetaGC(1)= thetaGCp(s, f, Qind)
-					ellGC(1)= ellGCp(s, f, Qind)
-					qGL(1)= qGLp(s, f, Qind)
-					qGH(1)= qGHp(s, f, Qind)
-					pGC(1)= pGCp(s, f, Qind)
-					d3xC(1)= d3xCp(s, f, Qind)
-
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T= qGC ! Create nested derived data types (including ghost cells)
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T= hqC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T= dpC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T= dqC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T= dphiC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T= rGC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T= phiGC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T= thetaGC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T= ellGC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T= qGL
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T= qGH
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T= pGC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T= d3xC
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T= TsPerp
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T= TsPar
-
 					! Total initial ion temperature [K]
 					! Note: Isotropic temperature from grid data (Ti= Tperp= Tpar= Tperp1= Tperp2)
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%Ts0T= (1d0/3d0)*TsPar+ (2d0/3d0)*TsPerp
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%Ts0T(1)= (1d0/3d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))+ &
+						(2d0/3d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))
 
 					! ----------------------------------------------------
 
 					! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-					if ((qGC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -738,8 +346,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((hqC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hqCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -747,8 +354,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((dpC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dpCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -756,8 +362,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((dqC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dqCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -765,8 +370,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((dphiC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dphiCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -774,8 +378,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((TsPerp(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPerpT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -783,8 +386,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((TsPar(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsParT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -792,8 +394,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((rGC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -801,8 +402,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((phiGC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -810,8 +410,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((thetaGC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -819,8 +418,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((ellGC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -828,8 +426,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((qGL(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGLT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -837,8 +434,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((qGH(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGHT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -846,8 +442,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((pGC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -855,8 +450,7 @@ contains
 							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((d3xC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(:)) /= 1) .or. &
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3xCT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -877,19 +471,12 @@ contains
 
 				! ----------------------------------------------------
 
-				deallocate(qGCp, hqCp, dpCp, dqCp, dphiCp, TsPerpp, TsParp, &
-					rGCp, phiGCp, thetaGCp, ellGCp, qGLp, qGHp, pGCp, d3xCp)
-
-				! ----------------------------------------------------
-
 			end do
 		end do
 
 		! ----------------------------------------------------
 
 		! SET SIMULATION DURATION AND TIME-STEP FOR MOMENT COMPUTATION:
-
-		i= (0, 1) ! Define sqrt(-1)
 
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
@@ -1030,6 +617,7 @@ contains
 
 				! Create nested derived data types
  				SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT= FLUIDIONEXPORTflag
+				SpecieT(s)%FluxTubeT(f)%SYMVPARflagT= SYMVPARflag
 				SpecieT(s)%FluxTubeT(f)%LBCONDITIONflagT= LBCONDITIONflag
 				SpecieT(s)%FluxTubeT(f)%UBCONDITIONflagT= UBCONDITIONflag
 				SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT= LBREPLENISHflag
@@ -1079,6 +667,15 @@ contains
 					(size(SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(:)) /= 1) .or. &
 					(isnan(real(SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1))) .eqv. .true.)) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' FLUIDIONEXPORTflagT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((SYMVPARflag /= SpecieT(s)%FluxTubeT(f)%SYMVPARflagT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%SYMVPARflagT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%SYMVPARflagT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' SYMVPARflagT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
 					' SUBROUTINE' // achar(27) // '[0m.'
@@ -1784,43 +1381,6 @@ contains
 
 		! ----------------------------------------------------
 
-		! IMPORT ION GRID PARAMETERS FROM MATLAB:
-
-		open (unit= 0, file= dataimportdir // 'Vperp12NlinRangemat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) Vperp12NlinRange
-		close(0)
-		open (unit= 0, file= dataimportdir // 'VparNlinRangemat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) VparNlinRange
-		close(0)
-		open (unit= 0, file= dataimportdir // 'Vperp12Gridlinspacemat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) Vperp12Gridlinspace
-		close(0)
-		open (unit= 0, file= dataimportdir // 'Vperp12sigmamat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) Vperp12sigma
-		close(0)
-		open (unit= 0, file= dataimportdir // 'Vperp12sigmaFacmat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) Vperp12sigmaFac
-		close(0)
-		open (unit= 0, file= dataimportdir // 'VparGridlinspacemat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) VparGridlinspace
-		close(0)
-		open (unit= 0, file= dataimportdir // 'Vparsigmamat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) Vparsigma
-		close(0)
-		open (unit= 0, file= dataimportdir // 'VparsigmaFacmat.bin', &
-			status= 'old', form= 'unformatted', access= 'stream')
-		read(0) VparsigmaFac
-		close(0)
-
-		! ----------------------------------------------------
-
 		! IMPORT EQUILIBRIUM DENSITY PARAMETERS FROM PREVIOUS SIMULATION:
 
 		if (SpecieT(1)%FluxTubeT(1)%DENSITYINPUTflagT(1) == 1) then
@@ -1929,112 +1489,39 @@ contains
 
 		! ----------------------------------------------------
 
-		! IMPORT ENA MASS AND INITIAL TEMPERATURE FROM MATLAB:
+		! CONSTRUCT INITIAL VELOCITY-SPACE GRID:
 
-		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
-			open (unit= 0, file= dataimportdir // 'mNeutmat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) mNeut
-			close(0)
-			open (unit= 0, file= dataimportdir // 'TNeutmat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) TNeut
-			close(0)
-			open (unit= 0, file= dataimportdir // 'VpphiNlinRangemat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) VpphiNlinRange
-			close(0)
-			open (unit= 0, file= dataimportdir // 'VqNlinRangemat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) VqNlinRange
-			close(0)
-			open (unit= 0, file= dataimportdir // 'VpphiGridlinspacemat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) VpphiGridlinspace
-			close(0)
-			open (unit= 0, file= dataimportdir // 'Vpphisigmamat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) Vpphisigma
-			close(0)
-			open (unit= 0, file= dataimportdir // 'VpphisigmaFacmat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) VpphisigmaFac
-			close(0)
-			open (unit= 0, file= dataimportdir // 'VqGridlinspacemat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) VqGridlinspace
-			close(0)
-			open (unit= 0, file= dataimportdir // 'Vqsigmamat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) Vqsigma
-			close(0)
-			open (unit= 0, file= dataimportdir // 'VqsigmaFacmat.bin', &
-				status= 'old', form= 'unformatted', access= 'stream')
-			read(0) VqsigmaFac
-			close(0)
-		end if
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
+
+				call VelGridGeneratorSub
+
+			end do
+		end do
 
 		! ----------------------------------------------------
 
-		! IMPORT ALL ION VELOCITY-SPACE GRID DIMENSIONS FROM MATLAB:
+		! ION VELOCITY-SPACE GRID DIMENSIONS:
 
 		do s= 1, Stot, 1
-			write(sstring, '(I5)') s
 			do f= 1, SpecieT(s)%NfT(1), 1
-				write(fstring, '(I5)') f
-
-				if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
-
-					! ----------------------------------------------------
-
-					allocate(NVperp1Gp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)), &
-						NVperp2Gp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)))
-
-					! ----------------------------------------------------
-
-					do Qind= 1, 1, 1
-						! write(Qindstring, '(I5)') Qind ! Note uncomment for config grid cell dependendent velocity grid
-						write(Qindstring, '(I5)') 1
-
-						! ----------------------------------------------------
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-							// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVperp1Gmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) NVperp1Gp(s, f, Qind)
-						close(0)
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-							// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVperp2Gmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) NVperp2Gp(s, f, Qind)
-						close(0)
-
-						NVperp1G(1)= NVperp1Gp(s, f, Qind)
-						NVperp2G(1)= NVperp2Gp(s, f, Qind)
-
-						! Create nested derived data types
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT= NVperp1G
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT= NVperp2G
+				if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
+					do Qind= NqLB(1), NqUB(1), 1
 
 						! ----------------------------------------------------
 
 						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-						if ((NVperp1G(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1))) .eqv. .true.)) then
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(:)) /= 1) .or. &
+							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1))) .eqv. .true.)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperp1GT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
 								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
-						if ((NVperp2G(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1))) .eqv. .true.)) then
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(:)) /= 1) .or. &
+							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1))) .eqv. .true.)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperp2GT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
@@ -2047,43 +1534,18 @@ contains
 
 					! ----------------------------------------------------
 
-					deallocate(NVperp1Gp, NVperp2Gp)
-
-					! ----------------------------------------------------
-
 				else
 
 					! ----------------------------------------------------
 
-					allocate(NVperpGp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)))
-
-					! ----------------------------------------------------
-
-					do Qind= 1, 1, 1
-						! write(Qindstring, '(I5)') Qind ! Note uncomment for config grid cell dependendent velocity grid
-						write(Qindstring, '(I5)') 1
-
-						! ----------------------------------------------------
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-							// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVperpGmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) NVperpGp(s, f, Qind)
-						close(0)
-
-						NVperpG(1)= NVperpGp(s, f, Qind)
-
-						! Create nested derived data types
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT= NVperpG
+					do Qind= NqLB(1), NqUB(1), 1
 
 						! ----------------------------------------------------
 
 						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-						if ((NVperpG(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1))) .eqv. .true.)) then
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(:)) /= 1) .or. &
+							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1))) .eqv. .true.)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperpGT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
@@ -2096,43 +1558,18 @@ contains
 
 					! ----------------------------------------------------
 
-					deallocate(NVperpGp)
-
-					! ----------------------------------------------------
-
 				end if
 
 				! ----------------------------------------------------
 
-				allocate(NVparGp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)))
-
-				! ----------------------------------------------------
-
-				do Qind= 1, 1, 1
-					! write(Qindstring, '(I5)') Qind ! Note uncomment for config grid cell dependendent velocity grid
-					write(Qindstring, '(I5)') 1
-
-					! ----------------------------------------------------
-
-					open (unit= 0, file= dataimportdir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVparGmat.bin'))), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) NVparGp(s, f, Qind)
-					close(0)
-
-					NVparG(1)= NVparGp(s, f, Qind)
-
-					! Create nested derived data types
-					SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT= NVparG
+				do Qind= NqLB(1), NqUB(1), 1
 
 					! ----------------------------------------------------
 
 					! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-					if ((NVparG(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)) .or. &
-						(size(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1))) .eqv. .true.)) then
+					if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(:)) /= 1) .or. &
+						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1))) .eqv. .true.)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVparGT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
@@ -2145,95 +1582,40 @@ contains
 
 				! ----------------------------------------------------
 
-				deallocate(NVparGp)
-
-				! ----------------------------------------------------
-
 			end do
 		end do
 
 		! ----------------------------------------------------
 
-		! IMPORT ALL ENA VELOCITY-SPACE GRID DIMENSIONS FROM MATLAB:
+		! ENA VELOCITY-SPACE GRID DIMENSIONS:
 
 		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
 			do s= 1, Stot, 1
-				write(sstring, '(I5)') s
 				do f= 1, SpecieT(s)%NfT(1), 1
-					write(fstring, '(I5)') f
-
-					! ----------------------------------------------------
-
-					allocate(NVpGp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)), &
-						NVqGp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)), &
-						NVphiGp(Stot, SpecieT(s)%NfT(1), ((NqUB(1)- NqLB(1))+ 1)))
-
-					! ----------------------------------------------------
-
-					do Qind= 1, 1, 1
-						! write(Qindstring, '(I5)') Qind ! Note uncomment for config grid cell dependendent velocity grid
-						write(Qindstring, '(I5)') 1
-
-						! ----------------------------------------------------
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) &
-							// '_' // adjustl(adjustr(fstring) &
-							// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVpGmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) NVpGp(s, f, Qind)
-						close(0)
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) &
-							// '_' // adjustl(adjustr(fstring) &
-							// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVqGmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) NVqGp(s, f, Qind)
-						close(0)
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) &
-							// '_' // adjustl(adjustr(fstring) &
-							// '_' // adjustl(adjustr(Qindstring) // '_' // 'NVphiGmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) NVphiGp(s, f, Qind)
-						close(0)
-
-						NVpG(1)= NVpGp(s, f, Qind)
-						NVqG(1)= NVqGp(s, f, Qind)
-						NVphiG(1)= NVphiGp(s, f, Qind)
-
-						! Create nested derived data types
-						SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT= NVpG
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT= NVqG
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT= NVphiG
+					do Qind= NqLB(1), NqUB(1), 1
 
 						! ----------------------------------------------------
 
 						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-						if ((NVpG(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1))) .eqv. .true.)) then
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(:)) /= 1) .or. &
+							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1))) .eqv. .true.)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVpGT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
 								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
-						if ((NVqG(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1))) .eqv. .true.)) then
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(:)) /= 1) .or. &
+							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1))) .eqv. .true.)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVqGT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
 								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
-						if ((NVphiG(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1))) .eqv. .true.)) then
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(:)) /= 1) .or. &
+							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1))) .eqv. .true.)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVphiGT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
@@ -2243,53 +1625,9 @@ contains
 						! ----------------------------------------------------
 
 					end do
-
-					! ----------------------------------------------------
-
-					deallocate(NVpGp, NVqGp, NVphiGp)
-
-					! ----------------------------------------------------
-
 				end do
 			end do
 		end if
-
-		! ----------------------------------------------------
-
-		! ALLOCATE VELOCITY-SPACE DERIVED DATA TYPES NESTED IN CONFIGURATION-SPACE
-		! TYPE NESTED IN FLUX TUBE TYPES NESTED IN PARTICLE SPECIES TYPE:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-				do Qind= NqLB(1), NqUB(1), 1
-
-					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
-						! Allocate V2PerpCellT(Vperp1ind, Vperp2ind, Vparind) derived data type nested in
-						! FluxTubeT(f) nested in SpecieT(s)
-						allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							V2PerpCellT(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
-					else
-						! Allocate VCellT(Vperpind, Vparind) derived data type nested in
-						! FluxTubeT(f) nested in SpecieT(s)
-						allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							VCellT(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
-					end if
-
-					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-						! Allocate V3CellT(Vpind, Vqind, Vphiind) derived data type nested in
-						! FluxTubeT(f) nested in SpecieT(s)
-						allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							V3CellT(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)))
-					end if
-
-				end do
-			end do
-		end do
 
 		! ----------------------------------------------------
 
@@ -2305,285 +1643,30 @@ contains
 
 		! ----------------------------------------------------
 
-		! IMPORT ALL ION EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES FROM MATLAB:
+		! ION EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
 
 		do s= 1, Stot, 1
-			write(sstring, '(I5)') s
 			do f= 1, SpecieT(s)%NfT(1), 1
-				write(fstring, '(I5)') f
-				do Qind= 1, 1, 1
-					write(Qindstring, '(I5)') 1
-
-					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
+				do Qind= NqLB(1), NqUB(1), 1
+					if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 
 						! ----------------------------------------------------
 
-						allocate(Vperp1GLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp1GHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp1GCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVperp1Gpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp2GLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp2GHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp2GCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVperp2Gpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGL2pp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGH2pp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGC2pp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVparG2pp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							d3vC2pp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
-
-						allocate(Vperp1GLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp1GHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp1GCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVperp1Gp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp2GLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp2GHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							Vperp2GCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVperp2Gp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGL2p(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGH2p(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGC2p(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVparG2p(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							d3vC2p(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
-
-						! ----------------------------------------------------
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'Vperp1GLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) Vperp1GLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'Vperp1GHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) Vperp1GHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'Vperp1GCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) Vperp1GCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVperp1Cmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVperp1Gpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'Vperp2GLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) Vperp2GLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'Vperp2GHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) Vperp2GHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'Vperp2GCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) Vperp2GCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVperp2Cmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVperp2Gpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VparGLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VparGL2pp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VparGHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VparGH2pp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VparGCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VparGC2pp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVparCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVparG2pp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'd3vCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) d3vC2pp(:)
-						close(0)
-
-						Vperp1GLp(:, :, :)= reshape(Vperp1GLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						Vperp1GHp(:, :, :)= reshape(Vperp1GHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						Vperp1GCp(:, :, :)= reshape(Vperp1GCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						dVperp1Gp(:, :, :)= reshape(dVperp1Gpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						Vperp2GLp(:, :, :)= reshape(Vperp2GLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						Vperp2GHp(:, :, :)= reshape(Vperp2GHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						Vperp2GCp(:, :, :)= reshape(Vperp2GCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						dVperp2Gp(:, :, :)= reshape(dVperp2Gpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VparGL2p(:, :, :)= reshape(VparGL2pp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VparGH2p(:, :, :)= reshape(VparGH2pp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VparGC2p(:, :, :)= reshape(VparGC2pp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						dVparG2p(:, :, :)= reshape(dVparG2pp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						d3vC2p(:, :, :)= reshape(d3vC2pp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-
-						! ----------------------------------------------------
-
-						do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
-							write(Vperp1indstring, '(I5)') Vperp1ind
-							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
-								write(Vperp2indstring, '(I5)') Vperp2ind
-								do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
-									write(Vparindstring, '(I5)') Vparind
+						do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
+							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
+								do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 
 									! ----------------------------------------------------
 
-									Vperp1GL(1)= Vperp1GLp(Vperp1ind, Vperp2ind, Vparind)
-									Vperp1GH(1)= Vperp1GHp(Vperp1ind, Vperp2ind, Vparind)
-									Vperp1GC(1)= Vperp1GCp(Vperp1ind, Vperp2ind, Vparind)
-									dVperp1G(1)= dVperp1Gp(Vperp1ind, Vperp2ind, Vparind)
-									Vperp2GL(1)= Vperp2GLp(Vperp1ind, Vperp2ind, Vparind)
-									Vperp2GH(1)= Vperp2GHp(Vperp1ind, Vperp2ind, Vparind)
-									Vperp2GC(1)= Vperp2GCp(Vperp1ind, Vperp2ind, Vparind)
-									dVperp2G(1)= dVperp2Gp(Vperp1ind, Vperp2ind, Vparind)
-									VparGL(1)= VparGL2p(Vperp1ind, Vperp2ind, Vparind)
-									VparGH(1)= VparGH2p(Vperp1ind, Vperp2ind, Vparind)
-									VparGC(1)= VparGC2p(Vperp1ind, Vperp2ind, Vparind)
-									dVparG(1)= dVparG2p(Vperp1ind, Vperp2ind, Vparind)
-									d3vC(1)= d3vC2p(Vperp1ind, Vperp2ind, Vparind)
-
-									if (VparGC(1) == 0d0) then
-										VparGC(1)= 1d-15
+									if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1) == 0d0) then
+										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)= 1d-15
 									end if
-
-									! Create nested derived data types
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT= Vperp1GL
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT= Vperp1GH
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT= Vperp1GC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT= dVperp1G
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT= Vperp2GL
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT= Vperp2GH
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT= Vperp2GC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT= dVperp2G
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT= VparGL
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT= VparGH
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT= VparGC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT= dVparG
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT= d3vC
 
 									! ----------------------------------------------------
 
 									! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-									if ((Vperp1GL(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										Vperp1GLT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT(1))) .eqv. .true.)) then
@@ -2594,10 +1677,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((Vperp1GH(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										Vperp1GHT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT(1))) .eqv. .true.)) then
@@ -2608,10 +1688,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((Vperp1GC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										Vperp1GCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT(1))) .eqv. .true.)) then
@@ -2622,10 +1699,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((dVperp1G(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										dVperp1GT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(1))) .eqv. .true.)) then
@@ -2636,10 +1710,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((Vperp2GL(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										Vperp2GLT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT(1))) .eqv. .true.)) then
@@ -2650,10 +1721,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((Vperp2GH(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										Vperp2GHT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT(1))) .eqv. .true.)) then
@@ -2664,10 +1732,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((Vperp2GC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										Vperp2GCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1))) .eqv. .true.)) then
@@ -2678,10 +1743,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((dVperp2G(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										dVperp2GT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(1))) .eqv. .true.)) then
@@ -2692,10 +1754,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VparGL(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										VparGLT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(1))) .eqv. .true.)) then
@@ -2706,10 +1765,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VparGH(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										VparGHT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(1))) .eqv. .true.)) then
@@ -2720,10 +1776,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VparGC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										VparGCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))) .eqv. .true.)) then
@@ -2734,10 +1787,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((dVparG(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										dVparGT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(1))) .eqv. .true.)) then
@@ -2748,10 +1798,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((d3vC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)% &
-										d3vCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(1))) .eqv. .true.)) then
@@ -2770,189 +1817,24 @@ contains
 
 						! ----------------------------------------------------
 
-						deallocate(Vperp1GLp, Vperp1GHp, Vperp1GCp, dVperp1Gp, Vperp2GLp, Vperp2GHp, Vperp2GCp, dVperp2Gp, &
-							VparGL2p, VparGH2p, VparGC2p, dVparG2p, d3vC2p)
-
-						! ----------------------------------------------------
-
 					else
 
 						! ----------------------------------------------------
 
-						allocate(VperpGLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVperpGpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVparGpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VperpGHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VperpGCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							d3vCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
-
-						allocate(VperpGLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVperpGp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							dVparGp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VperpGHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VperpGCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							VparGCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)), &
-							d3vCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)))
-
-						! ----------------------------------------------------
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVperpCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVperpGpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVparCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVparGpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VperpGLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VperpGLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VperpGHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VperpGHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VperpGCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VperpGCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VparGLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VparGLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VparGHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VparGHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VparGCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VparGCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'd3vCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) d3vCpp(:)
-						close(0)
-
-						dVperpGp(:, :)= reshape(dVperpGpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						dVparGp(:, :)= reshape(dVparGpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VperpGLp(:, :)= reshape(VperpGLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VperpGHp(:, :)= reshape(VperpGHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VperpGCp(:, :)= reshape(VperpGCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VparGLp(:, :)= reshape(VparGLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VparGHp(:, :)= reshape(VparGHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						VparGCp(:, :)= reshape(VparGCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-						d3vCp(:, :)= reshape(d3vCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)/))
-
-						! ----------------------------------------------------
-
-						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
-							write(Vperpindstring, '(I5)') Vperpind
-							do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
-								write(Vparindstring, '(I5)') Vparind
+						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), 1
+							do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
 
 								! ----------------------------------------------------
 
-								dVperpG(1)= dVperpGp(Vperpind, Vparind)
-								dVparG(1)= dVparGp(Vperpind, Vparind)
-								VperpGL(1)= VperpGLp(Vperpind, Vparind)
-								VperpGH(1)= VperpGHp(Vperpind, Vparind)
-								VperpGC(1)= VperpGCp(Vperpind, Vparind)
-								VparGL(1)= VparGLp(Vperpind, Vparind)
-								VparGH(1)= VparGHp(Vperpind, Vparind)
-								VparGC(1)= VparGCp(Vperpind, Vparind)
-								d3vC(1)= d3vCp(Vperpind, Vparind)
-
-								if (VparGC(1) == 0d0) then
-									VparGC(1)= 1d-15
+								if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1) == 0d0) then
+									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1)= 1d-15
 								end if
-
-								! Create nested derived data types
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%dVperpGT= dVperpG
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%dVparGT= dVparG
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGLT= VperpGL
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGHT= VperpGH
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGCT= VperpGC
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGLT= VparGL
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGHT= VparGH
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT= VparGC
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%d3vCT= d3vC
 
 								! ----------------------------------------------------
 
 								! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-								if ((dVperpG(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									dVperpGT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%dVperpGT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%dVperpGT(1))) .eqv. .true.)) then
@@ -2963,10 +1845,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((dVparG(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									dVparGT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%dVparGT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%dVparGT(1))) .eqv. .true.)) then
@@ -2977,10 +1856,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((VperpGL(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									VperpGLT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VperpGLT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VperpGLT(1))) .eqv. .true.)) then
@@ -2991,10 +1867,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((VperpGH(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									VperpGHT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VperpGHT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VperpGHT(1))) .eqv. .true.)) then
@@ -3005,10 +1878,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((VperpGC(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									VperpGCT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VperpGCT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VperpGCT(1))) .eqv. .true.)) then
@@ -3019,10 +1889,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((VparGL(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									VparGLT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VparGLT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VparGLT(1))) .eqv. .true.)) then
@@ -3033,10 +1900,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((VparGH(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									VparGHT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VparGHT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VparGHT(1))) .eqv. .true.)) then
@@ -3047,10 +1911,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((VparGC(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									VparGCT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VparGCT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%VparGCT(1))) .eqv. .true.)) then
@@ -3061,10 +1922,7 @@ contains
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
-								if ((d3vC(1) /= &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)% &
-									d3vCT(1)) .or. &
-									(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%d3vCT(:)) &
 									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									VCellT(Vperpind, Vparind)%d3vCT(1))) .eqv. .true.)) then
@@ -3082,11 +1940,6 @@ contains
 
 						! ----------------------------------------------------
 
-						deallocate(dVperpGp, dVparGp, VperpGLp, VperpGHp, VperpGCp, VparGLp, VparGHp, &
-							VparGCp, d3vCp)
-
-						! ----------------------------------------------------
-
 					end if
 
 				end do
@@ -3095,367 +1948,25 @@ contains
 
 		! ----------------------------------------------------
 
-		! IMPORT ALL ENA EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES FROM MATLAB:
+		! ENA EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
 
 		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
 			do s= 1, Stot, 1
-				write(sstring, '(I5)') s
 				do f= 1, SpecieT(s)%NfT(1), 1
-					write(fstring, '(I5)') f
-					do Qind= 1, 1, 1
-						write(Qindstring, '(I5)') 1
+					do Qind= NqLB(1), NqUB(1), 1
 
 						! ----------------------------------------------------
 
-						allocate(VpGLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VpGHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VpGCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VqGLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VqGHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VqGCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VphiGLpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VphiGHpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VphiGCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							hVpCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							hVqCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							hVphiCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							dVpCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							dVqCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							dVphiCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							d33vCpp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1)* &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)))
-
-						allocate(VpGLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VpGHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VpGCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VqGLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VqGHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VqGCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VphiGLp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VphiGHp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							VphiGCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							hVpCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							hVqCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							hVphiCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							dVpCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							dVqCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							dVphiCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)), &
-							d33vCp(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)))
-
-						! ----------------------------------------------------
-
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VpGLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VpGLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VpGHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VpGHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VpGCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VpGCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VqGLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VqGLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VqGHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VqGHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VqGCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VqGCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VphiGLmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VphiGLpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VphiGHmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VphiGHpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'VphiGCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) VphiGCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'hVpCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) hVpCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'hVqCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) hVqCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'hVphiCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) hVphiCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVpCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVpCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVqCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVqCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'dVphiCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) dVphiCpp(:)
-						close(0)
-						open (unit= 0, file= dataimportdir &
-							// adjustl(adjustr(sstring) // '_' // &
-							adjustl(adjustr(fstring) // '_' // adjustl(adjustr(Qindstring) &
-							// '_' // 'd33vCmat.bin'))), &
-							status= 'old', form= 'unformatted', access= 'stream')
-						read(0) d33vCpp(:)
-						close(0)
-
-						VpGLp(:, :, :)= reshape(VpGLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VpGHp(:, :, :)= reshape(VpGHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VpGCp(:, :, :)= reshape(VpGCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VqGLp(:, :, :)= reshape(VqGLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VqGHp(:, :, :)= reshape(VqGHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VqGCp(:, :, :)= reshape(VqGCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VphiGLp(:, :, :)= reshape(VphiGLpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VphiGHp(:, :, :)= reshape(VphiGHpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						VphiGCp(:, :, :)= reshape(VphiGCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						hVpCp(:, :, :)= reshape(hVpCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						hVqCp(:, :, :)= reshape(hVqCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						hVphiCp(:, :, :)= reshape(hVphiCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						dVpCp(:, :, :)= reshape(dVpCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						dVqCp(:, :, :)= reshape(dVqCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						dVphiCp(:, :, :)= reshape(dVphiCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-						d33vCp(:, :, :)= reshape(d33vCpp(:), &
-							(/SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)/))
-
-						! ----------------------------------------------------
-
-						do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), 1
-							write(Vpindstring, '(I5)') Vpind
-							do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1
-								write(Vqindstring, '(I5)') Vqind
-								do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1), 1
-									write(Vphiindstring, '(I5)') Vphiind
-
-									! ----------------------------------------------------
-
-									VpGL(1)= VpGLp(Vpind, Vqind, Vphiind)
-									VpGH(1)= VpGHp(Vpind, Vqind, Vphiind)
-									VpGC(1)= VpGCp(Vpind, Vqind, Vphiind)
-									VqGL(1)= VqGLp(Vpind, Vqind, Vphiind)
-									VqGH(1)= VqGHp(Vpind, Vqind, Vphiind)
-									VqGC(1)= VqGCp(Vpind, Vqind, Vphiind)
-									VphiGL(1)= VphiGLp(Vpind, Vqind, Vphiind)
-									VphiGH(1)= VphiGHp(Vpind, Vqind, Vphiind)
-									VphiGC(1)= VphiGCp(Vpind, Vqind, Vphiind)
-									hVpC(1)= hVpCp(Vpind, Vqind, Vphiind)
-									hVqC(1)= hVqCp(Vpind, Vqind, Vphiind)
-									hVphiC(1)= hVphiCp(Vpind, Vqind, Vphiind)
-									dVpC(1)= dVpCp(Vpind, Vqind, Vphiind)
-									dVqC(1)= dVqCp(Vpind, Vqind, Vphiind)
-									dVphiC(1)= dVphiCp(Vpind, Vqind, Vphiind)
-									d33vC(1)= d33vCp(Vpind, Vqind, Vphiind)
-
-									! Create nested derived data types
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGLT= VpGL
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGHT= VpGH
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT= VpGC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGLT= VqGL
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGHT= VqGH
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT= VqGC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										VphiGLT= VphiGL
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										VphiGHT= VphiGH
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										VphiGCT= VphiGC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										hVpCT= hVpC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										hVqCT= hVqC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										hVphiCT= hVphiC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										dVpCT= dVpC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										dVqCT= dVqC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										dVphiCT= dVphiC
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)% &
-										d33vCT= d33vC
+						do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
+							do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
+								do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
 
 									! ----------------------------------------------------
 
 									! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS,
 									! SIZES, AND FINITE VALUES:
 
-									if ((VpGL(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGLT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VpGLT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VpGLT(1))) .eqv. .true.)) then
@@ -3467,10 +1978,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VpGH(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGHT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VpGHT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VpGHT(1))) .eqv. .true.)) then
@@ -3482,10 +1990,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VpGC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))) .eqv. .true.)) then
@@ -3497,10 +2002,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VqGL(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VqGLT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1))) .eqv. .true.)) then
@@ -3512,10 +2014,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VqGH(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VqGHT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1))) .eqv. .true.)) then
@@ -3527,10 +2026,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VqGC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))) .eqv. .true.)) then
@@ -3542,10 +2038,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VphiGL(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(1))) .eqv. .true.)) then
@@ -3558,10 +2051,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VphiGH(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1))) .eqv. .true.)) then
@@ -3573,10 +2063,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((VphiGC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))) .eqv. .true.)) then
@@ -3589,10 +2076,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((hVpC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVpCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%hVpCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%hVpCT(1))) .eqv. .true.)) then
@@ -3604,10 +2088,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((hVqC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVqCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%hVqCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%hVqCT(1))) .eqv. .true.)) then
@@ -3619,10 +2100,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((hVphiC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1))) .eqv. .true.)) then
@@ -3634,10 +2112,7 @@ contains
 											' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((dVpC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVpCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%dVpCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%dVpCT(1))) .eqv. .true.)) then
@@ -3649,10 +2124,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((dVqC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVqCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%dVqCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%dVqCT(1))) .eqv. .true.)) then
@@ -3664,10 +2136,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((dVphiC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(1))) .eqv. .true.)) then
@@ -3679,10 +2148,7 @@ contains
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
-									if ((d33vC(1) /= &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%d33vCT(1)) .or. &
-										(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%d33vCT(:)) &
 										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%d33vCT(1))) .eqv. .true.)) then
@@ -3699,11 +2165,6 @@ contains
 								end do
 							end do
 						end do
-
-						! ----------------------------------------------------
-
-						deallocate(VpGLp, VpGHp, VpGCp, VqGLp, VqGHp, VqGCp, VphiGLp, VphiGHp, VphiGCp, &
-							hVpCp, hVqCp, hVphiCp, dVpCp, dVqCp, dVphiCp, d33vCp)
 
 						! ----------------------------------------------------
 
@@ -3826,27 +2287,6 @@ contains
 
 						! ----------------------------------------------------
 
-						!For (Barghouthi '98 case1) VS03:
-						!lambdaPerpp(1)= 0d0 ! VLF wavelength at local gyrofrequency [m] (set to zero for long wavelength limit)
-						!f0p(1)= 6d0 ! Reference gyrofrequency [Hz]
-						!S0p(1)= 1d-8 ! BBELF Wave Spectral Energy Density in [(V^2/m^2)/Hz]
-						!ChiPerp1p(1)= 1.7d0 ! ELF wave spectral index
-						!ChiPerp2p(1)= ChiPerp1p(1) ! ELF wave spectral index
-
-						!For (Barghouthi '97 case1 and Crew '90, Barghouthi '97 case2, Barghouthi '94, Wu '02 case3) VS1 VS2 VS3 VS10:
-						!lambdaPerpp(1)= 0d0 ! VLF wavelength at local gyrofrequency [m] (set to zero for long wavelength limit)
-						!f0p(1)= 5.6d0 ! Reference gyrofrequency [Hz]
-						!S0p(1)= 1.2d-6 ! BBELF Wave Spectral Energy Density in [(V^2/m^2)/Hz]
-						!ChiPerp1p(1)= 1.7d0 ! ELF wave spectral index
-						!ChiPerp2p(1)= ChiPerp1p(1) ! ELF wave spectral index
-
-						!For (Wu '02 case1 and Brown '95) VS8 VS11 VS12:
-						!lambdaPerpp(1)= 0d0 ! VLF wavelength at local gyrofrequency [m] (set to zero for long wavelength limit)
-						!f0p(1)= 6.5d0 ! Reference gyrofrequency [Hz]
-						!S0p(1)= 1d-8 ! BBELF Wave Spectral Energy Density in [(V^2/m^2)/Hz]
-						!ChiPerp1p(1)= 1.7d0 ! ELF wave spectral index
-						!ChiPerp2p(1)= ChiPerp1p(1) ! ELF wave spectral index
-
 						OmegaG0p(1)= 2d0*pi*f0p ! Ref. gyrofreq. corresponding to EPerp0 [rads/s]
 
 						! Create nested derived data types
@@ -3962,9 +2402,9 @@ contains
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
 					write(*, *) '----------------------------------------------------'
-					write(*, *) 'THREE-DIMENSIONAL KINETIC MODEL OF THE IONOSPHERIC OUTFLOW (3D-KMIO)'
-					write(*, *) 'Robert M. Albarran II, Experimental and Computational Laboratory for Atmospheric and Ionospheric Research'
-					write(*, *) 'Department of Physical Sciences, Embry-Riddle Aeronautical University'
+					write(*, *) 'Kinetic model of Auroral ion OutflowS (KAOS)'
+					write(*, *) 'Robert M. Albarran II, Ph.D. contact: albarran1@atmos.ucla.edu'
+					write(*, *) 'Department of Atmospheric and Oceanic Sciences, University of California, Los Angeles'
 
 		      call date_and_time(datechar(1), datechar(2), datechar(3), dateint)
 					write(monthstring, '(i10)') dateint(2)
@@ -3982,6 +2422,12 @@ contains
 
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
+					if (SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) then
+						write(*, *) trim('KAOS SPIN-UP')
+					end if
+
+					write(*, *)
+					write(*, *) '----------------------------------------------------'
 					write(*, *) 'SIMULATION PARAMETERS:'
 					write(*, *)
 
@@ -3989,17 +2435,16 @@ contains
 					write(*, *) trim('Number of MPI ranks= ' // adjustl(paramstring))
 
 					if (SpecieT(s)%FluxTubeT(f)%QCell0T(1)%qGL0T(1) <= 0d0) then
-						write(*, *) 'Southern Magnetic Hemisphere'
-					else if (SpecieT(s)%FluxTubeT(f)%QCell0T(1)%qGL0T(1) > 0d0) then
 						write(*, *) 'Northern Magnetic Hemisphere'
+					else if (SpecieT(s)%FluxTubeT(f)%QCell0T(1)%qGL0T(1) > 0d0) then
+						write(*, *) 'Southern Magnetic Hemisphere'
 					end if
 
-					write(*, *) trim('Data Import Path= ' // adjustl(dataimportdir))
 					write(*, *) trim('Data Export Path= ' // adjustl(dataexportdir))
 
 					if ((SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) .or. &
 						(SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1)) then
-						write(*, *) trim('Density Data I/O Path= ' // adjustl(Densitydatadir))
+						write(*, *) trim('Spin-up Data I/O Path= ' // adjustl(Densitydatadir))
 					end if
 
 					write(*, *)
@@ -4022,8 +2467,6 @@ contains
 					(SpecieT(s)%FluxTubeT(f)%NqICBT(1)+ 1)%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Upper Ion Initialization Altitude [km]= ' // adjustl(paramstring))
 
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%HiCratioMeanT
-					write(*, *) trim('Mean FA Grid Length to Ion Scale Height Ratio= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') Stot
 					write(*, *) trim('Total Number of Particle Species= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(1)%NfT(1)
@@ -4037,6 +2480,22 @@ contains
 					write(*, *)
 
 					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%Vperp1GLT(1)*1d-3
+						write(*, *) trim('Lower Vperp1 Limit [km/s]= ' // adjustl(paramstring))
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%Vperp2GLT(1)*1d-3
+						write(*, *) trim('Lower Vperp2 Limit [km/s]= ' // adjustl(paramstring))
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
+							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1, 1)%Vperp1GHT(1)*1d-3
+						write(*, *) trim('Upper Vperp1 Limit [km/s]= ' // adjustl(paramstring))
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
+							1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1)%Vperp2GHT(1)*1d-3
+						write(*, *) trim('Upper Vperp2 Limit [km/s]= ' // adjustl(paramstring))
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%VparGLT(1)*1d-3
+						write(*, *) trim('Lower Vpar Limit [km/s]= ' // adjustl(paramstring))
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
+							1, 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1))%VparGHT(1)*1d-3
+						write(*, *) trim('Upper Vpar Limit [km/s]= ' // adjustl(paramstring))
+
 						write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1)
 						write(*, *) trim('Total Number of Ion Vperp1 Grid Cells= ' // adjustl(paramstring))
 						write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1)
@@ -4047,24 +2506,20 @@ contains
 					end if
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)
 					write(*, *) trim('Total Number of Ion Vpar Grid Cells= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') Vperp12Gridlinspace*1d-3
-					write(*, *) trim('Vperp1 and Vperp2 Linear Grid Spacing [km/s]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') Vperp12sigma*1d-3
 					write(*, *) trim('Vperp1 and Vperp2 Standard Deviation [km/s]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') Vperp12sigmaFac
 					write(*, *) trim('Number of Linear Vperp1 and Vperp2 Standard Deviations &
 						Spanned by Linear Grid= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') Vperp12NlinRange
+					write(paramstring, '(i10)') Vperp12NlinRange
 					write(*, *) trim('Number of Vperp1 and Vperp2 Linear Grid Cells Spanning to &
 						Last Standard Deviation= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') VparGridlinspace*1d-3
-					write(*, *) trim('Vpar Linear Grid Spacing [km/s]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') Vparsigma*1d-3
 					write(*, *) trim('Vpar Standard Deviation [km/s]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') VparsigmaFac
 					write(*, *) trim('Number of Linear Vpar Standard Deviations &
 						Spanned by Linear Grid= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') VparNlinRange
+					write(paramstring, '(i10)') VparNlinRange
 					write(*, *) trim('Number of Vpar Linear Grid Cells Spanning to &
 						Last Standard Deviation= ' // adjustl(paramstring))
 
@@ -4081,8 +2536,6 @@ contains
 						write(*, *) trim('Total Number of ENA Vq Grid Cells= ' // adjustl(paramstring))
 						write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)
 						write(*, *) trim('Total Number of ENA Vphi Grid Cells= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') VpphiGridlinspace*1d-3
-						write(*, *) trim('Vp and Vphi Linear Grid Spacing [km/s]= ' // adjustl(paramstring))
 						write(paramstring, '(D10.2)') Vpphisigma*1d-3
 						write(*, *) trim('Vp and Vphi Standard Deviation [km/s]= ' // adjustl(paramstring))
 						write(paramstring, '(D10.2)') VpphisigmaFac
@@ -4091,8 +2544,6 @@ contains
 						write(paramstring, '(D10.2)') VpphiNlinRange
 						write(*, *) trim('Number of Vp and Vphi Linear Grid Cells Spanning to &
 							Last Standard Deviation= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') VqGridlinspace*1d-3
-						write(*, *) trim('Vq Linear Grid Spacing [km/s]= ' // adjustl(paramstring))
 						write(paramstring, '(D10.2)') Vqsigma*1d-3
 						write(*, *) trim('Vq Standard Deviation [km/s]= ' // adjustl(paramstring))
 						write(paramstring, '(D10.2)') VqsigmaFac
@@ -4246,7 +2697,7 @@ contains
 					write(*, *) trim('Ion Initialization Perpendicular Temperature [K]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T(1)%TsPar0T(1)
 					write(*, *) trim('Ion Initialization Parallel Temperature [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%TeT(1)
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%Te0T(1)
 					write(*, *) trim('Electron Initialization Temperature [K]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') dNTe
 					write(*, *) trim('Additive Increment of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
