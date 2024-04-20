@@ -179,7 +179,7 @@ integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
 integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
 real(kind= dp), parameter :: Lshell= 5d0 ! Initial L-shell
 real(kind= dp), parameter :: qGA= 0.8d0 ! Set lower boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
-real(kind= dp), parameter :: qGB= 0.05d0 ! Set upper boundary q value (negative for NMH)
+real(kind= dp), parameter :: qGB= 0.05d0 ! Set upper boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
 
 integer(kind= dp) :: SMagHemFlag
 real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
