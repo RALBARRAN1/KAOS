@@ -42,6 +42,8 @@ contains
 
   	if (n == 1) then
 
+			nnind= 1
+
   		! ----------------------------------------------------
 
   		do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -50,21 +52,29 @@ contains
   			ENAflag(j)= .false.
   			ENAflagN0ind(j)= n
 
-  			if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then ! S. Magnetic Hemisphere
+  			if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere
+
+					! ----------------------------------------------------
+
+					if (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)) then
+						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)
+					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, (NqUB(1)- NqLB(1))+ 1)) then
+						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGHT(nn, ((NqUB(1)- NqLB(1))+ 1))
+					end if
 
   				! ----------------------------------------------------
 
 					QloopKSA1: do Qind= NqLB(1), NqUB(1), 1
 						if ((Qind == NqLB(1)) .and. &
-							(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
-							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
+							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
 
 							exit QloopKSA1
 
 						else if ((Qind /= NqLB(1)) .and. &
-							(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
-							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
+							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
 
 							exit QloopKSA1
@@ -77,25 +87,25 @@ contains
   				! DIAGNOSTIC FLAGS FOR ALL q0T VALUES WITHIN CONFIGURATION-SPACE GRID:
 
 					if (((Qindk0(j) == 1) .and. &
-						(SpecieT(s)%FluxTubeT(f)%q0T(j) < SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1))) &
+						(SpecieT(s)%FluxTubeT(f)%q0T(j) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)))) &
 						.or. ((Qindk0(j) == 1) .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) > &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1)))) then
+						SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j))))) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' q0T= ', &
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1), ' AND qGHT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1), 'FOR SPECIE= ', s, &
+							SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)), ' AND qGHT= ', &
+							SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j)), 'FOR SPECIE= ', s, &
 							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
 					end if
 					if (((Qindk0(j) /= 1) .and. &
-						(SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1))) &
+						(SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)))) &
 						.or. ((Qindk0(j) /= 1) .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) > &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1)))) then
+						SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j))))) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' q0T= ', &
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1), ' AND qGHT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1), 'FOR SPECIE= ', s, &
+							SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)), ' AND qGHT= ', &
+							SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j)), 'FOR SPECIE= ', s, &
 							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
@@ -104,31 +114,29 @@ contains
   				! ----------------------------------------------------
 
   			end if
-  			if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then ! N. Magnetic Hemisphere
+  			if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
 
   				! ----------------------------------------------------
 
-					if (SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1)) then
-						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1)
-					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) < SpecieT(s)%FluxTubeT(f)% &
-						QCellT(((NqUB(1)- NqLB(1))+ 1))%qGHT(1)) then
-						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)% &
-							QCellT(((NqUB(1)- NqLB(1))+ 1))%qGHT(1)
+					if (SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)) then
+						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)
+					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, (NqUB(1)- NqLB(1))+ 1)) then
+						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGHT(nn, ((NqUB(1)- NqLB(1))+ 1))
 					end if
 
   				! ----------------------------------------------------
 
 					QloopKSA2: do Qind= NqLB(1), NqUB(1), 1
 						if ((Qind == NqLB(1)) .and. &
-							(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
-							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
+							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
 
 							exit QloopKSA2
 
 						else if ((Qind /= NqLB(1)) .and. &
-							(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
-							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
+							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
 
 							exit QloopKSA2
@@ -141,25 +149,25 @@ contains
   				! DIAGNOSTIC FLAGS FOR ALL q0T VALUES WITHIN CONFIGURATION-SPACE GRID:
 
 					if (((Qindk0(j) == 1) .and. &
-						(SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1))) &
+						(SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)))) &
 						.or. ((Qindk0(j) == 1) .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) < &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1)))) then
+						SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j))))) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' q0T= ', &
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1), ' AND qGHT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1), 'FOR SPECIE= ', s, &
+							SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)), ' AND qGHT= ', &
+							SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j)), 'FOR SPECIE= ', s, &
 							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
 					end if
 					if (((Qindk0(j) /= 1) .and. &
-						(SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1))) &
+						(SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)))) &
 						.or. ((Qindk0(j) /= 1) .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) < &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1)))) then
+						SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j))))) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' q0T= ', &
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGLT(1), ' AND qGHT= ', &
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qindk0(j))%qGHT(1), ' FOR SPECIE= ', s, &
+							SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qindk0(j)), ' AND qGHT= ', &
+							SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qindk0(j)), ' FOR SPECIE= ', s, &
 							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
@@ -330,7 +338,7 @@ contains
 
 			! DIAGNOSTIC FLAG FOR NON-ZERO GRID CELLS IN SPIN-UP:
 
-			if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. (rank == 0)) then
+			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
 						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then

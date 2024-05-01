@@ -146,42 +146,48 @@ contains
 				end if
 			end do nnloopKS1
 
-			if (nnFlag(1) == 1) then
+			!if (nnFlag(1) == 1) then
 
-				! ----------------------------------------------------
-				! Perform iterative updates of particle positions and velocities
-				jloopKS1: do j= 1, (NsTK(1)- dNsTK2(1)- dNsTK3(1)), 1
+			do nn= 1, SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1, 1
+				if (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)) then
+
+					nnind= nn
+
+					! ----------------------------------------------------
+					! Perform iterative updates of particle positions and velocities
+					jloopKS1: do j= 1, (NsTK(1)- dNsTK2(1)- dNsTK3(1)), 1
+
+						! ----------------------------------------------------
+
+						! DIAGNOSTIC FLAG FOR CORRECT ION/ENA PARTICLE TYPE:
+
+						if ((ENAflag(j) .eqv. .true.) .and. (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 0)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENA PRODUCED WITH', &
+								' CHARGE-EXCHANGE TURNED OFF FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+								' IN KINETIC SOLVER B SUBROUTINE' &
+								// achar(27) // '[0m.'
+						end if
+
+						! ----------------------------------------------------
+
+						call KineticRK4UpdateSub
+
+						! ----------------------------------------------------
+
+						if (j < (NsTK(1)- dNsTK2(1)- dNsTK3(1))) then
+							cycle jloopKS1
+						end if
+						if (j >= (NsTK(1)- dNsTK2(1)- dNsTK3(1))) then
+							exit jloopKS1
+						end if
+
+					end do jloopKS1
 
 					! ----------------------------------------------------
 
-					! DIAGNOSTIC FLAG FOR CORRECT ION/ENA PARTICLE TYPE:
-
-					if ((ENAflag(j) .eqv. .true.) .and. (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 0)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENA PRODUCED WITH', &
-							' CHARGE-EXCHANGE TURNED OFF FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-					call KineticRK4UpdateSub
-
-					! ----------------------------------------------------
-
-					if (j < (NsTK(1)- dNsTK2(1)- dNsTK3(1))) then
-						cycle jloopKS1
-					end if
-					if (j >= (NsTK(1)- dNsTK2(1)- dNsTK3(1))) then
-						exit jloopKS1
-					end if
-
-				end do jloopKS1
-
-				! ----------------------------------------------------
-
-			end if
+				end if
+			end do
 
 			! ----------------------------------------------------
 
@@ -205,27 +211,27 @@ contains
 						ENAflag(j)= .false.
 						ENAflagN0ind(j)= n
 						AEAmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EAmagRT(nn- 1, NqLB(1))))
-						AGmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(NqLB(1))))
-						AEPmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(NqLB(1))))
+						AGmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(nn- 1, NqLB(1))))
+						AEPmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, NqLB(1))))
 
 						! ----------------------------------------------------
 
 						! Set initial dipole coordinates
-						qNp(1)= SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGCT(1)
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%pGCT(1)
+						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, NqLB(1))
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, NqLB(1)) ! Inject LB on newly convected flux-tube
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere
 							QloopKSB1: do Qind= NqLB(1), NqUB(1), 1
-								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB1
 
-								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) < qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) < qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB1
@@ -233,10 +239,10 @@ contains
 								end if
 							end do QloopKSB1
 
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1) > qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1)) > qNp(1)) then
 								! SMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1) < qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)) < qNp(1)) then
 								! SMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -244,16 +250,16 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then ! N. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
 							QloopKSB2: do Qind= NqLB(1), NqUB(1), 1
-								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB2
 
-								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) > qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) > qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB2
@@ -261,10 +267,10 @@ contains
 								end if
 							end do QloopKSB2
 
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1) < qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1)) < qNp(1)) then
 								! NMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1) > qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)) > qNp(1)) then
 								! NMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -274,19 +280,19 @@ contains
 
 						! DIAGNOSTIC FLAG FOR PARTICLE POSITIONS WITHIN BOUNDS:
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then ! S. Magnetic Hemisphere)
-							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1)) .or. &
-								(qNp(1) > SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGHT(1))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere)
+							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
+								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT IS', &
-									' OUTSIDE LOWER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
+									' OUTSIDE LOWER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then ! N. Magnetic Hemisphere
-							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1)) .or. &
-								(qNp(1) < SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGHT(1))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
+							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
+								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp IS', &
-									' OUTSIDE LOWER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
+									' OUTSIDE LOWER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
@@ -307,7 +313,7 @@ contains
 						thetaMB(1)= thetafinalRK4(1)
 						phiMB(1)= phifinalRK4(1)
 						ellMB(1)= 1d0+ 3d0*(cos(thetaMB(1)))**2d0
-						TsMB(1)= SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%TsT(1)
+						TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(nn, NqLB(1))
 						LBflag(1)= 1d0
 
 						! ----------------------------------------------------
@@ -496,27 +502,27 @@ contains
 						ENAflag(j)= .false.
 						ENAflagN0ind(j)= n
 						AEAmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EAmagRT(nn- 1, NqUB(1))))
-						AGmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(NqUB(1))))
-						AEPmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(NqUB(1))))
+						AGmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(nn- 1, NqUB(1))))
+						AEPmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))*abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, NqUB(1))))
 
 						! ----------------------------------------------------
 
 						! Set initial dipole coordinates
-						qNp(1)= SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGCT(1)
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%pGCT(1)
+						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, NqUB(1))
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, NqUB(1)) ! Inject UB on newly convected flux-tube
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere
 							QloopKSB3: do Qind= NqLB(1), NqUB(1), 1
-								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB3
 
-								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) < qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) < qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB3
@@ -524,10 +530,10 @@ contains
 								end if
 							end do QloopKSB3
 
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1) > qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1)) > qNp(1)) then
 								! SMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1) < qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)) < qNp(1)) then
 								! SMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -535,16 +541,16 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then ! N. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
 							QloopKSB4: do Qind= NqLB(1), NqUB(1), 1
-								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB4
 
-								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) > qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+								else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) > qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB4
@@ -552,10 +558,10 @@ contains
 								end if
 							end do QloopKSB4
 
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1) < qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1)) < qNp(1)) then
 								! NMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1) > qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)) > qNp(1)) then
 								! NMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -565,17 +571,17 @@ contains
 
 						! DIAGNOSTIC FLAG FOR PARTICLE POSITIONS WITHIN BOUNDS:
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then ! S. Magnetic Hemisphere)
-							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGLT(1)) .or. &
-								(qNp(1) > SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere)
+							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
+								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT IS', &
 									' OUTSIDE UPPER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then ! N. Magnetic Hemisphere
-							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGLT(1)) .or. &
-								(qNp(1) < SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
+							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
+								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp IS', &
 									' OUTSIDE UPPER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
@@ -598,7 +604,7 @@ contains
 						thetaMB(1)= thetafinalRK4(1)
 						phiMB(1)= phifinalRK4(1)
 						ellMB(1)= 1d0+ 3d0*(cos(thetaMB(1)))**2d0
-						TsMB(1)= SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%TsT(1)
+						TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(nn, NqUB(1))
 						LBflag(1)= 0d0
 
 						! ----------------------------------------------------
@@ -782,227 +788,240 @@ contains
 			! ----------------------------------------------------
 
 			! Update variables on all other time-steps (without injection)
-			if (nnFlag(1) == 0) then
+			!if (nnFlag(1) == 0) then
+			nnloopKSnonstat: do nn= 1, SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1, 1
+				if (n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)) then
+					if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)+ 1d0) .and. &
+						(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) .or. &
+						((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)+ 1d0) .and. &
+						(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))))) then
 
-				do j= 1, NsTK(1), 1
+						nnind= nn- 1
 
-					if (ENAflag(j) .eqv. .false.) then
-						AEAmag(j)= AEAmagN(j)
-						AGmag(j)= AGmagN(j)
-						AEPmag(j)= AEPmagN(j)
+						do j= 1, NsTK(1), 1
+
+							if (ENAflag(j) .eqv. .false.) then
+								AEAmag(j)= AEAmagN(j)
+								AGmag(j)= AGmagN(j)
+								AEPmag(j)= AEPmagN(j)
+							end if
+
+							! ----------------------------------------------------
+
+							! Update particle phase-space coordinates
+							x(j)= xN(j)
+							y(j)= yN(j)
+							z(j)= zN(j)
+							if (ENAflag(j) .eqv. .false.) then
+								Vperp1(j)= Vperp1N(j)
+								Vperp2(j)= Vperp2N(j)
+								Vperp(j)= VperpN(j)
+							else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
+								(ENAflag(j) .eqv. .true.)) then
+								Vperp1(j)= 0d0
+								Vperp2(j)= 0d0
+								Vperp(j)= 0d0
+							end if
+							Vx(j)= VxN(j)
+							Vy(j)= VyN(j)
+							Vz(j)= VzN(j)
+
+							! ----------------------------------------------------
+
+							! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+							if (isnan(x(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' x VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(y(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' y VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(z(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' z VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vperp1(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vperp1 VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vperp2(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vperp2 VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vperp(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vperp VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vx(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vx VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vy(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vy VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vz(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vz VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							! ----------------------------------------------------
+
+						end do
+
+						! ----------------------------------------------------
+
+						! Perform iterative updates of particle positions and velocities
+						jloopKS4: do j= 1, NsTK(1), 1
+
+							! ----------------------------------------------------
+
+							! DIAGNOSTIC FLAG FOR CORRECT ION/ENA PARTICLE TYPE:
+
+							if ((ENAflag(j) .eqv. .true.) .and. (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 0)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENA PRODUCED WITH', &
+									' CHARGE-EXCHANGE TURNED OFF FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							! ----------------------------------------------------
+
+							call KineticRK4UpdateSub
+
+							! ----------------------------------------------------
+
+							! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+							if (isnan(xN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' xN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(yN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' yN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(zN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' zN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vperp1N(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vperp1N VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(Vperp2N(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' Vperp2N VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(VperpN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VperpN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(VxN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VxN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(VyN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VyN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							if (isnan(VzN(j)) .eqv. .true.) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VzN VALUE IS NAN FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+									' IN KINETIC SOLVER B SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+
+							! ----------------------------------------------------
+
+							if (j < NsTK(1)) then
+								cycle jloopKS4
+							end if
+							if (j >= NsTK(1)) then
+								exit jloopKS4
+							end if
+
+						end do jloopKS4
+
+						! ----------------------------------------------------
+
 					end if
+				end if
 
-					! ----------------------------------------------------
+				exit nnloopKSnonstat
 
-					! Update particle phase-space coordinates
-					x(j)= xN(j)
-					y(j)= yN(j)
-					z(j)= zN(j)
-					if (ENAflag(j) .eqv. .false.) then
-						Vperp1(j)= Vperp1N(j)
-						Vperp2(j)= Vperp2N(j)
-						Vperp(j)= VperpN(j)
-					else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
-						(ENAflag(j) .eqv. .true.)) then
-						Vperp1(j)= 0d0
-						Vperp2(j)= 0d0
-						Vperp(j)= 0d0
-					end if
-					Vx(j)= VxN(j)
-					Vy(j)= VyN(j)
-					Vz(j)= VzN(j)
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAGS FOR NAN VALUES:
-
-					if (isnan(x(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' x VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(y(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' y VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(z(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' z VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vperp1(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vperp1 VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vperp2(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vperp2 VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vperp(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vperp VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vx(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vx VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vy(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vy VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vz(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vz VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-				end do
-
-				! ----------------------------------------------------
-
-				! Perform iterative updates of particle positions and velocities
-				jloopKS4: do j= 1, NsTK(1), 1
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAG FOR CORRECT ION/ENA PARTICLE TYPE:
-
-					if ((ENAflag(j) .eqv. .true.) .and. (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 0)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENA PRODUCED WITH', &
-							' CHARGE-EXCHANGE TURNED OFF FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-					call KineticRK4UpdateSub
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAGS FOR NAN VALUES:
-
-					if (isnan(xN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' xN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(yN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' yN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(zN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' zN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vperp1N(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vperp1N VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(Vperp2N(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' Vperp2N VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(VperpN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' VperpN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(VxN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' VxN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(VyN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' VyN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					if (isnan(VzN(j)) .eqv. .true.) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' VzN VALUE IS NAN FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-							' IN KINETIC SOLVER B SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-					if (j < NsTK(1)) then
-						cycle jloopKS4
-					end if
-					if (j >= NsTK(1)) then
-						exit jloopKS4
-					end if
-
-				end do jloopKS4
-
-				! ----------------------------------------------------
-
-			end if
+			end do nnloopKSnonstat
 
 			! ----------------------------------------------------
 
@@ -1022,7 +1041,7 @@ contains
 
 			! DIAGNOSTIC FLAG FOR NON-ZERO GRID CELLS IN SPIN-UP:
 
-			if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. (rank == 0)) then
+			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
 						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then

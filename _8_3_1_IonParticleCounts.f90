@@ -118,7 +118,7 @@ contains
 					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqT(nn)= &
 						SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)* &
 						(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1))
+						SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
 					SpecieT(s)%FluxTubeT(f)%NqTp(nn, Qind)= &
 						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqT(nn)
 
@@ -159,14 +159,14 @@ contains
 						end if
 						if (nn == 1) then
 							!if (Qind == NqLB(1)) then
-							!	if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+							!	if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 							!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))- &
 							!		nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)*(SpecieT(s)%FluxTubeT(f)%d3xCLBT(1)/ &
 							!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))) > 1d0) then
 							!		write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 							!			' CONFIG-SPACE GRID COUNTS= ', &
 							!			nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-							!			(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+							!			(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 							!			SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 							!			' ARE UNEQUAL TO LB NOMINAL DENSITY= ', &
 							!			nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)* &
@@ -177,14 +177,14 @@ contains
 							!	end if
 							!end if
 						!	if (Qind == NqUB(1)) then
-						!		if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+						!		if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 						!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))- &
 						!		nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)*(SpecieT(s)%FluxTubeT(f)%d3xCUBT(1)/ &
 						!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))) > 1d0) then
 						!			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 						!				' CONFIG-SPACE GRID COUNTS= ', &
 						!				nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-						!				(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+						!				(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 						!				SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 						!				' ARE UNEQUAL TO UB NOMINAL DENSITY= ', &
 						!				nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)* &
@@ -194,17 +194,17 @@ contains
 						!				' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
 						!		end if
 						!	end if
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
 								if (SpecieT(s)%FluxTubeT(f)%NqICAT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-										(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+										(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 										SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) /= &
 										SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
 										SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%NsFARRT(1)) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' TEST CONFIG-SPACE GRID COUNTS= ', &
 											nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-											(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+											(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 											SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 											' AT INITIAL TIME ARE UNEQUAL', &
 											' TO INITIAL Q CELL POPULATION= ', &
@@ -216,17 +216,17 @@ contains
 									end if
 								end if
 							end if
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
 								if (SpecieT(s)%FluxTubeT(f)%NqICAT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-										(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+										(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 										SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) /= &
 										SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
 										SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%NsFARRT(1)) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' TEST CONFIG-SPACE GRID COUNTS= ', &
 											nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-											(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)/ &
+											(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 											SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 											' AT INITIAL TIME ARE UNEQUAL', &
 											' TO INITIAL Q CELL POPULATION= ', &
@@ -448,7 +448,7 @@ contains
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												N2PerpphReNormRT(nn, Vperp1ind, Vperp2ind, Vparind)* &
 												(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1))
+												SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
 										end if
 
 										SpecieT(s)%FluxTubeT(f)% &
@@ -721,7 +721,7 @@ contains
 											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											NphReNormRT(nn, Vperpind, Vparind)* &
 											(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1))
+											SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
 									end if
 
 									SpecieT(s)%FluxTubeT(f)% &

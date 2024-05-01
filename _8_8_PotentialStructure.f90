@@ -27,7 +27,8 @@ contains
 		! ----------------------------------------------------
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			if ((n == 1) .and. (nn == 1)) then
+			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
 
 				! ----------------------------------------------------
 
@@ -44,13 +45,13 @@ contains
 						! ----------------------------------------------------
 
 						if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 0) then
-							SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind)= 0d0
+							SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind)= 0d0
 						end if
 						if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) then
-							SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind)= &
+							SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind)= &
 								SpecieT(s)%FluxTubeT(f)%PhiPar0BT(1)* &
-								sum(SpecieT(s)%FluxTubeT(f)%dqCTp(1:Qind)* &
-								SpecieT(s)%FluxTubeT(f)%hqCTp(1:Qind))
+								sum(SpecieT(s)%FluxTubeT(f)%dqCT(nn, 1:Qind)* &
+								SpecieT(s)%FluxTubeT(f)%hqCT(nn, 1:Qind))
 						end if
 
 						! ----------------------------------------------------
@@ -64,57 +65,58 @@ contains
 						! ----------------------------------------------------
 
 						if (Qind == NqLB(1)) then
-							EParR(1)= (2d0/(SpecieT(s)%FluxTubeT(f)%QCellT(Qind+ 1)%hqCT(1)+ &
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%hqCT(1)))* &
-								(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind+ 1)- &
-								SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind))/ &
-								abs(SpecieT(s)%FluxTubeT(f)%QCellT(Qind+ 1)%qGCT(1)- &
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)))
+							EParR(1)= (2d0/(SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind+ 1)+ &
+								SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)))* &
+								(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind+ 1)- &
+								SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind))/ &
+								abs(SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind+ 1)- &
+								SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)))
 						end if
 						if (Qind /= NqLB(1)) then
 							if (Qind < NqUB(1)- 5d0) then
-								EParR(1)= (2d0/(SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%hqCT(1)+ &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%hqCT(1)))* &
-									(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind- 1)- &
-									SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind))/ &
-									abs(SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)- &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)))
+								EParR(1)= (2d0/(SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind- 1)+ &
+									SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)))* &
+									(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind- 1)- &
+									SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind))/ &
+									abs(SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)- &
+									SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)))
 							end if
 							if (Qind >= NqUB(1)- 5d0) then
-								EParR(1)= 3d0*((2d0/(SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%hqCT(1)+ &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%hqCT(1)))* &
-									(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind- 1)- &
-									SpecieT(s)%FluxTubeT(f)%PhiParRT(Qind))/ &
-									abs(SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)- &
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))))
+								EParR(1)= 3d0*((2d0/(SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind- 1)+ &
+									SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)))* &
+									(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind- 1)- &
+									SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind))/ &
+									abs(SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)- &
+									SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))))
 							end if
 						end if
 
 						! ----------------------------------------------------
 
-						SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)= EParR(1)
+						SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)= EParR(1)
 
 						! ----------------------------------------------------
 
 						! DIAGNOSTIC FLAGS FOR PROPER ARRAY SIZES AND FINITE VALUES:
 
-						if ((isnan(real(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))) &
-							.eqv. .true.) .or. (size(SpecieT(s)%FluxTubeT(f)%EPmagRT(:)) &
-							/= ((NqUB(1)- NqLB(1))+ 1))) then
+						if ((isnan(real(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))) &
+							.eqv. .true.) .or. (size(SpecieT(s)%FluxTubeT(f)%EPmagRT(:, :)) &
+							/= (SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
+							((NqUB(1)- NqLB(1))+ 1))) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-								' EPmagRT= ', SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind), &
+								' EPmagRT= ', SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind), &
 								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, &
-								' IN PARALLEL FIELD SUBROUTINE' &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								' TIME-STEP= ', nn, ' IN PARALLEL FIELD SUBROUTINE' &
 								// achar(27) // '[0m.'
 						end if
 
 						if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) then
-							if (SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind) == 0d0) then
+							if (SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind) == 0d0) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO EPmagRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, &
-									' IN PARALLEL FIELD SUBROUTINE' &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									' TIME-STEP= ', nn, ' IN PARALLEL FIELD SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
 						end if
@@ -139,11 +141,12 @@ contains
 		! ----------------------------------------------------
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			if ((n == 1) .and. (nn == 1)) then
+			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
 				if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) then
 
 					call mpi_barrier(MPI_COMM_WORLD, ierr)
-					call mpi_bcast(SpecieT(s)%FluxTubeT(f)%EPmagRT(:), &
+					call mpi_bcast(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, :), &
 						((NqUB(1)- NqLB(1))+ 1), &
 						MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
@@ -167,8 +170,8 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Parallel E field for Southern Magnetic Hemisphere
-					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then
+					! Compute Parallel E field for Northern Magnetic Hemisphere
+					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
@@ -176,12 +179,12 @@ contains
 
 								if (nn == 1) then
 									if (Qind == NqLB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -211,16 +214,16 @@ contains
 
 								if (nn == 1) then
 									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) < &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= SpecieT(s)%FluxTubeT(f)%q0T(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -255,16 +258,16 @@ contains
 
 								if (nn == 1) then
 									if (Qind == NqUB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) < &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 											SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 											(SpecieT(s)%FluxTubeT(f)%q0T(j) < &
-											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+											SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= SpecieT(s)%FluxTubeT(f)%q0T(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -295,12 +298,12 @@ contains
 
 										end if
 
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1) <= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind) <= &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -332,11 +335,11 @@ contains
 
 								if (nn /= 1) then
 									if (Qind == NqLB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= &
 		                  qk4(j)) .and. (qk4(j) <= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -366,15 +369,15 @@ contains
 
 								if (nn /= 1) then
 									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) < &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 		                  qk4(j)) .and. (qk4(j) <= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= qk4(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -409,15 +412,15 @@ contains
 
 								if (nn /= 1) then
 									if (Qind == NqUB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) < &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 											qk4(j)) .and. (qk4(j) < &
-											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+											SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= qk4(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -448,11 +451,11 @@ contains
 
 										end if
 
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1) <= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind) <= &
 		                  qk4(j)) .and. (qk4(j) <= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -488,8 +491,8 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Parallel E field for Northern Magnetic Hemisphere
-					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then
+					! Compute Parallel E field for Southern Magnetic Hemisphere
+					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
@@ -497,12 +500,12 @@ contains
 
 								if (nn == 1) then
 									if (Qind == NqLB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -532,16 +535,16 @@ contains
 
 								if (nn == 1) then
 									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) > &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= SpecieT(s)%FluxTubeT(f)%q0T(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -576,16 +579,16 @@ contains
 
 								if (nn == 1) then
 									if (Qind == NqUB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) > &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 											SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 											(SpecieT(s)%FluxTubeT(f)%q0T(j) > &
-											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+											SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= SpecieT(s)%FluxTubeT(f)%q0T(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -616,12 +619,12 @@ contains
 
 										end if
 
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1) >= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind) >= &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -653,11 +656,11 @@ contains
 
 								if (nn /= 1) then
 									if (Qind == NqLB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= &
 		                  qk4(j)) .and. (qk4(j) >= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -687,15 +690,15 @@ contains
 
 								if (nn /= 1) then
 									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) > &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 		                  qk4(j)) .and. (qk4(j) >= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= qk4(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -730,15 +733,15 @@ contains
 
 								if (nn /= 1) then
 									if (Qind == NqUB(1)) then
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) > &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 											qk4(j)) .and. (qk4(j) > &
-											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+											SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
 
 											xLinInterp(1)= qk4(j)
-											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+											xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)
+											xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)
+											yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind- 1)
+											yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind)
 
 											call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 												yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -769,11 +772,11 @@ contains
 
 										end if
 
-										if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1) >= &
+										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind) >= &
 		                  qk4(j)) .and. (qk4(j) >= &
-		                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+		                  SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 
-											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+											EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))
 
 											if (EPmagInterp(1) == 0d0) then
 												AEPmagN(j)= 0d0
@@ -852,19 +855,19 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Parallel E field for Southern Magnetic Hemisphere
-					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then
+					! Compute Parallel E field for Northern Magnetic Hemisphere
+					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, 1) <= 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 								! ----------------------------------------------------
 
 								if (Qind == NqLB(1)) then
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= &
+									if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, Qind) <= &
 	                  qk4(j)) .and. (qk4(j) <= &
-	                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
 
-										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind))
 
 										if (EPmagInterp(1) == 0d0) then
 											AEPmagN(j)= 0d0
@@ -892,15 +895,15 @@ contains
 								end if
 
 								if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) < &
+									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) < &
 	                  qk4(j)) .and. (qk4(j) <= &
-	                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
 
 										xLinInterp(1)= qk4(j)
-										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1)
+										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind)
+										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind- 1)
+										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind)
 
 										call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 											yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -933,15 +936,15 @@ contains
 								end if
 
 								if (Qind == NqUB(1)) then
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) < &
+									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) < &
 										qk4(j)) .and. (qk4(j) < &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+										SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
 
 										xLinInterp(1)= qk4(j)
-										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1)
+										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind)
+										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind- 1)
+										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind)
 
 										call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 											yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -972,11 +975,11 @@ contains
 
 									end if
 
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1) <= &
+									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind) <= &
 	                  qk4(j)) .and. (qk4(j) <= &
-	                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+	                  SpecieT(s)%FluxTubeT(f)%qGHT(nn- 1, Qind))) then
 
-										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind))
 
 										if (EPmagInterp(1) == 0d0) then
 											AEPmagN(j)= 0d0
@@ -1011,19 +1014,19 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Parallel E field for Northern Magnetic Hemisphere
-					if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then
+					! Compute Parallel E field for Southern Magnetic Hemisphere
+					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, 1) > 0) then
 						do Qind= NqLB(1), NqUB(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 								! ----------------------------------------------------
 
 								if (Qind == NqLB(1)) then
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= &
+									if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, Qind) >= &
 	                  qk4(j)) .and. (qk4(j) >= &
-	                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
 
-										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind))
 
 										if (EPmagInterp(1) == 0d0) then
 											AEPmagN(j)= 0d0
@@ -1051,15 +1054,15 @@ contains
 								end if
 
 								if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) > &
+									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) > &
 	                  qk4(j)) .and. (qk4(j) >= &
-	                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
 
 										xLinInterp(1)= qk4(j)
-										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1)
+										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind)
+										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind- 1)
+										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind)
 
 										call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 											yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -1092,15 +1095,15 @@ contains
 								end if
 
 								if (Qind == NqUB(1)) then
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1) > &
+									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) > &
 										qk4(j)) .and. (qk4(j) > &
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1))) then
+										SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
 
 										xLinInterp(1)= qk4(j)
-										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind- 1)%qGCT(1)
-										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)
-										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind- 1)
-										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind)
+										xLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1)
+										xLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind)
+										yLinInterp1(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind- 1)
+										yLinInterp2(1)= SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind)
 
 										call LinInterpsub(yLinInterp(1), xLinInterp(1), yLinInterp1(1), &
 											yLinInterp2(1), xLinInterp1(1), xLinInterp2(1))
@@ -1131,11 +1134,11 @@ contains
 
 									end if
 
-									if ((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1) >= &
+									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind) >= &
 	                  qk4(j)) .and. (qk4(j) >= &
-	                  SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+	                  SpecieT(s)%FluxTubeT(f)%qGHT(nn- 1, Qind))) then
 
-										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(Qind))
+										EPmagInterp(1)= abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, Qind))
 
 										if (EPmagInterp(1) == 0d0) then
 											AEPmagN(j)= 0d0

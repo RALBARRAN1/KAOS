@@ -33,7 +33,7 @@ contains
 
 		if (ENAflag(j) .eqv. .false.) then
 			! Note: Without cross L-shell convection, solar forcing or other azimuthal asymmetries, ion motion is phi-invariant.
-			phik2(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)
+			phik2(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)
 		else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 			(ENAflag(j) .eqv. .true.)) then
 			call phisub(phik2(1), xk2(1), yk2(1))
@@ -44,9 +44,9 @@ contains
 		! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 		if (ENAflag(j) .eqv. .false.) then
-			if (phik2(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)) then
+			if (phik2(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION phik2= ', phik2(1), &
-					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1), &
+					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE B SUBROUTINE' &
 					// achar(27) // '[0m.'
@@ -56,7 +56,8 @@ contains
 		! ----------------------------------------------------
 
 		call qsub(qk2(1), rk2(1), thetak2(1))
-		call psub(pk2(1), rk2(1), thetak2(1))
+		pk2(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1)
+		!call psub(pk2(1), rk2(1), thetak2(1))
 		call ellsub(ellk2(1), thetak2(1))
 		call Bmagsub(Bmagk2(1), rk2(1), ellk2(1))
 
@@ -214,13 +215,13 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk2(1) <= 0) .and. (AMpark2(1) < 0d0)) .or. &
-				((qk2(1) > 0) .and. (AMpark2(1) > 0d0))) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
-					' AMpark2= ', AMpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
-					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-					' IN KINETIC UPDATE B SUBROUTINE' // achar(27) // '[0m.'
-			end if
+			!if (((qk2(1) <= 0) .and. (AMpark2(1) < 0d0)) .or. &
+			!	((qk2(1) > 0) .and. (AMpark2(1) > 0d0))) then
+			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
+			!		' AMpark2= ', AMpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
+			!		', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+			!		' IN KINETIC UPDATE B SUBROUTINE' // achar(27) // '[0m.'
+			!end if
 
 			! ----------------------------------------------------
 
@@ -679,13 +680,13 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk2(1) <= 0) .and. (AEPpark2(1) > 0d0)) .or. &
-				((qk2(1) > 0) .and. (AEPpark2(1) < 0d0))) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
-					' AEPpark2= ', AEPpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
-					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-					' IN KINETIC UPDATE B SUBROUTINE' // achar(27) // '[0m.'
-			end if
+			!if (((qk2(1) <= 0) .and. (AEPpark2(1) > 0d0)) .or. &
+			!	((qk2(1) > 0) .and. (AEPpark2(1) < 0d0))) then
+			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
+			!		' AEPpark2= ', AEPpark2(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
+			!		', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+			!		' IN KINETIC UPDATE B SUBROUTINE' // achar(27) // '[0m.'
+			!end if
 
 			! ----------------------------------------------------
 

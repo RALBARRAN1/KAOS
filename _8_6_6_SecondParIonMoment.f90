@@ -657,7 +657,7 @@ contains
 
 		! SET OUTPUT DENSITY AND TEMPERATURE FOR NEXT SIMULATION:
 
-		if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. (rank == 0)) then
+		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
 					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then

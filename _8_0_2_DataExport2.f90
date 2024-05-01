@@ -588,26 +588,6 @@ contains
 		! ----------------------------------------------------
 
 		if ((SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) .and. &
-			(rank == 0) .and. (nn /= 2)) then
-
-			write(sstring, '(I5)') s
-			write(fstring, '(I5)') f
-
-			expstring= adjustl(adjustr(rankstring) // '_' // &
-				adjustl(adjustr(sstring) // '_' // &
-				adjustl(adjustr(fstring) // '_')))
-
-			PhiParRTfile= adjustl(adjustr(expstring) // &
-				adjustl(adjustr('PhiParRTfort.bin')))
-			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
-				adjustl(adjustr(PhiParRTfile))), status= 'replace', &
-				form= 'unformatted', access= 'stream')
-			write(expint) SpecieT(s)%FluxTubeT(f)%PhiParRT(:)
-			close(expint)
-
-		end if
-
-		if ((SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) .and. &
 			(rank == 0)) then
 
 			write(nnstring, '(I5)') nn
@@ -643,9 +623,33 @@ contains
 			write(expint) SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, :)
 			close(expint)
 
+			EGmagRTfile= adjustl(adjustr(expstring) // &
+				adjustl(adjustr('EGmagRTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(EGmagRTfile))), status= 'replace', &
+				form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%EGmagRT(nn, :)
+			close(expint)
+
+			EPmagRTfile= adjustl(adjustr(expstring) // &
+				adjustl(adjustr('EPmagRTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(EPmagRTfile))), status= 'replace', &
+				form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, :)
+			close(expint)
+
+			PhiParRTfile= adjustl(adjustr(expstring) // &
+				adjustl(adjustr('PhiParRTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(PhiParRTfile))), status= 'replace', &
+				form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, :)
+			close(expint)
+
 		end if
 
-		if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. &
+		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. &
 			(rank == 0)) then
 
 			write(sstring, '(I5)') s

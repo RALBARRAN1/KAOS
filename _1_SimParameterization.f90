@@ -47,224 +47,12 @@ contains
 
 		! ----------------------------------------------------
 
-		! SET RANGE ALONG FLUX TUBES FOR INITIAL POSITIONS:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				! ----------------------------------------------------
-
-				if (s == 1) then
-					! Starting and ending Q cell for density initialization
-					! (including selected cells and does not include lower boundary ghost cell)
-
-					NqLB(1)= NqICA
-					NqUB(1)= NqICB
-
-					NqGpF= (NqUB(1)- NqLB(1)+ 4)
-
-				end if
-
-				NqIC(1)= abs(NqICB- NqICA)+ 1d0 ! Q cell range for density initialization
-
-				SpecieT(s)%FluxTubeT(f)%NqICAT= NqICA ! Create nested derived data types
-				SpecieT(s)%FluxTubeT(f)%NqICBT= NqICB
-				SpecieT(s)%FluxTubeT(f)%NqICT= NqIC
-
-				! ----------------------------------------------------
-
-				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-				if ((NqICA /= SpecieT(s)%FluxTubeT(f)%NqICAT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NqICAT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICAT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICAT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((NqICB /= SpecieT(s)%FluxTubeT(f)%NqICBT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NqICBT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICBT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICBT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((NqIC(1) /= SpecieT(s)%FluxTubeT(f)%NqICT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NqICT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				! ----------------------------------------------------
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! ALLOCATE INITIALIZATION CONFIG-SPACE DERIVED DATA TYPES NESTED IN FLUX TUBE
-		! TYPES NESTED IN PARTICLE SPECIES TYPE:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				! Allocate QCellICT(Qind) derived data type nested in FluxTubeT(f)
-				! nested in SpecieT(s)
-				allocate(SpecieT(s)%FluxTubeT(f)%QCellICT(SpecieT(s)%FluxTubeT(f)%NqICT(1)))
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! SET PARTICLE SPECIES INITIAL DENSITY PARAMETERS:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				! ----------------------------------------------------
-
-				SpecieT(s)%FluxTubeT(f)%zns0T= zns0 ! Create nested derived data types
-				SpecieT(s)%FluxTubeT(f)%ns0T= ns0
-				SpecieT(s)%FluxTubeT(f)%nsnormfacT= nsnormfac
-
-				SpecieT(s)%FluxTubeT(f)%zns0NeutT= zns0Neut ! Create nested derived data types
-				SpecieT(s)%FluxTubeT(f)%ns0NeutT= ns0Neut
-
-				! ----------------------------------------------------
-
-				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-				if ((zns0 /= SpecieT(s)%FluxTubeT(f)%zns0T(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%zns0T(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%zns0T(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zns0T HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION', &
-						' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((ns0 /= SpecieT(s)%FluxTubeT(f)%ns0T(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%ns0T(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%ns0T(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ns0T HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION', &
-						' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((nsnormfac /= SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%nsnormfacT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' nsnormfacT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION', &
-						' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((zns0Neut /= SpecieT(s)%FluxTubeT(f)%zns0NeutT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%zns0NeutT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%zns0NeutT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zns0NeutT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION', &
-						' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((ns0Neut /= SpecieT(s)%FluxTubeT(f)%ns0NeutT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%ns0NeutT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%ns0NeutT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ns0NeutT HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION', &
-						' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				! ----------------------------------------------------
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! ALLOCATE CONFIGURATION-SPACE DERIVED DATA TYPES NESTED IN FLUX TUBE TYPES NESTED IN
-		! PARTICLE SPECIES TYPE:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				! Allocate QCellT(Qind) derived data type nested in FluxTubeT(f)
-				! nested in SpecieT(s)
-				allocate(SpecieT(s)%FluxTubeT(f)%QCellT(((NqUB(1)- NqLB(1))+ 1)))
-				allocate(SpecieT(s)%FluxTubeT(f)%QCell0T(((NqUB(1)- NqLB(1))+ 3)))
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
 		! CONSTRUCT INITIAL CONFIGURATION-SPACE GRID:
 
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 
 				call ConfigGridGeneratorSub
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! CONFIGURATION-SPACE GRID DIMENSIONS:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				! ----------------------------------------------------
-
-				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-				if ((size(SpecieT(s)%FluxTubeT(f)%NqG0T(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqG0T(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((size(SpecieT(s)%FluxTubeT(f)%NqGT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NqGT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
-						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				do Qind= NqLB(1), NqUB(1)+ 2, 1
-					if ((size(SpecieT(s)%FluxTubeT(f)%Te0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqG0T(1)) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%Te0T(Qind))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Te0T HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (SpecieT(s)%FluxTubeT(f)%Te0T(Qind) > dNTeEND) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' INITIAL Te0T IS GREATER THAN Te CAP FOR SPECIE= ', s, &
-							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-				end do
-
-				! ----------------------------------------------------
 
 			end do
 		end do
@@ -309,183 +97,16 @@ contains
 
 		! ----------------------------------------------------
 
-		! PARTICLE SPECIES INITIAL TEMPERATURES AND CONFIGURATION-SPACE GRID
- 		! PARAMETERS:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				! ----------------------------------------------------
-
-				! COMPUTE TOTAL FIELD-LINE ARC LENGTH:
-
-				allocate(SpecieT(s)%FluxTubeT(f)%ellqCT(SpecieT(s)%FluxTubeT(f)%NqG0T(1)))
-				SpecieT(s)%FluxTubeT(f)%ellqCT(:)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1)*SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1)
-				SpecieT(s)%FluxTubeT(f)%SUMellqCT(1)= sum(SpecieT(s)%FluxTubeT(f)%ellqCT(:))
-
-				! ----------------------------------------------------
-
-				do Qind= NqLB(1), NqUB(1)+ 2, 1
-
-					! ----------------------------------------------------
-
-					! Total initial ion temperature [K]
-					! Note: Isotropic temperature from grid data (Ti= Tperp= Tpar= Tperp1= Tperp2)
-					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%Ts0T(1)= (1d0/3d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))+ &
-						(2d0/3d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hqCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dpCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dqCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dphiCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPerpT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsParT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGLT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGHT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3xCT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1) < 0) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NEGATIVE ', &
-							' d3xCT FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Qind= ', &
-							Qind, ' IN SIMULATION PARAMETERIZATION SUBROUTINE' &
-							// achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-				end do
-
-				! ----------------------------------------------------
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
 		! SET SIMULATION DURATION AND TIME-STEP FOR MOMENT COMPUTATION:
 
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 
-				! ----------------------------------------------------
 				h(1)= (B- A)/Nt ! Time-step size [s]
 
 				! Injection time-step [s] (must be > 2 and excludes initial time-step)
 				! Mean transit time through LB ghost cell
+
 				Q0ndatfac(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1))%hqC0T(1)* &
 					SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1))%dqC0T(1)* &
 					(abs(sqrt(SpecieT(s)%msT(1)/ &
@@ -601,6 +222,53 @@ contains
 
 				! ----------------------------------------------------
 
+				! SET NOISE FILTERS FOR ION MOMENTS:
+
+				if (SpecieT(1)%FluxTubeT(1)%MOMENTFILTERflagT(1) == 1) then
+
+					! ----------------------------------------------------
+
+					! DIAGNOSTIC FLAGS CONSISTENT MOMENT FILTER MOVING AVERAGE POINTS:
+
+					if (M0MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION DENSITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M1Perp1MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP1 VELOCITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M1Perp2MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP2 VELOCITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M1ParMAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL VELOCITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M2ParMAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL ENERGY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					! ----------------------------------------------------
+
+				end if
+
 			end do
 		end do
 
@@ -624,8 +292,7 @@ contains
 				SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT= UBREPLENISHflag
 				SpecieT(s)%FluxTubeT(f)%DENSITYPROFILEflagT= DENSITYPROFILEflag
 				SpecieT(s)%FluxTubeT(f)%STATICINJECTIONflagT= STATICINJECTIONflag
-				SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT= DENSITYOUTPUTflag
-				SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT= DENSITYINPUTflag
+				SpecieT(s)%FluxTubeT(f)%SPINUPflagT= SPINUPflag
 
 				SpecieT(s)%FluxTubeT(f)%IONNOISEflagT= IONNOISEflag
  				SpecieT(s)%FluxTubeT(f)%ICRflagT= ICRflag
@@ -638,6 +305,7 @@ contains
 				SpecieT(s)%FluxTubeT(f)%EAPRESSUREflagT= EAPRESSUREflag
 
 				SpecieT(s)%FluxTubeT(f)%EPARflagT= EPARflag
+				SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT= CONVECTIONflag
 
 				SpecieT(s)%FluxTubeT(s)%MOMENTFILTERflagT= MOMENTFILTERflag
 				SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT= ION2VPERPflag
@@ -735,19 +403,10 @@ contains
 					' SUBROUTINE' // achar(27) // '[0m.'
 				end if
 
-				if ((DENSITYOUTPUTflag /= SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DENSITYOUTPUTflagT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((DENSITYINPUTflag /= SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DENSITYINPUTflagT HAS', &
+				if ((SPINUPflag /= SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%SPINUPflagT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' SPINUPflagT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
 					' SUBROUTINE' // achar(27) // '[0m.'
@@ -847,6 +506,16 @@ contains
 					(isnan(real(SpecieT(s)%FluxTubeT(f)%EPARflagT(1))) &
 					.eqv. .true.)) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EPARflagT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((CONVECTIONflag /= SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1))) &
+					.eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' CONVECTIONflagT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
 					' SUBROUTINE' // achar(27) // '[0m.'
@@ -1223,18 +892,10 @@ contains
 						' SUBROUTINE' // achar(27) // '[0m.'
 				end if
 
-				if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. &
-					(SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-						' INCONSISTENT DENSITYOUTPUTflagT AND DENSITYINPUTflagT FOR SPECIE= ', s, &
-						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-						' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) .and. &
+				if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. &
 					(SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 0)) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-						' INCONSISTENT DENSITYOUTPUTflagT AND FLUIDIONEXPORTflagT FOR SPECIE= ', s, &
+						' INCONSISTENT SPINUPflagT AND FLUIDIONEXPORTflagT FOR SPECIE= ', s, &
 						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
 						' SUBROUTINE' // achar(27) // '[0m.'
 				end if
@@ -1243,59 +904,6 @@ contains
 
 			end do
 		end do
-
-		! ----------------------------------------------------
-
-		! SET NOISE FILTERS FOR ION MOMENTS:
-
-		if (SpecieT(1)%FluxTubeT(1)%MOMENTFILTERflagT(1) == 1) then
-			do s= 1, Stot, 1
-				do f= 1, SpecieT(s)%NfT(1), 1
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAGS CONSISTENT MOMENT FILTER MOVING AVERAGE POINTS:
-
-					if (M0MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION DENSITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M1Perp1MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP1 VELOCITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M1Perp2MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP2 VELOCITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M1ParMAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL VELOCITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M2ParMAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL ENERGY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-				end do
-			end do
-		end if
 
 		! ----------------------------------------------------
 
@@ -1383,7 +991,7 @@ contains
 
 		! IMPORT EQUILIBRIUM DENSITY PARAMETERS FROM PREVIOUS SIMULATION:
 
-		if (SpecieT(1)%FluxTubeT(1)%DENSITYINPUTflagT(1) == 1) then
+		if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
 
 			! ----------------------------------------------------
 
@@ -1501,136 +1109,6 @@ contains
 
 		! ----------------------------------------------------
 
-		! ION VELOCITY-SPACE GRID DIMENSIONS:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-				if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
-
-						! ----------------------------------------------------
-
-						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperp1GT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
-
-						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperp2GT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
-
-						! ----------------------------------------------------
-
-					end do
-
-					! ----------------------------------------------------
-
-				else
-
-					! ----------------------------------------------------
-
-					do Qind= NqLB(1), NqUB(1), 1
-
-						! ----------------------------------------------------
-
-						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperpGT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
-
-						! ----------------------------------------------------
-
-					end do
-
-					! ----------------------------------------------------
-
-				end if
-
-				! ----------------------------------------------------
-
-				do Qind= NqLB(1), NqUB(1), 1
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-					if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(:)) /= 1) .or. &
-						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1))) .eqv. .true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVparGT HAS', &
-							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-							' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-				end do
-
-				! ----------------------------------------------------
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! ENA VELOCITY-SPACE GRID DIMENSIONS:
-
-		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
-			do s= 1, Stot, 1
-				do f= 1, SpecieT(s)%NfT(1), 1
-					do Qind= NqLB(1), NqUB(1), 1
-
-						! ----------------------------------------------------
-
-						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVpGT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
-
-						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVqGT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
-
-						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVphiGT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
-
-						! ----------------------------------------------------
-
-					end do
-				end do
-			end do
-		end if
-
-		! ----------------------------------------------------
-
 		! COMPUTE NUMBER OF MPI RANKS:
 
 		do s= 1, Stot, 1
@@ -1643,538 +1121,6 @@ contains
 
 		! ----------------------------------------------------
 
-		! ION EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-				do Qind= NqLB(1), NqUB(1), 1
-					if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
-
-						! ----------------------------------------------------
-
-						do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
-							do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
-								do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
-
-									! ----------------------------------------------------
-
-									if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1) == 0d0) then
-										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)= 1d-15
-									end if
-
-									! ----------------------------------------------------
-
-									! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1GLT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1GHT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1GCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVperp1GT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2GLT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2GHT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2GCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVperp2GT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGLT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGHT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVparGT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3vCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
-											', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									! ----------------------------------------------------
-
-								end do
-							end do
-						end do
-
-						! ----------------------------------------------------
-
-					else
-
-						! ----------------------------------------------------
-
-						do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), 1
-							do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
-
-								! ----------------------------------------------------
-
-								if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1) == 0d0) then
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1)= 1d-15
-								end if
-
-								! ----------------------------------------------------
-
-								! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%dVperpGT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%dVperpGT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVperpGT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%dVparGT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%dVparGT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVparGT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VperpGLT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VperpGLT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGLT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VperpGHT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VperpGHT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGHT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VperpGCT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VperpGCT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGCT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VparGLT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VparGLT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGLT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VparGHT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VparGHT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGHT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VparGCT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%VparGCT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%d3vCT(:)) &
-									/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-									VCellT(Vperpind, Vparind)%d3vCT(1))) .eqv. .true.)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3vCT HAS', &
-										' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
-										', AND Vparind= ', Vparind, ' IN SIMULATION PARAMETERIZATION', &
-										' SUBROUTINE' // achar(27) // '[0m.'
-								end if
-
-								! ----------------------------------------------------
-
-							end do
-						end do
-
-						! ----------------------------------------------------
-
-					end if
-
-				end do
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! ENA EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
-
-		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
-			do s= 1, Stot, 1
-				do f= 1, SpecieT(s)%NfT(1), 1
-					do Qind= NqLB(1), NqUB(1), 1
-
-						! ----------------------------------------------------
-
-						do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
-							do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
-								do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
-
-									! ----------------------------------------------------
-
-									! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS,
-									! SIZES, AND FINITE VALUES:
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGLT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGLT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGLT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGHT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGHT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGHT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGLT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGLT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGHT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGHT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' VphiGLT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
-											' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', &
-											Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' VphiGHT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
-											' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-											', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' VphiGCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
-											' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', &
-											Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVpCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVpCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hVpCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVqCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVqCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hVqCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' hVphiCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
-											' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', &
-											Qind, ', Vpind= ', Vpind, ', Vqind= ', Vqind, &
-											', AND Vphiind= ', Vphiind, ' IN SIMULATION', &
-											' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVpCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVpCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVpCT HAS', &
-											' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
-											', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
-											' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVqCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVqCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' dVqCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
-											' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-											', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' dVphiCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
-											' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-											', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%d33vCT(:)) &
-										/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-										V3CellT(Vpind, Vqind, Vphiind)%d33vCT(1))) .eqv. .true.)) then
-										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-											' d33vCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
-											' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-											', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ' IN SIMULATION PARAMETERIZATION', &
-											' SUBROUTINE' // achar(27) // '[0m.'
-									end if
-
-									! ----------------------------------------------------
-
-								end do
-							end do
-						end do
-
-						! ----------------------------------------------------
-
-					end do
-				end do
-			end do
-		end if
-
-		! ----------------------------------------------------
-
 		! SET ALL DRIFT LIMITS:
 
 		do s= 1, Stot, 1
@@ -2183,7 +1129,8 @@ contains
 				! ----------------------------------------------------
 
 				! L-shell drift limit over each time-step [RE]
-				pdriftLim(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%dpCT(1)
+
+				pdriftLim(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%dpC0T(1)
 				! ENA R drift limit over entire simulation [m]
 				rdriftLim(1)= 5d0*RE
 				! ENA THETA drift limit over entire simulation [rads]
@@ -2245,6 +1192,7 @@ contains
 
 		! SET REFERENCE PARALLEL POTENTIAL DROPS:
 
+		! Consider making this time and space dependent
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) then
@@ -2280,6 +1228,7 @@ contains
 
 		! SET ICR HEATING PARAMETERS:
 
+		! Consider making this time and space dependent
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (SpecieT(s)%FluxTubeT(f)%ICRflagT(1) == 1) then
@@ -2422,7 +1371,7 @@ contains
 
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 						write(*, *) trim('KAOS SPIN-UP')
 					end if
 
@@ -2442,9 +1391,11 @@ contains
 
 					write(*, *) trim('Data Export Path= ' // adjustl(dataexportdir))
 
-					if ((SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) .or. &
-						(SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1)) then
-						write(*, *) trim('Spin-up Data I/O Path= ' // adjustl(Densitydatadir))
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
+						write(*, *) trim('Export Spin-up Data Directory Path= ' // adjustl(Densitydatadir))
+					end if
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
+						write(*, *) trim('Import Spin-up Data Directory Path= ' // adjustl(Densitydatadir))
 					end if
 
 					write(*, *)
@@ -2603,10 +1554,8 @@ contains
 					write(*, *) trim('Initial Density Profile Flag= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%STATICINJECTIONflagT(1)
 					write(*, *) trim('Static Injection Flag= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1)
-					write(*, *) trim('Density Output Flag= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1)
-					write(*, *) trim('Density Input Flag= ' // adjustl(paramstring))
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1)
+					write(*, *) trim('Spin up Flag= ' // adjustl(paramstring))
 
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
@@ -2631,6 +1580,8 @@ contains
 					write(*, *) trim('Pressure Term of Ambipolar Electric Field Flag= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%EPARflagT(1)
 					write(*, *) trim('Parallel Electric Field Flag= ' // adjustl(paramstring))
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1)
+					write(*, *) trim('Flux-tube Convection Flag= ' // adjustl(paramstring))
 
 					write(*, *)
 					write(*, *) '----------------------------------------------------'

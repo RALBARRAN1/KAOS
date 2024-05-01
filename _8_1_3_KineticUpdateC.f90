@@ -33,7 +33,7 @@ contains
 
 		if (ENAflag(j) .eqv. .false.) then
 			! Note: Without cross L-shell convection, solar forcing or other azimuthal asymmetries, ion motion is phi-invariant.
-			phik4(j)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)
+			phik4(j)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)
 		else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 			(ENAflag(j) .eqv. .true.)) then
 			call phisub(phik4(j), xk4(1), yk4(1))
@@ -44,9 +44,9 @@ contains
 		! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 		if (ENAflag(j) .eqv. .false.) then
-			if (phik4(j) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)) then
+			if (phik4(j) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION phik4= ', phik4(j), &
-					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1), &
+					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE C SUBROUTINE' &
 					// achar(27) // '[0m.'
@@ -56,7 +56,8 @@ contains
 		! ----------------------------------------------------
 
 		call qsub(qk4(j), rk4(j), thetak4(j))
-		call psub(pk4(j), rk4(j), thetak4(j))
+		pk4(j)= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1)
+		!call psub(pk4(j), rk4(j), thetak4(j))
 		call ellsub(ellk4(j), thetak4(j))
 		call Bmagsub(Bmagk4(1), rk4(j), ellk4(j))
 
@@ -124,23 +125,23 @@ contains
 
 		! COMPUTE ION DRIFTS OVER ENTIRE SIMULATION:
 
-		if (j < SpecieT(s)%FluxTubeT(f)%NsnT(1)) then
-			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+		!if (j < SpecieT(s)%FluxTubeT(f)%NsnT(1)) then
+		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+		!		if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
 
-					pdriftion(j)= abs(pk4(j)- SpecieT(s)%FluxTubeT(f)%p0T(j))
+		!			pdriftion(j)= abs(pk4(j)- SpecieT(s)%FluxTubeT(f)%p0T(1))
 
-				end if
-			end do
+		!		end if
+		!	end do
 
-			if ((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. (ENAflag(j) .eqv. .false.)) then
+		!	if ((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. (ENAflag(j) .eqv. .false.)) then
 
-				qdriftion(j)= abs(qk4(j)- SpecieT(s)%FluxTubeT(f)%q0T(j))
-				phidriftion(j)= abs(phik4(j)- SpecieT(s)%FluxTubeT(f)%phi0T(j))
+		!		qdriftion(j)= abs(qk4(j)- SpecieT(s)%FluxTubeT(f)%q0T(j))
+		!		phidriftion(j)= abs(phik4(j)- SpecieT(s)%FluxTubeT(f)%phi0T(j))
 
-			end if
-		end if
+		!	end if
+		!end if
 
 		! ----------------------------------------------------
 
@@ -236,13 +237,13 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk4(j) <= 0) .and. (AMpark4(1) < 0d0)) .or. &
-				((qk4(j) > 0) .and. (AMpark4(1) > 0d0))) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
-					' AMpark4= ', AMpark4(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
-					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-					' IN KINETIC UPDATE C SUBROUTINE' // achar(27) // '[0m.'
-			end if
+			!if (((qk4(j) <= 0) .and. (AMpark4(1) < 0d0)) .or. &
+			!	((qk4(j) > 0) .and. (AMpark4(1) > 0d0))) then
+			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
+			!		' AMpark4= ', AMpark4(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
+			!		', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+			!		' IN KINETIC UPDATE C SUBROUTINE' // achar(27) // '[0m.'
+			!end if
 
 			! ----------------------------------------------------
 
@@ -702,13 +703,13 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk4(j) <= 0) .and. (AEPpark4(1) > 0d0)) .or. &
-				((qk4(j) > 0) .and. (AEPpark4(1) < 0d0))) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
-					' AEPpark4= ', AEPpark4(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
-					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-					' IN KINETIC UPDATE C SUBROUTINE' // achar(27) // '[0m.'
-			end if
+			!if (((qk4(j) <= 0) .and. (AEPpark4(1) > 0d0)) .or. &
+			!	((qk4(j) > 0) .and. (AEPpark4(1) < 0d0))) then
+			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
+			!		' AEPpark4= ', AEPpark4(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
+			!		', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+			!		' IN KINETIC UPDATE C SUBROUTINE' // achar(27) // '[0m.'
+			!end if
 
 			! ----------------------------------------------------
 

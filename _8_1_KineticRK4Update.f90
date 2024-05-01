@@ -156,14 +156,13 @@ contains
 			zNp(1)= z(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1z(1)+ 2d0*k2z(1)+ 2d0*k3z(1)+ k4z(1))
 				! Compute zNp values
 
-
 			! Set displacement dr= ds and update new q position accordingly with reset p (and xN, yN, zN)
-
 
 			call rsub(rNp(1), xNp(1), yNp(1), zNp(1))
 			call thetasub(thetaNp(1), zNp(1), rNp(1))
 			call qsub(qNp(1), rNp(1), thetaNp(1))
-			pNp(1)= SpecieT(s)%FluxTubeT(f)%p0T(1) ! Reset particle on correct L-shell
+
+			pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1) ! Reset particle on correct L-shell
 
 			! ----------------------------------------------------
 
@@ -229,7 +228,8 @@ contains
 
 		if (ENAflag(j) .eqv. .false.) then
 			! Note: Without cross L-shell convection, solar forcing or other azimuthal asymmetries, ion motion is phi-invariant.
-			phiN(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)
+			phiN(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)
+
 		else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 			(ENAflag(j) .eqv. .true.)) then
 			call phisub(phiN(1), xN(j), yN(j))
@@ -240,9 +240,16 @@ contains
 		! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 		if (ENAflag(j) .eqv. .false.) then
-			if (phiN(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)) then
+			if (phiN(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION phiN= ', phiN(1), &
-					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1), &
+					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
+					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC RK4', &
+					' UPDATE SUBROUTINE' // achar(27) // '[0m.'
+			end if
+			if (pNp(1) /= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION pNp= ', pNp(1), &
+					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC RK4', &
 					' UPDATE SUBROUTINE' // achar(27) // '[0m.'

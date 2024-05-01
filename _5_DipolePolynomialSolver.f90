@@ -203,14 +203,13 @@ contains
 
 						! DIAGNOSTIC FLAGS FOR ALL qfinalICT VALUES WITHIN CONFIGURATION-SPACE GRID:
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(1, 1) <= 0) then
 							if (((Qind == NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGLT(1))) .or. ((Qind == NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
+								.or. ((Qind == NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGHT(1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
@@ -219,11 +218,10 @@ contains
 							end if
 							if (((Qind /= NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) <= &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGLT(1))) .or. ((Qind /= NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
+								.or. ((Qind /= NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGHT(1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
@@ -231,14 +229,13 @@ contains
 									' POLYNOMIAL SOLVER SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(1, 1) > 0) then
 							if (((Qind == NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGLT(1))) .or. ((Qind == NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
+								.or. ((Qind == NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGHT(1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
@@ -247,11 +244,10 @@ contains
 							end if
 							if (((Qind /= NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) >= &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGLT(1))) .or. ((Qind /= NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
+								.or. ((Qind /= NqLB(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ &
-								Qind- 1)%qGHT(1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &

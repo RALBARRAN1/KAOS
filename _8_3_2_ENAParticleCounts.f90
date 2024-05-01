@@ -111,7 +111,7 @@ contains
 							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqENAT(nn)= &
 								SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind)* &
 								(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1))
+								SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
 							SpecieT(s)%FluxTubeT(f)%NqENATp(nn, Qind)= &
 								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqENAT(nn)
 
@@ -343,7 +343,7 @@ contains
 											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											NphReNormENART(nn, Vpind, Vqind, Vphiind)* &
 											(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1))
+											SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
 									end if
 
 									SpecieT(s)%FluxTubeT(f)% &

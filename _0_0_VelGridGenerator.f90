@@ -790,7 +790,7 @@ contains
                 2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1)* &
                 cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCT(1)= &
-                (1d0+ 3d0*((cos(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%thetaGCT(1)))**2d0))
+                (1d0+ 3d0*((cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1)))**2d0))
 
               ! Test dipole velocity components
               VpGCtest= &
@@ -859,6 +859,648 @@ contains
         end do
       end do
     end if
+
+		! ----------------------------------------------------
+
+		! ION VELOCITY-SPACE GRID DIMENSIONS:
+
+		if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
+			do Qind= NqLB(1), NqUB(1), 1
+
+				! ----------------------------------------------------
+
+				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperp1GT HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+						' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperp2GT HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+						' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				! ----------------------------------------------------
+
+			end do
+
+			! ----------------------------------------------------
+
+		else
+
+			! ----------------------------------------------------
+
+			do Qind= NqLB(1), NqUB(1), 1
+
+				! ----------------------------------------------------
+
+				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVperpGT HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+						' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				! ----------------------------------------------------
+
+			end do
+
+			! ----------------------------------------------------
+
+		end if
+
+		! ----------------------------------------------------
+
+		do Qind= NqLB(1), NqUB(1), 1
+
+			! ----------------------------------------------------
+
+			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVparGT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			! ----------------------------------------------------
+
+		end do
+
+		! ----------------------------------------------------
+
+		! ENA VELOCITY-SPACE GRID DIMENSIONS:
+
+		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
+			do Qind= NqLB(1), NqUB(1), 1
+
+				! ----------------------------------------------------
+
+				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVpGT HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+						' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVqGT HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+						' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NVphiGT HAS', &
+						' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+						', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+						' IN VELOCITY-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				! ----------------------------------------------------
+
+			end do
+		end if
+
+		! ----------------------------------------------------
+
+		! ION EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
+
+		do Qind= NqLB(1), NqUB(1), 1
+			if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
+
+				! ----------------------------------------------------
+
+				do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
+					do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
+						do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
+
+							! ----------------------------------------------------
+
+							if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1) == 0d0) then
+								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)= 1d-15
+							end if
+
+							! ----------------------------------------------------
+
+							! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GLT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1GLT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GHT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1GHT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp1GCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1GCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVperp1GT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GLT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2GLT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GHT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2GHT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2GCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVperp2GT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGLT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGHT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVparGT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3vCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
+									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							! ----------------------------------------------------
+
+						end do
+					end do
+				end do
+
+				! ----------------------------------------------------
+
+			else
+
+				! ----------------------------------------------------
+
+				do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1), 1
+					do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
+
+						! ----------------------------------------------------
+
+						if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1) == 0d0) then
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1)= 1d-15
+						end if
+
+						! ----------------------------------------------------
+
+						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%dVperpGT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%dVperpGT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVperpGT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%dVparGT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%dVparGT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVparGT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VperpGLT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VperpGLT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGLT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VperpGHT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VperpGHT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGHT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VperpGCT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VperpGCT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGCT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VparGLT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VparGLT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGLT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VparGHT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VparGHT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGHT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VparGCT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%VparGCT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%d3vCT(:)) &
+							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+							VCellT(Vperpind, Vparind)%d3vCT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3vCT HAS', &
+								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
+								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+								' SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						! ----------------------------------------------------
+
+					end do
+				end do
+
+				! ----------------------------------------------------
+
+			end if
+		end do
+
+		! ----------------------------------------------------
+
+		! ENA EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
+
+		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
+			do Qind= NqLB(1), NqUB(1), 1
+
+				! ----------------------------------------------------
+
+				do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
+					do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
+						do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
+
+							! ----------------------------------------------------
+
+							! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS,
+							! SIZES, AND FINITE VALUES:
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGLT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGLT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGLT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGHT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGHT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGHT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGLT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGLT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGHT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGHT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VphiGLT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', &
+									Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VphiGHT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
+									' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
+									', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
+									Vphiind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' VphiGCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', &
+									Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%hVpCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%hVpCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hVpCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%hVqCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%hVqCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hVqCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hVphiCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%dVpCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%dVpCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dVpCT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
+									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
+									' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%dVqCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%dVqCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' dVqCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
+									' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
+									', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
+									Vphiind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' dVphiCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
+									' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
+									', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
+									Vphiind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%d33vCT(:)) &
+								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
+								V3CellT(Vpind, Vqind, Vphiind)%d33vCT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' d33vCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE FOR', &
+									' SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
+									', Vpind= ', Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
+									Vphiind, ' IN VELOCITY-SPACE GRID GENERATOR', &
+									' SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							! ----------------------------------------------------
+
+						end do
+					end do
+				end do
+
+				! ----------------------------------------------------
+
+			end do
+		end if
 
     ! ---------------------------------------------
 

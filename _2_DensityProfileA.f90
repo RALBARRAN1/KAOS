@@ -80,10 +80,10 @@ contains
 
 						! Create nested derived data types
 
-						if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 0) then
+						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 							SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCT= nsnormC
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 							if (Qind == NqLB(1)) then
 								SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCT(1)= SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)
 							end if
@@ -145,7 +145,7 @@ contains
 								' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
-						if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 0) then
+						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 							if ((nsnormC(1) /= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCT(1)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCT(:)) /= 1) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCT(1))) .eqv. &
@@ -309,17 +309,19 @@ contains
 						end if
 					end if
 
-					if (rank == 0) then
-						do Qind= NqLB(1), NqUB(1)- 1, 1
-							if (SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind) <= SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1)) then
-								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-									' NON-DECREASING PARTICLE NUMBERS WITH ALTITUDE', &
-									', NsFARpT(Qind)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind), &
-									', NsFARpT(Qind+ 1)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1), &
-									' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
-									' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
-							end if
-						end do
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
+						if (rank == 0) then
+							do Qind= NqLB(1), NqUB(1)- 1, 1
+								if (SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind) <= SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1)) then
+									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+										' NON-DECREASING PARTICLE NUMBERS WITH ALTITUDE', &
+										', NsFARpT(Qind)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind), &
+										', NsFARpT(Qind+ 1)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1), &
+										' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
+										' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
+								end if
+							end do
+						end if
 					end if
 
 					! ----------------------------------------------------
@@ -336,19 +338,48 @@ contains
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 
-				allocate(SpecieT(s)%FluxTubeT(f)%rGCTp(NqUB(1)- NqLB(1)+ 1))
-				allocate(SpecieT(s)%FluxTubeT(f)%hqCTp(NqUB(1)- NqLB(1)+ 1))
-				allocate(SpecieT(s)%FluxTubeT(f)%dqCTp(NqUB(1)- NqLB(1)+ 1))
+				! ----------------------------------------------------
+
+				allocate(SpecieT(s)%FluxTubeT(f)%qGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%hqCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%dpCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%dqCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%dphiCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%rGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%phiGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%thetaGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%ellGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%qGLT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%qGHT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%pGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%d3xCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%TsPerpT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%TsParT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%TsT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
+				allocate(SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, (NqUB(1)- NqLB(1))+ 1))
 
 				do Qind= NqLB(1), NqUB(1), 1
 
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%hqCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%hqC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%dpCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dpC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%dqCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dqC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%dphiCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dphiC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%rGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%rGC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%phiGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%phiGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%qGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%hqCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%hqC0T(1)
+					SpecieT(s)%FluxTubeT(f)%dpCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dpC0T(1)
+					SpecieT(s)%FluxTubeT(f)%dqCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dqC0T(1)
+					SpecieT(s)%FluxTubeT(f)%dphiCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dphiC0T(1)
+					SpecieT(s)%FluxTubeT(f)%rGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%rGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%phiGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%phiGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%thetaGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%thetaGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%ellGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%ellGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%qGLT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGL0T(1)
+					SpecieT(s)%FluxTubeT(f)%qGHT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGH0T(1)
+					SpecieT(s)%FluxTubeT(f)%pGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%pGC0T(1)
+					SpecieT(s)%FluxTubeT(f)%d3xCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)
+					SpecieT(s)%FluxTubeT(f)%TsPerpT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPerp0T(1)
+					SpecieT(s)%FluxTubeT(f)%TsParT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPar0T(1)
+					SpecieT(s)%FluxTubeT(f)%TsT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%Ts0T(1)
+
+					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
+						SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(1, Qind)= nsnormCNeut0(Qind+ 1)
+					end if
 
 					! ----------------------------------------------------
 
@@ -359,33 +390,15 @@ contains
 							SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1), ' AND phiGC0T VALUE= ', &
 							SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1), &
 							' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Q CELL= ', Qind, &
-							' IN DENSITY PROFILE A', ' SUBROUTINE' // achar(27) // '[0m.'
+							' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
 					! ----------------------------------------------------
 
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%thetaGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%thetaGC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ellGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%ellGC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGL0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGH0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%pGCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%pGC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3xCT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TsPerpT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPerp0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TsParT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPar0T(1)
-					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TsT(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%Ts0T(1)
-
-					SpecieT(s)%FluxTubeT(f)%rGCTp(Qind)= &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%rGCT(1)
-					SpecieT(s)%FluxTubeT(f)%hqCTp(Qind)= &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%hqCT(1)
-					SpecieT(s)%FluxTubeT(f)%dqCTp(Qind)= &
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%dqCT(1)
-
-					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%nsnormCNeutT(1)= nsnormCNeut0(Qind+ 1)
-					end if
-
 				end do
+
+				! ----------------------------------------------------
+
 			end do
 		end do
 

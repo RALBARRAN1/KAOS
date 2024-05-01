@@ -51,7 +51,7 @@ contains
 
 						! DIAGNOSTIC FLAGS FOR PROPER GRIDDED PARTICLE NUMBERS:
 
-						if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 							if (NsFARRp(Qind) /= nint((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%DensityInputT(1)/ &
 								SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))* &
 								(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)))) then
@@ -333,35 +333,35 @@ contains
 		    ! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1) == 0) then
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 0) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 				    nsnormCLB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1))
 					end if
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 						nsnormCLB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)
 					end if
 				end if
 				if (SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1) == 1) then
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 0) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 						nsnormCLB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1))
 					end if
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 						nsnormCLB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)
 					end if
 				end if
 
 				if (SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1) == 0) then
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 0) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 				    nsnormCUB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqUB(1)+ 1)%nsnormCT(1))
 					end if
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 						nsnormCUB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCUBInputT(1)
 					end if
 				end if
 				if (SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1) == 1) then
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 0) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 				    nsnormCUB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqUB(1)+ 1)%nsnormCT(1))
 					end if
-					if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 						nsnormCUB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCUBInputT(1)
 					end if
 				end if
@@ -736,7 +736,7 @@ contains
 								' IN DENSITY PROFILE A1', ' SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
-						if (SpecieT(s)%FluxTubeT(f)%DENSITYINPUTflagT(1) == 1) then
+						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 							if (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFARRT(1) &
 								/= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%nsnormCT(1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ROOT RANK NsFARRT=  ', &

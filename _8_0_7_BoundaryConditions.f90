@@ -178,9 +178,9 @@ contains
 
         ! ----------------------------------------------------
 
-				if (rank == 0) then
-					write(*, *) 'BC6.1, rank, n, nn= ', rank, n, nn, NsTK(1)
-				end if
+				!if (rank == 0) then
+				!	write(*, *) 'BC6.1, rank, n, nn= ', rank, n, nn, NsTK(1)
+				!end if
 
 				call mpi_barrier(MPI_COMM_WORLD, ierr)
 				NqLBoutfluxIon(1)= SpecieT(s)%FluxTubeT(f)%NqReNormLBoutfluxIonT(nn)
@@ -191,9 +191,9 @@ contains
 				!call mpi_reduce(NqLBoutfluxIon(1), NqLBoutfluxIonR(1), 1, &
 				!	MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, ierr)
 
-				if (rank == 0) then
-					write(*, *) 'BC6.2, rank, n, nn= ', rank, n, nn, NsTK(1)
-				end if
+				!if (rank == 0) then
+				!	write(*, *) 'BC6.2, rank, n, nn= ', rank, n, nn, NsTK(1)
+				!end if
 
 				if (rank == 0) then
 
@@ -254,9 +254,9 @@ contains
 
         ! ----------------------------------------------------
 
-				if (rank == 0) then
-					write(*, *) 'BC8.1, rank, n, nn= ', rank, n, nn, NsTK(1)
-				end if
+				!if (rank == 0) then
+				!	write(*, *) 'BC8.1, rank, n, nn= ', rank, n, nn, NsTK(1)
+				!end if
 
 				call mpi_barrier(MPI_COMM_WORLD, ierr)
 				NqUBoutfluxIon(1)= SpecieT(s)%FluxTubeT(f)%NqReNormUBoutfluxIonT(nn)
@@ -267,9 +267,9 @@ contains
 				!call mpi_reduce(NqUBoutfluxIon(1), NqUBoutfluxIonR(1), 1, &
 				!	MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, ierr)
 
-				if (rank == 0) then
-					write(*, *) 'BC8.2, rank, n, nn= ', rank, n, nn, NsTK(1)
-				end if
+				!if (rank == 0) then
+				!	write(*, *) 'BC8.2, rank, n, nn= ', rank, n, nn, NsTK(1)
+				!end if
 
 				if (rank == 0) then
 					SpecieT(s)%FluxTubeT(f)%NqUBoutfluxIonRT(nn)= &
@@ -333,9 +333,9 @@ contains
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 
-					if (rank == 0) then
-						write(*, *) 'BC10.1, rank, n, nn= ', rank, n, nn, NsTK(1)
-					end if
+					!if (rank == 0) then
+					!	write(*, *) 'BC10.1, rank, n, nn= ', rank, n, nn, NsTK(1)
+					!end if
 
 					call mpi_barrier(MPI_COMM_WORLD, ierr)
 					NqLBoutfluxENA(1)= SpecieT(s)%FluxTubeT(f)%NqReNormLBoutfluxENAT(nn)
@@ -346,9 +346,9 @@ contains
 					!call mpi_reduce(NqLBoutfluxENA(1), NqLBoutfluxENAR(1), 1, &
 					!	MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, ierr)
 
-					if (rank == 0) then
-						write(*, *) 'BC10.2, rank, n, nn= ', rank, n, nn, NsTK(1)
-					end if
+					!if (rank == 0) then
+					!	write(*, *) 'BC10.2, rank, n, nn= ', rank, n, nn, NsTK(1)
+					!end if
 
 					if (rank == 0) then
 						SpecieT(s)%FluxTubeT(f)%NqLBoutfluxENART(nn)= NqLBoutfluxENAR(1)* &
@@ -413,9 +413,9 @@ contains
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 
-					if (rank == 0) then
-						write(*, *) 'BC12.1, rank, n, nn= ', rank, n, nn, NsTK(1)
-					end if
+					!if (rank == 0) then
+					!	write(*, *) 'BC12.1, rank, n, nn= ', rank, n, nn, NsTK(1)
+					!end if
 
 					call mpi_barrier(MPI_COMM_WORLD, ierr)
 					NqUBoutfluxENA(1)= SpecieT(s)%FluxTubeT(f)%NqReNormUBoutfluxENAT(nn)
@@ -426,9 +426,9 @@ contains
 					!call mpi_reduce(NqUBoutfluxENA(1), NqUBoutfluxENAR(1), 1, &
 					!	MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, ierr)
 
-					if (rank == 0) then
-						write(*, *) 'BC12.2, rank, n, nn= ', rank, n, nn, NsTK(1)
-					end if
+					!if (rank == 0) then
+					!	write(*, *) 'BC12.2, rank, n, nn= ', rank, n, nn, NsTK(1)
+					!end if
 
 					if (rank == 0) then
 						SpecieT(s)%FluxTubeT(f)%NqUBoutfluxENART(nn)= &
@@ -846,9 +846,9 @@ contains
 
 				! ----------------------------------------------------
 
-				if (rank == 0) then
-					write(*, *) 'BC24.1, rank, n, nn= ', rank, n, nn, NsTK(1)
-				end if
+				!if (rank == 0) then
+				!	write(*, *) 'BC24.1, rank, n, nn= ', rank, n, nn, NsTK(1)
+				!end if
 
 				call mpi_barrier(MPI_COMM_WORLD, ierr)
 				NsTKp(1)= NsTK(1)
@@ -859,9 +859,9 @@ contains
 				!call mpi_reduce(NsTKp(1), NsTKRp(1), 1, &
 				!	MPI_DOUBLE_PRECISION, MPI_SUM, 0, MPI_COMM_WORLD, ierr)
 
-				if (rank == 0) then
-					write(*, *) 'BC24.2, rank, n, nn= ', rank, n, nn, NsTK(1)
-				end if
+				!if (rank == 0) then
+				!	write(*, *) 'BC24.2, rank, n, nn= ', rank, n, nn, NsTK(1)
+				!end if
 
 				if (rank == 0) then
 					SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)= NsTKRp(1)

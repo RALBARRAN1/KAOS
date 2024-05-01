@@ -119,7 +119,7 @@ contains
 
 		if (ENAflag(j) .eqv. .false.) then
 			! Note: Without cross L-shell convection, solar forcing or other azimuthal asymmetries, ion motion is phi-invariant.
-			phik1(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)
+			phik1(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)
 		else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 			(ENAflag(j) .eqv. .true.)) then
 			call phisub(phik1(1), x(j), y(j))
@@ -130,9 +130,9 @@ contains
 		! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 		if (ENAflag(j) .eqv. .false.) then
-			if (phik1(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1)) then
+			if (phik1(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION phik1= ', phik1(1), &
-					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%QCellT(1)%phiGCT(1), &
+					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
 					// achar(27) // '[0m.'
@@ -142,7 +142,8 @@ contains
 		! ----------------------------------------------------
 
 		call qsub(qk1(1), rk1(1), thetak1(1))
-		call psub(pk1(1), rk1(1), thetak1(1))
+		pk1(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1)
+		!call psub(pk1(1), rk1(1), thetak1(1))
 		call ellsub(ellk1(1), thetak1(1))
 		call Bmagsub(Bmagk1(1), rk1(1), ellk1(1))
 
@@ -217,16 +218,16 @@ contains
 
 		! COMPUTE EACH PARTICLE CONFIGURATION-SPACE GRID CELL:
 
-		if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) <= 0) then ! N. Magnetic Hemisphere
+		if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, 1) <= 0) then ! N. Magnetic Hemisphere
 			QloopKUA1: do Qind= NqLB(1), NqUB(1), 1
-				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) <= qk1(1)) &
-					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) <= qk1(1)) &
+					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA1
 
-				else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) < qk1(1)) &
-					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+				else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) < qk1(1)) &
+					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA1
@@ -234,10 +235,10 @@ contains
 				end if
 			end do QloopKUA1
 
-			if (SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1) > qk1(1)) then
+			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, NqLB(1)) > qk1(1)) then
 				! SMH Lower boundary escape
 				Qindk1(j)= 0d0
-			else if (SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1) < qk1(1)) then
+			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, NqUB(1)) < qk1(1)) then
 				! SMH Upper boundary escape
 				Qindk1(j)= -1d0
 			end if
@@ -245,16 +246,16 @@ contains
 
 		! ----------------------------------------------------
 
-		if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1) > 0) then ! S. Magnetic Hemisphere
+		if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, 1) > 0) then ! S. Magnetic Hemisphere
 			QloopKUA2: do Qind= NqLB(1), NqUB(1), 1
-				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) >= qk1(1)) &
-					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) >= qk1(1)) &
+					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA2
 
-				else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGLT(1) > qk1(1)) &
-					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%qGHT(1))) then
+				else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) > qk1(1)) &
+					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA2
@@ -262,10 +263,10 @@ contains
 				end if
 			end do QloopKUA2
 
-			if (SpecieT(s)%FluxTubeT(f)%QCellT(NqLB(1))%qGLT(1) < qk1(1)) then
+			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, NqLB(1)) < qk1(1)) then
 				! NMH Lower boundary escape
 				Qindk1(j)= 0d0
-			else if (SpecieT(s)%FluxTubeT(f)%QCellT(NqUB(1))%qGHT(1) > qk1(1)) then
+			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, NqUB(1)) > qk1(1)) then
 				! NMH Upper boundary escape
 				Qindk1(j)= -1d0
 			end if
@@ -366,15 +367,15 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk1(1) <= 0) .and. (AMpark1(1) < 0d0)) .or. &
-				((qk1(1) > 0) .and. (AMpark1(1) > 0d0))) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
-					' AMpark1= ', AMpark1(1), ', muk1= ', muk1(1), ', Bmagk1= ', Bmagk1(1), &
-					', Vperp= ', Vperp(j), ', dBdsk1= ', dBdsk1(1), ', msT= ', SpecieT(s)%msT(1), &
-					', AMxk1p= ', AMxk1p(1), ', AMyk1p= ', AMyk1p(1), ', AMzk1p= ', AMzk1p(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
-					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-					' IN KINETIC UPDATE A SUBROUTINE' // achar(27) // '[0m.'
-			end if
+			!if (((qk1(1) <= 0) .and. (AMpark1(1) < 0d0)) .or. &
+			!	((qk1(1) > 0) .and. (AMpark1(1) > 0d0))) then
+			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
+			!		' AMpark1= ', AMpark1(1), ', muk1= ', muk1(1), ', Bmagk1= ', Bmagk1(1), &
+			!		', Vperp= ', Vperp(j), ', dBdsk1= ', dBdsk1(1), ', msT= ', SpecieT(s)%msT(1), &
+			!		', AMxk1p= ', AMxk1p(1), ', AMyk1p= ', AMyk1p(1), ', AMzk1p= ', AMzk1p(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
+			!		', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+			!		' IN KINETIC UPDATE A SUBROUTINE' // achar(27) // '[0m.'
+			!end if
 
 			! ----------------------------------------------------
 
@@ -836,13 +837,13 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER PARALLEL ACCELERATION SIGN:
 
-			if (((qk1(1) <= 0) .and. (AEPpark1(1) > 0d0)) .or. &
-				((qk1(1) > 0) .and. (AEPpark1(1) < 0d0))) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
-					' AEPpark1= ', AEPpark1(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
-					', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
-					' IN KINETIC UPDATE A SUBROUTINE' // achar(27) // '[0m.'
-			end if
+			!if (((qk1(1) <= 0) .and. (AEPpark1(1) > 0d0)) .or. &
+			!	((qk1(1) > 0) .and. (AEPpark1(1) < 0d0))) then
+			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT', &
+			!		' AEPpark1= ', AEPpark1(1), ' WITH MAGNETIC HEMISPHERE FOR SPECIE= ', s, &
+			!		', FLUX TUBE= ', f, ', TIME-STEP= ', n, ', AND PARTICLE= ', j, &
+			!		' IN KINETIC UPDATE A SUBROUTINE' // achar(27) // '[0m.'
+			!end if
 
 			! ----------------------------------------------------
 

@@ -25,9 +25,142 @@ contains
 
 	subroutine ConfigGridGeneratorSub
 
-! What we need for Grid Generator output:
-! qGC0T, hqC0T, dpC0T, dqC0T, dphiC0T, rGC0T, phiGC0T, thetaGC0T, ellGC0T, qGL0T, qGH0T, pGC0T, d3xC0T, TsPerp0T, TsPar0T, Ts0T, &
-! NqG0T, NqGT, Te0T
+		! What we need for Grid Generator output:
+		! qGC0T, hqC0T, dpC0T, dqC0T, dphiC0T, rGC0T, phiGC0T, thetaGC0T, ellGC0T, qGL0T, qGH0T, pGC0T, d3xC0T, TsPerp0T, TsPar0T, Ts0T, &
+		! NqG0T, NqGT, Te0T
+
+		! ----------------------------------------------------
+
+		! SET GRID RANGE ALONG FLUX TUBES:
+
+		if (s == 1) then
+			! Starting and ending Q cell for density initialization
+			! (including selected cells and does not include lower boundary ghost cell)
+
+			NqLB(1)= NqICA
+			NqUB(1)= NqICB
+
+			NqGpF= (NqUB(1)- NqLB(1)+ 4)
+
+		end if
+
+		NqIC(1)= abs(NqICB- NqICA)+ 1d0 ! Q cell range for density initialization
+
+		SpecieT(s)%FluxTubeT(f)%NqICAT= NqICA ! Create nested derived data types
+		SpecieT(s)%FluxTubeT(f)%NqICBT= NqICB
+		SpecieT(s)%FluxTubeT(f)%NqICT= NqIC
+
+		! ----------------------------------------------------
+
+		! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+		if ((NqICA /= SpecieT(s)%FluxTubeT(f)%NqICAT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%NqICAT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICAT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICAT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
+				' SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((NqICB /= SpecieT(s)%FluxTubeT(f)%NqICBT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%NqICBT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICBT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICBT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
+				' SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((NqIC(1) /= SpecieT(s)%FluxTubeT(f)%NqICT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%NqICT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
+				' SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		! ----------------------------------------------------
+
+		! ALLOCATE INITIALIZATION CONFIG-SPACE DERIVED DATA TYPES NESTED IN FLUX TUBE
+		! TYPES NESTED IN PARTICLE SPECIES TYPE:
+
+		! Allocate QCellICT(Qind) derived data type nested in FluxTubeT(f)
+		! nested in SpecieT(s)
+		allocate(SpecieT(s)%FluxTubeT(f)%QCellICT(SpecieT(s)%FluxTubeT(f)%NqICT(1)))
+
+		! ----------------------------------------------------
+
+		! SET PARTICLE SPECIES INITIAL DENSITY PARAMETERS:
+
+		! ----------------------------------------------------
+
+		SpecieT(s)%FluxTubeT(f)%zns0T= zns0 ! Create nested derived data types
+		SpecieT(s)%FluxTubeT(f)%ns0T= ns0
+		SpecieT(s)%FluxTubeT(f)%nsnormfacT= nsnormfac
+
+		SpecieT(s)%FluxTubeT(f)%zns0NeutT= zns0Neut ! Create nested derived data types
+		SpecieT(s)%FluxTubeT(f)%ns0NeutT= ns0Neut
+
+		! ----------------------------------------------------
+
+		! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+		if ((zns0 /= SpecieT(s)%FluxTubeT(f)%zns0T(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%zns0T(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%zns0T(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zns0T HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN SIMULATION', &
+				' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((ns0 /= SpecieT(s)%FluxTubeT(f)%ns0T(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%ns0T(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%ns0T(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ns0T HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN SIMULATION', &
+				' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((nsnormfac /= SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%nsnormfacT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' nsnormfacT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN SIMULATION', &
+				' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((zns0Neut /= SpecieT(s)%FluxTubeT(f)%zns0NeutT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%zns0NeutT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%zns0NeutT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zns0NeutT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN SIMULATION', &
+				' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((ns0Neut /= SpecieT(s)%FluxTubeT(f)%ns0NeutT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%ns0NeutT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%ns0NeutT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ns0NeutT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN SIMULATION', &
+				' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		! ----------------------------------------------------
+
+		! ALLOCATE CONFIGURATION-SPACE DERIVED DATA TYPES NESTED IN FLUX TUBE TYPES NESTED IN
+		! PARTICLE SPECIES TYPE:
+
+		! Allocate QCellT(Qind) derived data type nested in FluxTubeT(f)
+		! nested in SpecieT(s)
+		allocate(SpecieT(s)%FluxTubeT(f)%QCellT(((NqUB(1)- NqLB(1))+ 1)))
+		allocate(SpecieT(s)%FluxTubeT(f)%QCell0T(((NqUB(1)- NqLB(1))+ 3)))
 
 	  ! ----------------------------------------------------
 
@@ -157,10 +290,10 @@ contains
 
     do Qind= 1, SpecieT(s)%FluxTubeT(f)%NqGpT(1), 1
       if (Qind /= SpecieT(s)%FluxTubeT(f)%NqGpT(1)) then
-				if (qGA <= 0d0) then ! SMH
+				if (qGA <= 0d0) then ! NMH
 	        SpecieT(s)%FluxTubeT(f)%qGT(Qind)= qGA+ (Qind- 1d0)*(abs(qGB- qGA)/SpecieT(s)%FluxTubeT(f)%NqGpT(1))
 				end if
-				if (qGA > 0d0) then ! NMH
+				if (qGA > 0d0) then ! SMH
 	        SpecieT(s)%FluxTubeT(f)%qGT(Qind)= qGA- (Qind- 1d0)*(abs(qGB- qGA)/SpecieT(s)%FluxTubeT(f)%NqGpT(1))
 				end if
       end if
@@ -182,6 +315,72 @@ contains
       SpecieT(s)%FluxTubeT(f)%xGridOutT(Qind)= xGridOut(1)
       SpecieT(s)%FluxTubeT(f)%yGridOutT(Qind)= yGridOut(1)
       SpecieT(s)%FluxTubeT(f)%zGridOutT(Qind)= zGridOut(1)
+
+			! ---------------------------------------------
+
+			! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%rGridOutT(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%rGridOutT(:)) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGridOutT= ', &
+					SpecieT(s)%FluxTubeT(f)%rGridOutT(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%thetaGridOutT(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%thetaGridOutT(:)) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGridOutT= ', &
+					SpecieT(s)%FluxTubeT(f)%thetaGridOutT(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%phiGridOutT(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%phiGridOutT(:)) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGridOutT= ', &
+					SpecieT(s)%FluxTubeT(f)%phiGridOutT(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%xGridOutT(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%xGridOutT(:)) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xGridOutT= ', &
+					SpecieT(s)%FluxTubeT(f)%xGridOutT(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%yGridOutT(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%yGridOutT(:)) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' yGridOutT= ', &
+					SpecieT(s)%FluxTubeT(f)%yGridOutT(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%zGridOutT(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%zGridOutT(:)) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGridOutT= ', &
+					SpecieT(s)%FluxTubeT(f)%zGridOutT(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			! ---------------------------------------------
 
     end do
 
@@ -246,8 +445,176 @@ contains
       SpecieT(s)%FluxTubeT(f)%zGH0T(Qind)= &
         SpecieT(s)%FluxTubeT(f)%zGridOutT((Qind- 1)*dq+ 1+ dq) ! upper z limits of FA cells
 
-      SpecieT(s)%FluxTubeT(f)%xGL0T(Qind)= 0d0 ! Let phi= pi/2 s.t. all FA cells have x= 0
-      SpecieT(s)%FluxTubeT(f)%xGH0T(Qind)= 0d0
+			SpecieT(s)%FluxTubeT(f)%xGL0T(Qind)= &
+        SpecieT(s)%FluxTubeT(f)%xGridOutT((Qind- 1)* dq+ 1) ! lower x limits of FA cells
+      SpecieT(s)%FluxTubeT(f)%xGH0T(Qind)= &
+        SpecieT(s)%FluxTubeT(f)%xGridOutT((Qind- 1)*dq+ 1+ dq) ! upper x limits of FA cells
+
+			! ---------------------------------------------
+
+			! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%phiGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%phiGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%phiGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%phiGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%phiGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%phiGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%rGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%rGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%rGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%rGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%rGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%rGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%thetaGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%thetaGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%thetaGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%thetaGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%thetaGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%thetaGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%yGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%yGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' yGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%yGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%yGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%yGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' yGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%yGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%zGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%zGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%zGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%zGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%zGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%zGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%xGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%xGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%xGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%xGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%xGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%xGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			! ---------------------------------------------
 
     end do
 
@@ -309,6 +676,172 @@ contains
           ' NEGATIVE d3xC0T VALUE IN GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
       end if
 
+			! ---------------------------------------------
+
+			! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%xGC0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%xGC0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%xGC0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%yGC0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%yGC0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' yGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%yGC0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%zGC0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%zGC0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%zGC0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%ellGL0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%ellGL0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGL0T= ', &
+					SpecieT(s)%FluxTubeT(f)%ellGL0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%ellGH0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%ellGH0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGH0T= ', &
+					SpecieT(s)%FluxTubeT(f)%ellGH0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hqC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%hpC0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%hpC0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hpC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%hpC0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%hphiC0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%hphiC0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGT(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hphiC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%hphiC0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dqC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dpC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dphiC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3xC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			! ---------------------------------------------
+
     end do
 
     SpecieT(s)%Qindns0T(1)= 1d0
@@ -332,7 +865,262 @@ contains
         ' IN GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
     end if
 
-    ! ---------------------------------------------
+		! ---------------------------------------------
+
+		! DIAGNOSTIC FLAGS FOR NAN VALUES:
+
+		if ((isnan(real(SpecieT(s)%Qindns0T(1))) .eqv. .true.) .or. &
+			(size(SpecieT(s)%Qindns0T(:)) /= 1)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0T= ', &
+				SpecieT(s)%Qindns0T(1), &
+				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+				// achar(27) // '[0m.'
+		end if
+
+		if ((isnan(real(SpecieT(s)%FluxTubeT(f)%NqG0T(1))) .eqv. .true.) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%NqG0T(:)) /= 1)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T= ', &
+				SpecieT(s)%FluxTubeT(f)%NqG0T(1), &
+				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+				', FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+				// achar(27) // '[0m.'
+		end if
+
+		if ((isnan(real(SpecieT(s)%FluxTubeT(f)%NqGT(1))) .eqv. .true.) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%NqGT(:)) /= 1)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqGT= ', &
+				SpecieT(s)%FluxTubeT(f)%NqGT(1), &
+				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+				', FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+				// achar(27) // '[0m.'
+		end if
+
+		do Qind= NqLB(1), NqUB(1)+ 2, 1
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPerp0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(:)) /= 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPar0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%Te0T(Qind))) .eqv. .true.) .or. &
+				(size(SpecieT(s)%FluxTubeT(f)%Te0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqG0T(1))) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Te0T= ', &
+					SpecieT(s)%FluxTubeT(f)%Te0T(Qind), &
+					' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+		end do
+
+		! ----------------------------------------------------
+
+		! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+		if ((size(SpecieT(s)%FluxTubeT(f)%NqG0T(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqG0T(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, &
+				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		if ((size(SpecieT(s)%FluxTubeT(f)%NqGT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqGT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqG0T HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, &
+				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		do Qind= NqLB(1), NqUB(1)+ 2, 1
+			if ((size(SpecieT(s)%FluxTubeT(f)%Te0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqG0T(1)) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%Te0T(Qind))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Te0T HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if (SpecieT(s)%FluxTubeT(f)%Te0T(Qind) > dNTeEND) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+					' INITIAL Te0T IS GREATER THAN Te CAP FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+		end do
+
+		! ----------------------------------------------------
+
+		! COMPUTE TOTAL FIELD-LINE ARC LENGTH:
+
+		allocate(SpecieT(s)%FluxTubeT(f)%ellqCT(SpecieT(s)%FluxTubeT(f)%NqG0T(1)))
+		SpecieT(s)%FluxTubeT(f)%ellqCT(:)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1)*SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1)
+		SpecieT(s)%FluxTubeT(f)%SUMellqCT(1)= sum(SpecieT(s)%FluxTubeT(f)%ellqCT(:))
+
+		! ----------------------------------------------------
+
+		do Qind= NqLB(1), NqUB(1)+ 2, 1
+
+			! ----------------------------------------------------
+
+			! Total initial ion temperature [K]
+			! Note: Isotropic temperature from grid data (Ti= Tperp= Tpar= Tperp1= Tperp2)
+			SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%Ts0T(1)= (1d0/3d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))+ &
+				(2d0/3d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))
+
+			! ----------------------------------------------------
+
+			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hqCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dpCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dqCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dphiCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPerpT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsParT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGLT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGHT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3xCT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if (SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1) < 0) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NEGATIVE ', &
+					' d3xCT FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			! ----------------------------------------------------
+
+		end do
+
+		! ----------------------------------------------------
 
   end subroutine ConfigGridGeneratorSub
 

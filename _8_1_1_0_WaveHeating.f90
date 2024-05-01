@@ -151,9 +151,11 @@ contains
 			!Vperp1N(j)= ...
 			!Vperp2N(j)= ...
 
+			! FIXME add cusp mask in (s, f, nn, Qind) for heating regions (bound Qind by local zmin, zmax)
+
 			! if ICRCOHERENCEflag == 0
-			Vperp1N(j)= Vperp1(j)+ DVperp1icr(1)
-			Vperp2N(j)= Vperp2(j)+ DVperp2icr(1)
+			Vperp1N(j)= Vperp1(j) !+ cuspmask(nn, Qind)*DVperp1icr(1)
+			Vperp2N(j)= Vperp2(j) !+ cuspmask(nn, Qind)*DVperp2icr(1)
 			VperpN(j)= abs(sqrt(Vperp1N(j)**2d0+ Vperp2N(j)**2d0))
 
 			! ----------------------------------------------------
@@ -169,10 +171,10 @@ contains
 			!end if
 
 			!if (VperpN(j)/OmegaGk1(1) >= &
-			!	sum(SpecieT(s)%FluxTubeT(f)%hqCTp(:)*SpecieT(s)%FluxTubeT(f)%dqCTp(:))) then
+			!	sum(SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)*SpecieT(s)%FluxTubeT(f)%dqCT(nn, :))) then
 			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION LARMOR RADIUS [m]= ', VperpN(j)/OmegaGk1(1), &
 			!		' IS GREATER THAN TOTAL FLUX-TUBE ARC LENGTH [m]= ', &
-			!		sum(SpecieT(s)%FluxTubeT(f)%hqCTp(:)*SpecieT(s)%FluxTubeT(f)%dqCTp(:)), &
+			!		sum(SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)*SpecieT(s)%FluxTubeT(f)%dqCT(nn, :)), &
 			!		' AT LOCAL GYROFREQUENCY FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 			!		', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
 			!		// achar(27) // '[0m.'

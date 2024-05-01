@@ -32,7 +32,7 @@ character(10) :: rankstring
 
 ! Define all running indices
 integer(kind= dp) :: s, f, Qind, FAindIC, Vperp1ind, Vperp2ind, Vperpind, Vparind, Vpind, Vqind, Vphiind, &
-	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2
+	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2, nnind
 character(50) :: Nsstring, sstring, fstring, Qindstring, Vperp1indstring, Vperp2indstring, Vperpindstring, Vparindstring, &
 	Vpindstring, Vqindstring, Vphiindstring, nnstring, jstring, expstring, &
 	paramstring, pdriftmaxstring, pdriftmeanstring, Timestring
@@ -428,13 +428,9 @@ type QCelltype ! Config-space grid cell derived data type: rank 1, indices [s, f
 		dVperp1GpT, dVperp2GpT, dVperpGpT, VparGp1T, VparGp2T, VparGpT, dVparGpT, VpGp1T, VpGp2T, VpGpT, VphiGp1T, VphiGp2T, VphiGpT, &
 		VqGp1T, VqGp2T, VqGpT, dVpGpT, dVphiGpT, dVqGpT
 	real(kind= dp), dimension(:, :, :), allocatable :: Vperp1GT, Vperp2GT, VpGT, VqGT, VphiGT, VparGT
-	real(kind= dp), dimension(1) :: qGCT, hqCT, dpCT, dqCT, dphiCT, TsT, TsPerpT, TsParT, rGCT, &
-		phiGCT, thetaGCT, ellGCT, qGLT, qGHT, pGCT, d3xCT
 	real(kind= dp), dimension(:), allocatable :: TeNT
 	real(kind= dp), dimension(1) :: lambdaPerppT, EtaLHpT, XiPerp1pT, XiPerp2pT, S0pT, &
 		OmegaG0pT, ChiPerp1pT, ChiPerp2pT
-	! Density Profile A:
-	real(kind= dp), dimension(1) :: nsnormCNeutT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NqT, NqENAT, NqRT, NqENART
 	real(kind= dp), dimension(:, :, :), allocatable :: NphReNormT, NphReNormRT
@@ -472,9 +468,9 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 	real(kind= dp), dimension(1) :: IonNoiseLimitT, ENANoiseLimitT
 	integer(kind= dp), dimension(1) :: IONNOISEflagT, FLUIDIONEXPORTflagT, FLUIDENAEXPORTflagT, &
 		LBCONDITIONflagT, UBCONDITIONflagT, LBREPLENISHflagT, UBREPLENISHflagT, &
-		DENSITYPROFILEflagT, STATICINJECTIONflagT, DENSITYOUTPUTflagT, DENSITYINPUTflagT, &
+		DENSITYPROFILEflagT, STATICINJECTIONflagT, SPINUPflagT, &
 		ICRflagT, MIRRORflagT, GRAVflagT, EAMBSELFCONSISTflagT, EAMBSIGNflagT, EAMBflagT, &
-		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, SYMVPARflagT, &
+		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, CONVECTIONflagT, SYMVPARflagT, &
 		ION2VPERPflagT, PHASEIONDISTRIBflagT, PHASEDENSITYIONMOMENTflagT, &
 		PHASEVELPERPIONMOMENTflagT, PHASEVELPARIONMOMENTflagT, PHASEENERGYIONMOMENTflagT, &
 		PHASEENERGYPERPIONMOMENTflagT, PHASEENERGYPARIONMOMENTflagT, PHASEENERGYPERPIONMOMENTCENTERflagT, &
@@ -484,9 +480,10 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 	real(kind= dp), dimension(1) :: zns0T, ns0T, nsnormfacT, zns0NeutT, ns0NeutT
 	real(kind= dp), dimension(1) :: pdriftLimT, rdriftLimT, thetadriftLimT, &
 		phidriftLimT
-	real(kind= dp), dimension(:), allocatable :: rGCTp, hqCTp, dqCTp
 	real(kind= dp), dimension(1) :: PhiPar0BT
 	! Density Profile A:
+	real(kind= dp), dimension(:, :), allocatable :: qGCT, hqCT, dpCT, dqCT, dphiCT, rGCT, phiGCT, thetaGCT, ellGCT, &
+		qGLT, qGHT, pGCT, d3xCT, TsPerpT, TsParT, TsT, nsnormCNeutT
 	integer(kind= dp), dimension(1) :: nsnormCLBT, nsnormCUBT
 	integer(kind= dp), dimension(:), allocatable :: NsFARRpT, NsFApT, NsFARpT
 	integer(kind= dp), dimension(1) :: NsRRT, NsRT, NsT
@@ -527,13 +524,13 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 	! Ambipolar Electric Field:
 	real(kind= dp), dimension(:, :), allocatable :: LambdaDRT, EAInertialRT, EAPressureRT, EAmagRT
 	! Gravitational Field:
-	real(kind= dp), dimension(:), allocatable :: EGmagRT
+	real(kind= dp), dimension(:, :), allocatable :: EGmagRT
 	! Moment Filter:
 	real(kind= dp), dimension(:, :), allocatable :: MomentFiltInT, MomentFiltOutT, &
 		M0FiltAvrgRT, M1Perp1FiltAvrgRT, M1Perp2FiltAvrgRT, M1ParFiltAvrgRT, M2ParFiltAvrgRT
 	! Parallel Electric Field:
-	real(kind= dp), dimension(:), allocatable :: PhiParRT
-	real(kind= dp), dimension(:), allocatable :: EPmagRT
+	real(kind= dp), dimension(:, :), allocatable :: PhiParRT
+	real(kind= dp), dimension(:, :), allocatable :: EPmagRT
 	! ENA Moments:
 	real(kind= dp), dimension(:, :), allocatable :: M0phENART, M1PphENART, &
 		M1QphENART, M1PHIphENART, M2phENART, M2PphENART, M2QphENART, M2PHIphENART
@@ -584,7 +581,7 @@ subroutine thetasub(theta, z, r)
 	implicit none
 	real(kind= dp), intent(out) :: theta
 	real(kind= dp), intent(in) :: z, r
-		theta= acos(z/r)
+		theta= acos(z/r) ! [rad/s]
 end subroutine thetasub
 
 subroutine phisub(phi, x, y)

@@ -120,7 +120,7 @@ contains
 ! 					get max limits to compare here
 
 					! if ((SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
-! 						SpecieT(s)%FluxTubeT(f)%QCellT(1)%qGLT(1)) .or. &
+! 						SpecieT(s)%FluxTubeT(f)%qGLT(1, 1)) .or. &
 ! 						(SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%QCellT( &
 ! 						((NqUB(1)- NqLB(1))+ 1))%qGHT(1))) then
 ! 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &

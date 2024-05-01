@@ -536,7 +536,7 @@ contains
         allocate(SpecieT(s)%FluxTubeT(f)%M2ParphRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
           ((NqUB(1)- NqLB(1))+ 1)))
 
-				if (SpecieT(s)%FluxTubeT(f)%DENSITYOUTPUTflagT(1) == 1) then
+				if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
 					allocate(SpecieT(s)%FluxTubeT(f)%DensityOutputRT((NqUB(1)- NqLB(1))+ 1), &
 						SpecieT(s)%FluxTubeT(f)%TemperatureOutputRT((NqUB(1)- NqLB(1))+ 1))
 					allocate(SpecieT(s)%FluxTubeT(f)%EAInertialOutputRT((NqUB(1)- NqLB(1))+ 1), &
@@ -582,16 +582,19 @@ contains
     end if
     allocate(SpecieT(s)%FluxTubeT(f)%EAmagRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
       ((NqUB(1)- NqLB(1))+ 1)))
-		allocate(SpecieT(s)%FluxTubeT(f)%EGmagRT((NqUB(1)- NqLB(1))+ 1))
+		allocate(SpecieT(s)%FluxTubeT(f)%EGmagRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+      ((NqUB(1)- NqLB(1))+ 1)))
 
     ! ----------------------------------------------------
 
     ! ALLOCATE PARALLEL ELECTRIC FIELD VARIABLES IN DERIVED DATA TYPES:
 
     if (rank == 0) then
-      allocate(SpecieT(s)%FluxTubeT(f)%PhiParRT(((NqUB(1)- NqLB(1))+ 1)))
+      allocate(SpecieT(s)%FluxTubeT(f)%PhiParRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	      ((NqUB(1)- NqLB(1))+ 1)))
     end if
-    allocate(SpecieT(s)%FluxTubeT(f)%EPmagRT(((NqUB(1)- NqLB(1))+ 1)))
+    allocate(SpecieT(s)%FluxTubeT(f)%EPmagRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+      ((NqUB(1)- NqLB(1))+ 1)))
 
     ! ----------------------------------------------------
 

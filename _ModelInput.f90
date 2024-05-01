@@ -17,20 +17,18 @@ complex(kind= dp) :: i ! Square-root of -1
 
 ! ----------------- I/O PATHS -----------------
 
+! Set (=1) for spin-up simulations (output initial conditions, i.e. spin up simulation (=1))
+integer(kind= dp), parameter :: SPINUPflag= 1
+
 ! Define I/O paths:
+character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDensityInput/'
 
-integer(kind= dp), parameter :: SPINUP= 1 ! KAOS Spinup (=1)
-
-!write(*, *) SPINUP
-
-!if (SPINUP == 1) then
+!if (SPINUPflag == 1) then
   character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
 !end if
-!if (SPINUP == 0) then
-  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
+!if (SPINUPflag == 0) then
+!  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
 !end if
-
-character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDensityInput/'
 
 ! ----------------- PHYSICAL CONSTANTS -----------------
 
@@ -46,6 +44,7 @@ real(kind= dp), parameter :: melec= 9.109d-31 ! Electron mass [kg]
 
 ! ----------------- TIME PARAMETERS -----------------
 
+!HERE00
 real(kind= dp), parameter :: A= 0d0 ! Start time [s]
 real(kind= dp), parameter :: B= 18000d0 ! 25200d0 ! 14400d0 ! (25200 for W0F, 18000d0 for W0 sims, 14400d0 for VV0, VV0F sims) End time [s]
 integer(kind= dp), parameter :: Nt= 3d4 ! 2d4 ! 0.2d4 ! Total number of time-steps
@@ -84,22 +83,6 @@ integer(kind= dp), parameter :: DENSITYPROFILEflag= 1
 ! Set initial velocities of injected ions equal to zero (leave =0)
 integer(kind= dp), parameter :: STATICINJECTIONflag= 0
 
-! Set (=1) for spin-up simulations (output initial conditions, i.e. spin up simulation (=1))
-!if (SPINUP == 1) then
-  integer(kind= dp), parameter :: DENSITYOUTPUTflag= 1
-!end if
-!if (SPINUP == 0) then
-  !integer(kind= dp), parameter :: DENSITYOUTPUTflag= 0
-!end if
-
-! Set (=1) for non spin-up simulations (input initial conditions from spin-up, i.e. spin up simulation (=0))
-!if (SPINUP == 1) then
-  integer(kind= dp), parameter :: DENSITYINPUTflag= 0
-!end if
-!if (SPINUP == 0) then
-  !integer(kind= dp), parameter :: DENSITYINPUTflag= 1
-!end if
-
 ! ----------------- ION FORCE FLAGS -----------------
 
 ! Set wave-particle interactions
@@ -128,6 +111,9 @@ integer(kind= dp), parameter :: EAPRESSUREflag= 1
 
 ! Set parallel electric field
 integer(kind= dp), parameter :: EPARflag= 0
+
+! Set flux-tube converction:
+integer(kind= dp), parameter :: CONVECTIONflag= 0
 
 ! ----------------- ION MOMENT FLAGS -----------------
 
@@ -177,9 +163,9 @@ integer(kind= dp), parameter :: ENANOISEflag= 0
 ! Define number of particle species and flux tubes
 integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
 integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
-real(kind= dp), parameter :: Lshell= 5d0 ! Initial L-shell
-real(kind= dp), parameter :: qGA= 0.8d0 ! Set lower boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
-real(kind= dp), parameter :: qGB= 0.05d0 ! Set upper boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
+real(kind= dp), parameter :: Lshell= 3d0 ! Initial L-shell
+real(kind= dp), parameter :: qGA= 0.6d0 ! Set lower boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
+real(kind= dp), parameter :: qGB= 0.1d0 ! Set upper boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
 
 integer(kind= dp) :: SMagHemFlag
 real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
@@ -198,27 +184,27 @@ integer(kind= dp) :: NqGpF ! Preliminary number of Q Grid Cells (including lower
 
 real(kind= dp), parameter :: NVparGpF= 30d0 ! Preliminary number of Vpar Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
 real(kind= dp), parameter :: NVperpGpF= 30d0 ! Preliminary number of Vperp Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
-real(kind= dp), parameter :: VperpsigmaFac= 25d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
-real(kind= dp), parameter :: VparsigmaFac= 25d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
+real(kind= dp), parameter :: VperpsigmaFac= 4d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
+real(kind= dp), parameter :: VparsigmaFac= 4d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
 
-real(kind= dp), parameter :: Ti= 2.5d3 ! Ion initialization temperature [K]
-real(kind= dp), parameter :: Te= 2.5d3 ! Electron initialization temperature [K]
+real(kind= dp), parameter :: Ti= 5d3 ! Ion initialization temperature [K]
+real(kind= dp), parameter :: Te= 5d3 ! Electron initialization temperature [K]
 real(kind= dp), parameter :: TNeut= 848d0 ! O neutral temperature [K] from NRLMSISE-00
 
 ! ----------------- ION INITIALIZATION PARAMETERS -----------------
 ! Note: change lower boundary cell (NqICA) and upper boundary cell (NqICB) and macro-particle normalization constant (nsnormfac) such that no cells are empty
 
 integer(kind= dp), parameter :: NqICA= 1d0 ! Leave =1 (change grid to adjust)
-integer(kind= dp), parameter :: NqICB= 15d0
+integer(kind= dp), parameter :: NqICB= 12d0
 
-real(kind= dp), parameter :: nsnormfac= 9.5d13 ! Macro-particle normalization factor (inversely proportional to number of particles)
+real(kind= dp), parameter :: nsnormfac= 8d18 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
 real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
 real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]
 real(kind= dp), parameter :: dns0= 1d0 ! Multiplicative factor of reference ion density
 
-real(kind= dp), parameter :: zns0= RE+ 389d3 ! RE+ 370.78d3 ! Initial ion density profile reference altitude [km]
-real(kind= dp), parameter :: ns0= 1d7*dns0 ! (W0F2) ! Initial ion density profile reference density at zns0 [m-3]
+real(kind= dp), parameter :: zns0= RE+ 400d3 ! RE+ 370.78d3 ! Initial ion density profile reference altitude [km]
+real(kind= dp), parameter :: ns0= 1d8*dns0 ! (W0F2) ! Initial ion density profile reference density at zns0 [m-3]
 
 ! ----------------- NEUTRAL OXYGEN INITIALIZATION PARAMETERS -----------------
 

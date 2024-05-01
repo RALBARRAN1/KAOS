@@ -64,11 +64,10 @@ contains
 						ellMB(1)= SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)% &
 							ellfinalICT(FAindIC)
 
-						if (SpecieT(1)%FluxTubeT(1)%DENSITYINPUTflagT(1) == 0) then
-							TsMB(1)= SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)% &
-				  			FluxTubeT(f)%NqICAT(1)+ Qind- 1)%TsT(1)
+						if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 1) then
+							TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)
 						end if
-						if (SpecieT(1)%FluxTubeT(1)%DENSITYINPUTflagT(1) == 1) then
+						if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
 							TsMB(1)= SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)% &
 				  			FluxTubeT(f)%NqICAT(1)+ Qind- 1)%TemperatureInputT(1)
 						end if
