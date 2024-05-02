@@ -49,6 +49,12 @@ contains
 
 		! CONSTRUCT INITIAL CONFIGURATION-SPACE GRID:
 
+		if (abs(qGA) <= abs(qGB)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+				' INCONSISTENT qGA AND qGB WITH MAGNETIC HEMISPHERE', &
+				' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 
@@ -296,7 +302,9 @@ contains
 
 				SpecieT(s)%FluxTubeT(f)%IONNOISEflagT= IONNOISEflag
  				SpecieT(s)%FluxTubeT(f)%ICRflagT= ICRflag
+				SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT= ICRCOHERENCEflag
 				SpecieT(s)%FluxTubeT(f)%MIRRORflagT= MIRRORflag
+
 				SpecieT(s)%FluxTubeT(f)%GRAVflagT= GRAVflag
 				SpecieT(s)%FluxTubeT(f)%EAMBflagT= EAMBflag
 				SpecieT(s)%FluxTubeT(f)%EAMBSELFCONSISTflagT= EAMBSELFCONSISTflag
@@ -426,6 +434,16 @@ contains
 					(isnan(real(SpecieT(s)%FluxTubeT(f)%ICRflagT(1))) &
 					.eqv. .true.)) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ICRflagT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((ICRCOHERENCEflag /= SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT(1))) &
+					.eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ICRCOHERENCEflagT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
 					' SUBROUTINE' // achar(27) // '[0m.'
@@ -1228,112 +1246,178 @@ contains
 
 		! SET ICR HEATING PARAMETERS:
 
-		! Consider making this time and space dependent
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (SpecieT(s)%FluxTubeT(f)%ICRflagT(1) == 1) then
-					do Qind= 1, 1, 1
 
-						! ----------------------------------------------------
+					allocate(SpecieT(s)%FluxTubeT(f)%lambdaPerppT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%EtaLHpT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%XiPerp1pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%XiPerp2pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%S0pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%OmegaG0pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+	          ((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+						((NqUB(1)- NqLB(1))+ 1)))
+					allocate(SpecieT(s)%FluxTubeT(f)%dsICRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+						((NqUB(1)- NqLB(1))+ 1)))
 
-						OmegaG0p(1)= 2d0*pi*f0p ! Ref. gyrofreq. corresponding to EPerp0 [rads/s]
+					do Qind= NqLB(1), NqUB(1), 1
+						do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 
-						! Create nested derived data types
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%lambdaPerppT= lambdaPerpp
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EtaLHpT= EtaLHp
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp1pT= XiPerp1p
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp2pT= XiPerp2p
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%S0pT= S0p
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%OmegaG0pT= OmegaG0p
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp1pT= ChiPerp1p
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp2pT= ChiPerp2p
+							! ----------------------------------------------------
 
-						! ----------------------------------------------------
+							OmegaG0p(1)= 2d0*pi*f0p ! Ref. gyrofreq. corresponding to EPerp0 [rads/s]
 
-						! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+							! Create nested derived data types
+							SpecieT(s)%FluxTubeT(f)%lambdaPerppT(nn, Qind)= lambdaPerpp
+							SpecieT(s)%FluxTubeT(f)%EtaLHpT(nn, Qind)= EtaLHp
+							SpecieT(s)%FluxTubeT(f)%XiPerp1pT(nn, Qind)= XiPerp1p
+							SpecieT(s)%FluxTubeT(f)%XiPerp2pT(nn, Qind)= XiPerp2p
+							SpecieT(s)%FluxTubeT(f)%S0pT(nn, Qind)= S0p
+							SpecieT(s)%FluxTubeT(f)%OmegaG0pT(nn, Qind)= OmegaG0p(1)
+							SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(nn, Qind)= ChiPerp1p
+							SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(nn, Qind)= ChiPerp2p
 
-						if ((lambdaPerpp /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%lambdaPerppT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%lambdaPerppT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%lambdaPerppT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' lambdaPerppT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							! ----------------------------------------------------
 
-						if ((EtaLHp /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EtaLHpT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EtaLHpT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EtaLHpT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EtaLHpT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-						if ((XiPerp1p /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp1pT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp1pT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp1pT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp1pT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							if ((lambdaPerpp /= SpecieT(s)%FluxTubeT(f)%lambdaPerppT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%lambdaPerppT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%lambdaPerppT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' lambdaPerppT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
-						if ((XiPerp2p /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp2pT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp2pT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%XiPerp2pT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp2pT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							if ((EtaLHp /= SpecieT(s)%FluxTubeT(f)%EtaLHpT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%EtaLHpT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%EtaLHpT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EtaLHpT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
-						if ((S0p /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%S0pT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%S0pT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%S0pT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' S0pT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							if ((XiPerp1p /= SpecieT(s)%FluxTubeT(f)%XiPerp1pT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%XiPerp1pT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%XiPerp1pT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp1pT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
-						if ((OmegaG0p(1) /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%OmegaG0pT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%OmegaG0pT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%OmegaG0pT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' OmegaG0pT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							if ((XiPerp2p /= SpecieT(s)%FluxTubeT(f)%XiPerp2pT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%XiPerp2pT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%XiPerp2pT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp2pT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
-						if ((ChiPerp1p /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp1pT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp1pT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp1pT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp1pT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							if ((S0p /= SpecieT(s)%FluxTubeT(f)%S0pT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%S0pT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%S0pT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' S0pT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
-						if ((ChiPerp2p /= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp2pT(1)) .or. &
-							(size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp2pT(:)) /= 1) .or. &
-							(isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%ChiPerp2pT(1))) &
-							.eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp2pT HAS', &
-								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN SIMULATION', &
-								' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-						end if
+							if ((OmegaG0p(1) /= SpecieT(s)%FluxTubeT(f)%OmegaG0pT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%OmegaG0pT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%OmegaG0pT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' OmegaG0pT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
-						! ----------------------------------------------------
+							if ((ChiPerp1p /= SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp1pT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
 
+							if ((ChiPerp2p /= SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(nn, Qind)) .or. &
+								(size(SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(:, :)) /= &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+								(isnan(real(SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(nn, Qind))) &
+								.eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp2pT HAS', &
+									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
+									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+									', STATISTICAL TIME-STEP= ', nn, &
+									', AND Qind= ', Qind, ' IN SIMULATION', &
+									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+							end if
+
+							if (SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT(1) == 1) then
+								if (SpecieT(s)%FluxTubeT(f)%XiPerp1pT(nn, Qind) /= &
+									SpecieT(s)%FluxTubeT(f)%XiPerp2pT(nn, Qind)) then
+									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+										' INCONSISTENT XiPerp1 and XiPerp2 VALUES FOR COHERENT ICR HEATING', &
+										' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+										', STATISTICAL TIME-STEP= ', nn, &
+										', AND Qind= ', Qind, ' IN SIMULATION', &
+										' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+								end if
+								if (SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(nn, Qind) /= &
+									SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(nn, Qind)) then
+									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+										' INCONSISTENT ChiPerp1 and ChiPerp2 VALUES FOR COHERENT ICR HEATING', &
+										' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+										', STATISTICAL TIME-STEP= ', nn, &
+										', AND Qind= ', Qind, ' IN SIMULATION', &
+										' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+								end if
+							end if
+
+							! ----------------------------------------------------
+
+						end do
 					end do
 				end if
 			end do
@@ -1384,9 +1468,9 @@ contains
 					write(*, *) trim('Number of MPI ranks= ' // adjustl(paramstring))
 
 					if (SpecieT(s)%FluxTubeT(f)%QCell0T(1)%qGL0T(1) <= 0d0) then
-						write(*, *) 'Northern Magnetic Hemisphere'
-					else if (SpecieT(s)%FluxTubeT(f)%QCell0T(1)%qGL0T(1) > 0d0) then
 						write(*, *) 'Southern Magnetic Hemisphere'
+					else if (SpecieT(s)%FluxTubeT(f)%QCell0T(1)%qGL0T(1) > 0d0) then
+						write(*, *) 'Northern Magnetic Hemisphere'
 					end if
 
 					write(*, *) trim('Data Export Path= ' // adjustl(dataexportdir))
@@ -1564,6 +1648,8 @@ contains
 
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%ICRflagT(1)
 					write(*, *) trim('Ion Cyclotron Wave Heating Flag= ' // adjustl(paramstring))
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT(1)
+					write(*, *) trim('Coherent Ion Cyclotron Wave Heating Flag= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%MIRRORflagT(1)
 					write(*, *) trim('Mirror Force Flag= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%GRAVflagT(1)
@@ -1682,21 +1768,21 @@ contains
 						write(*, *) 'ICR HEATING PARAMETERS:'
 						write(*, *)
 
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%lambdaPerppT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%lambdaPerppT(1, 1)
 						write(*, *) trim('BBELF Wavelength [m]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%EtaLHpT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%EtaLHpT(1, 1)
 						write(*, *) trim('BBELF Wave Power LHP Fraction= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%XiPerp1pT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%XiPerp1pT(1, 1)
 						write(*, *) trim('BBELF Wave Power Fraction Along Vperp1= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%XiPerp2pT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%XiPerp2pT(1, 1)
 						write(*, *) trim('BBELF Wave Power Fraction Along Vperp2= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%S0pT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%S0pT(1, 1)
 						write(*, *) trim('Wave Spectral Energy Density [(V^2/m^2)/Hz]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%OmegaG0pT(1)/(2d0*pi)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%OmegaG0pT(1, 1)/(2d0*pi)
 						write(*, *) trim('Reference Ion Cyclotron Frequency [Hz]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%ChiPerp1pT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(1, 1)
 						write(*, *) trim('Wave Spectral Index Along Vperp1= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%ChiPerp2pT(1)
+						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(1, 1)
 						write(*, *) trim('Wave Spectral Index Along Vperp2= ' // adjustl(paramstring))
 
 					end if

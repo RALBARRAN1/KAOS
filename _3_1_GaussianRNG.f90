@@ -28,7 +28,7 @@ contains
 
 		! ----------------------------------------------------
 
-		call random_number(UniformRN1)
+		call random_number(UniformRN1) ! Uniformly distributed RN from [0, 1)
     call random_number(UniformRN2)
 		GaussianRN(1)= sqrt(-2d0*log(UniformRN1(1)))*cos(2d0*pi*UniformRN2(1))
 

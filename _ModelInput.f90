@@ -27,7 +27,7 @@ character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KAOS_M
   character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
 !end if
 !if (SPINUPflag == 0) then
-!  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
+  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
 !end if
 
 ! ----------------- PHYSICAL CONSTANTS -----------------
@@ -87,6 +87,9 @@ integer(kind= dp), parameter :: STATICINJECTIONflag= 0
 
 ! Set wave-particle interactions
 integer(kind= dp), parameter :: ICRflag= 0
+
+! Set coherent wave-particle interactions
+integer(kind= dp), parameter :: ICRCOHERENCEflag= 0
 
 ! Set mirro-force
 integer(kind= dp), parameter :: MIRRORflag= 0
@@ -164,8 +167,8 @@ integer(kind= dp), parameter :: ENANOISEflag= 0
 integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
 integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
 real(kind= dp), parameter :: Lshell= 3d0 ! Initial L-shell
-real(kind= dp), parameter :: qGA= 0.6d0 ! Set lower boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
-real(kind= dp), parameter :: qGB= 0.1d0 ! Set upper boundary q value (< for North Magnetic Hemisphere and > for South Magnetic Hemisphere)
+real(kind= dp), parameter :: qGA= -0.6d0 ! Set lower boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
+real(kind= dp), parameter :: qGB= -0.03d0 ! Set upper boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
 
 integer(kind= dp) :: SMagHemFlag
 real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
@@ -197,7 +200,7 @@ real(kind= dp), parameter :: TNeut= 848d0 ! O neutral temperature [K] from NRLMS
 integer(kind= dp), parameter :: NqICA= 1d0 ! Leave =1 (change grid to adjust)
 integer(kind= dp), parameter :: NqICB= 12d0
 
-real(kind= dp), parameter :: nsnormfac= 8d18 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
+real(kind= dp), parameter :: nsnormfac= 8d14 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
 real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
 real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]
@@ -221,7 +224,7 @@ real(kind= dp), parameter :: XiPerp2p= 0.5d0 ! Fraction of LH Polarized ELF wave
 real(kind= dp), parameter :: lambdaPerpp= 0d0 ! VLF wavelength at local gyrofrequency [m] (set to zero for infinite wavelength limit)
 
 real(kind= dp), parameter :: f0p= 6.5d0 ! 72.5333d0 ! Reference heating gyrofrequency [Hz]
-real(kind= dp), parameter :: S0p= 5d-7 ! 1.9052d-10 ! Reference Wave Spectral Energy Density in [(V^2/m^2)/Hz]
+real(kind= dp), parameter :: S0p= 5d-5 ! 1.9052d-10 ! Reference Wave Spectral Energy Density in [(V^2/m^2)/Hz]
 
 real(kind= dp), parameter :: ChiPerp1p= 2.1d0 ! ELF wave spectral index along vperp1
 real(kind= dp), parameter :: ChiPerp2p= 2.1d0 ! ELF wave spectral index along vperp2

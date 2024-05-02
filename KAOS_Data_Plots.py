@@ -2,13 +2,15 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-NNt= 148
+NNt= 9
 Stot= 1
 Nf= 1
 NqG= 12
 NVparG= 28
 NVperp1G= 28
 NVperp2G= 28
+
+Qindval= 6
 
 if ((NVparG != NVperp1G) or (NVparG != NVperp2G) or (NVperp1G != NVperp2G)):
 	print('ERROR: UNEQUAL VALUES OF NVparG= ', NVparG, ', NVperp1G= ', NVperp1G, ', NVperp2G= ', NVperp2G)
@@ -127,7 +129,7 @@ axarr[figB].plot(M0[nn, :], alt[:], 'k.',label= 'current time')
 axarr[figB].set_xlabel('$n$ [m$^{-3}$]')
 axarr[figB].legend()
 figC= 2
-axarr[figC].plot(Time[:], M0[:, 7])
+axarr[figC].plot(Time[:], M0[:, Qindval])
 axarr[figC].set_xlabel('Time [s]')
 axarr[figC].set_ylabel('$n$ [m$^{-3}$]')
 plt.show()
@@ -158,25 +160,24 @@ figB= 1
 axarr[figB].plot(M1Par[nn, :], alt[:])
 axarr[figB].set_xlabel('$u_\parallel$ [m/s]')
 figC= 2
-axarr[figC].plot(Time[:], M1Par[:, 7])
+axarr[figC].plot(Time[:], M1Par[:, Qindval])
 axarr[figC].set_xlabel('Time [s]')
 axarr[figC].set_ylabel('$u_\parallel$ [m/s]')
 plt.show()
 
-Qind= 7
 for nn in range(NNt- 5, NNt- 1):
 
 	fig,axarr= plt.subplots(1, 3)
-	NphVperp1Vparplt= axarr[0].pcolormesh(NphVperp1Vpar[:, :, Qind, nn])
+	NphVperp1Vparplt= axarr[0].pcolormesh(NphVperp1Vpar[:, :, Qindval, nn])
 	fig.colorbar(NphVperp1Vparplt)
 	axarr[0].set_xlabel('$N(v_{\perp 1},\:v_{\parallel})$')
 	#plt.title('Time [s]= ', Time[nn])
 
-	NphVperp2Vparplt= axarr[1].pcolormesh(NphVperp1Vperp2[:, :, Qind, nn])
+	NphVperp2Vparplt= axarr[1].pcolormesh(NphVperp1Vperp2[:, :, Qindval, nn])
 	fig.colorbar(NphVperp2Vparplt)
 	axarr[1].set_xlabel('$N(v_{\perp 2},\:v_{\parallel})$')
 
-	NphVperp1Vperp2plt= axarr[2].pcolormesh(NphVperp2Vpar[:, :, Qind, nn])
+	NphVperp1Vperp2plt= axarr[2].pcolormesh(NphVperp2Vpar[:, :, Qindval, nn])
 	fig.colorbar(NphVperp1Vperp2plt)
 	axarr[2].set_xlabel('$N(v_{\perp 1},\:v_{\perp 2})$')
 	plt.show()

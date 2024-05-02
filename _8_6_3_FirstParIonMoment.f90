@@ -437,6 +437,17 @@ contains
 ! 			end if
 ! 		end do
 
+		if (rank == 0) then
+			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					do Qind= NqLB(1), NqUB(1), 1
+						write(*, *) 'M1Par, nn, Qind= ', nn, Qind, SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)
+					end do
+				end if
+			end do
+		end if
+
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 

@@ -193,18 +193,19 @@ real(kind= dp), dimension(:), allocatable :: Vphi, Vp, VphiTMP, VpTMP
 real(kind= dp), dimension(1) :: rk1, pk1, qk1, Rperpk1, &
 	Bmagk1, OmegaGk1, dBdsk1, muk1, AMxk1p, AMyk1p, AMzk1p, AMxk1, AMyk1, AMzk1, AMpark1, AMpk1, AMphik1, &
 	AGxk1p, AGyk1p, AGzk1p, AGxk1, AGyk1, AGzk1, AGpark1, AGpk1, AGphik1, &
-	AEAxk1p, AEAyk1p, AEAzk1p, AEAxk1, AEAyk1, AEAzk1, AEApark1, AEApk1, AEAphik1, &
+	AEAxk1p, AEAyk1p, AEAzk1p, AEAxk1, AEAyk1, AEAzk1, AEApark1, AEApk1, AEAphik1, AEAmagSk1, AGmagSk1, AEPmagSk1, &
 	AEPxk1p, AEPyk1p, AEPzk1p, AEPxk1, AEPyk1, AEPzk1, AEPpark1, AEPpk1, AEPphik1, &
 	Axk1, Ayk1, Azk1, Vr, Vtheta, EpsilonPar, &
 	EpsilonPerp, alpha, VxR, VyR, VzR, lambdaPerp, EtaLH, XiPerp1, XiPerp2, S0, OmegaG0, ChiPerp1, &
-	ChiPerp2, GammaPerp1, GammaPerp2, SigmaPerp, DPerp1, DPerp2, DVPerp1icr, DVPerp2icr, &
-	epsPerp, tauPerp
+	ChiPerp2, GammaPerp1, GammaPerp2, SigmaPerp, DPerp1, DPerp2, DVPerp1icr, DVPerp2icr, DVPerpicr, &
+	SUMdsICR, epsPerp, tauPerp
 integer(kind= dp), dimension(:), allocatable :: Qindk1, Qindk0, Vparindk1, Vperpindk1, Vperp1indk1, Vperp2indk1, &
 	Vparindk0, Vperpindk0, Vperp1indk0, Vperp2indk0, Vpindk1, Vqindk1, Vphiindk1
 integer(kind= dp), dimension(:), allocatable :: Qindk1TMP, Qindk0TMP, Vparindk1TMP, Vperp1indk1TMP, Vperp2indk1TMP, &
 	Vperpindk1TMP, Vparindk0TMP, Vperp1indk0TMP, Vperp2indk0TMP, Vperpindk0TMP, Vpindk1TMP, Vqindk1TMP, Vphiindk1TMP
 real(kind= dp), dimension(1) :: U1GammaPerp1randn, U2GammaPerp1randn, &
 	U1GammaPerp2randn, U2GammaPerp2randn
+real(kind= dp), dimension(1) :: GammaGArandn, UniformGA, URNgyroangle
 
 ! ----------------- 8_1_2 KINETIC UPDATE B-----------------
 
@@ -213,8 +214,8 @@ real(kind= dp), dimension(1) :: rk2, thetak2, phik2, qk2, pk2, &
 	AMxk2p, AMyk2p, AMzk2p, AMxk2, AMyk2, AMzk2, AMpark2, AMpk2, AMphik2, &
 	AGxk2p, AGyk2p, AGzk2p, AGxk2, AGyk2, AGzk2, AGpark2, AGpk2, AGphik2, &
 	AEAxk2p, AEAyk2p, AEAzk2p, AEAxk2, AEAyk2, AEAzk2, AEApark2, AEApk2, AEAphik2, &
-	AEPxk2p, AEPyk2p, AEPzk2p, AEPxk2, AEPyk2, AEPzk2, AEPpark2, AEPpk2, AEPphik2, &
-	Axk2, Ayk2, Azk2
+	AEAmagSk2, AGmagSk2, AEPmagSk2, AEPxk2p, AEPyk2p, AEPzk2p, AEPxk2, AEPyk2, &
+	AEPzk2, AEPpark2, AEPpk2, AEPphik2, Axk2, Ayk2, Azk2
 
 ! ----------------- 8_1_3 KINETIC UPDATE C-----------------
 
@@ -224,8 +225,8 @@ real(kind= dp), dimension(1) ::  Rperpk4, Bmagk4, OmegaGk4, dBdsk4, muk4, &
 	AMxk4p, AMyk4p, AMzk4p, AMxk4, AMyk4, AMzk4, AMpark4, AMpk4, AMphik4, &
 	AGxk4p, AGyk4p, AGzk4p, AGxk4, AGyk4, AGzk4, AGpark4, AGpk4, AGphik4, &
 	AEAxk4p, AEAyk4p, AEAzk4p, AEAxk4, AEAyk4, AEAzk4, AEApark4, AEApk4, AEAphik4, &
-	AEPxk4p, AEPyk4p, AEPzk4p, AEPxk4, AEPyk4, AEPzk4, AEPpark4, AEPpk4, AEPphik4, &
-	Axk4, Ayk4, Azk4
+	AEAmagSk4, AGmagSk4, AEPmagSk4, AEPxk4p, AEPyk4p, AEPzk4p, AEPxk4, AEPyk4, &
+	AEPzk4, AEPpark4, AEPpk4, AEPphik4, Axk4, Ayk4, Azk4
 
 ! ----------------- 8_1_4 RK4 DIPOLE POLYNOMIAL SOLVER -----------------
 
@@ -429,8 +430,6 @@ type QCelltype ! Config-space grid cell derived data type: rank 1, indices [s, f
 		VqGp1T, VqGp2T, VqGpT, dVpGpT, dVphiGpT, dVqGpT
 	real(kind= dp), dimension(:, :, :), allocatable :: Vperp1GT, Vperp2GT, VpGT, VqGT, VphiGT, VparGT
 	real(kind= dp), dimension(:), allocatable :: TeNT
-	real(kind= dp), dimension(1) :: lambdaPerppT, EtaLHpT, XiPerp1pT, XiPerp2pT, S0pT, &
-		OmegaG0pT, ChiPerp1pT, ChiPerp2pT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NqT, NqENAT, NqRT, NqENART
 	real(kind= dp), dimension(:, :, :), allocatable :: NphReNormT, NphReNormRT
@@ -459,8 +458,7 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 		Te0T, rGL0T, rGH0T, phiGL0T, phiGH0T, thetaGL0T, thetaGH0T, ellGL0T, ellGH0T, &
 		xGC0T, xGL0T, xGH0T, yGC0T, yGL0T, yGH0T, zGC0T, zGL0T, zGH0T
 	integer(kind= dp), dimension(1) :: nsnormCLBInputT, nsnormCUBInputT
-	real(kind= dp), dimension(:), allocatable :: ellqCT
-	real(kind= dp), dimension(1) :: SUMellqCT
+	real(kind= dp), dimension(:, :), allocatable :: dsICRT
 	real(kind= dp), dimension(1) :: LBNominalDensityT, UBNominalDensityT, &
 		d3xCLBT, d3xCUBT, sigmaLBT, sigmaUBT
 	real(kind= dp), dimension(1) :: AT, BT, hT
@@ -469,7 +467,7 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 	integer(kind= dp), dimension(1) :: IONNOISEflagT, FLUIDIONEXPORTflagT, FLUIDENAEXPORTflagT, &
 		LBCONDITIONflagT, UBCONDITIONflagT, LBREPLENISHflagT, UBREPLENISHflagT, &
 		DENSITYPROFILEflagT, STATICINJECTIONflagT, SPINUPflagT, &
-		ICRflagT, MIRRORflagT, GRAVflagT, EAMBSELFCONSISTflagT, EAMBSIGNflagT, EAMBflagT, &
+		ICRflagT, ICRCOHERENCEflagT, MIRRORflagT, GRAVflagT, EAMBSELFCONSISTflagT, EAMBSIGNflagT, EAMBflagT, &
 		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, CONVECTIONflagT, SYMVPARflagT, &
 		ION2VPERPflagT, PHASEIONDISTRIBflagT, PHASEDENSITYIONMOMENTflagT, &
 		PHASEVELPERPIONMOMENTflagT, PHASEVELPARIONMOMENTflagT, PHASEENERGYIONMOMENTflagT, &
@@ -481,6 +479,8 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 	real(kind= dp), dimension(1) :: pdriftLimT, rdriftLimT, thetadriftLimT, &
 		phidriftLimT
 	real(kind= dp), dimension(1) :: PhiPar0BT
+	real(kind= dp), dimension(:, :), allocatable :: lambdaPerppT, EtaLHpT, XiPerp1pT, XiPerp2pT, S0pT, &
+		OmegaG0pT, ChiPerp1pT, ChiPerp2pT
 	! Density Profile A:
 	real(kind= dp), dimension(:, :), allocatable :: qGCT, hqCT, dpCT, dqCT, dphiCT, rGCT, phiGCT, thetaGCT, ellGCT, &
 		qGLT, qGHT, pGCT, d3xCT, TsPerpT, TsParT, TsT, nsnormCNeutT
@@ -676,25 +676,25 @@ end subroutine AMzsub
 
 ! DEFINE GRAVITATIONAL FORCE PARTICLE ACCELERATION TERMS:
 
-subroutine AGxsub(AGx, AGmag, theta, phi, ell)
+subroutine AGxsub(AGx, AGmagS, AGmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AGx
-	real(kind= dp), intent(in) :: AGmag, theta, phi, ell
-		AGx= abs(AGmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AGmagS, AGmag, theta, phi, ell
+		AGx= AGmagS*abs(AGmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AGxsub
 
-subroutine AGysub(AGy, AGmag, theta, phi, ell)
+subroutine AGysub(AGy, AGmagS, AGmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AGy
-	real(kind= dp), intent(in) :: AGmag, theta, phi, ell
-		AGy= abs(AGmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AGmagS, AGmag, theta, phi, ell
+		AGy= AGmagS*abs(AGmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AGysub
 
-subroutine AGzsub(AGz, AGmag, theta, ell)
+subroutine AGzsub(AGz, AGmagS, AGmag, theta, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AGz
-	real(kind= dp), intent(in) :: AGmag, theta, ell
-		AGz= abs(AGmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AGmagS, AGmag, theta, ell
+		AGz= AGmagS*abs(AGmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 end subroutine AGzsub
 
 subroutine AGENAxsub(AGx, mNeut, r, theta, phi)
@@ -722,39 +722,39 @@ end subroutine AGENAzsub
 
 ! DEFINE AMBIPOLAR ELECTRIC FIELD PARTICLE ACCELERATION TERMS:
 
-subroutine AEAxsub(AEAx, AEAmag, theta, phi, ell)
+subroutine AEAxsub(AEAx, AEAmagS, AEAmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEAx
-	real(kind= dp), intent(in) :: AEAmag, theta, phi, ell
+	real(kind= dp), intent(in) :: AEAmagS, AEAmag, theta, phi, ell
 		if (EAMBSIGNflag == 0) then
-			AEAx= abs(AEAmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAx= AEAmagS*abs(AEAmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 		if (EAMBSIGNflag == 1) then
-			AEAx= AEAmag*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAx= AEAmagS*AEAmag*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 end subroutine AEAxsub
 
-subroutine AEAysub(AEAy, AEAmag, theta, phi, ell)
+subroutine AEAysub(AEAy, AEAmagS, AEAmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEAy
-	real(kind= dp), intent(in) :: AEAmag, theta, phi, ell
+	real(kind= dp), intent(in) :: AEAmagS, AEAmag, theta, phi, ell
 		if (EAMBSIGNflag == 0) then
-			AEAy= abs(AEAmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAy= AEAmagS*abs(AEAmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 		if (EAMBSIGNflag == 1) then
-			AEAy= AEAmag*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+			AEAy= AEAmagS*AEAmag*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 		end if
 end subroutine AEAysub
 
-subroutine AEAzsub(AEAz, AEAmag, theta, ell)
+subroutine AEAzsub(AEAz, AEAmagS, AEAmag, theta, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEAz
-	real(kind= dp), intent(in) :: AEAmag, theta, ell
+	real(kind= dp), intent(in) :: AEAmagS, AEAmag, theta, ell
 		if (EAMBSIGNflag == 0) then
-			AEAz= abs(AEAmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+			AEAz= AEAmagS*abs(AEAmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 		end if
 		if (EAMBSIGNflag == 1) then
-			AEAz= AEAmag*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+			AEAz= AEAmagS*AEAmag*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 		end if
 end subroutine AEAzsub
 
@@ -762,25 +762,25 @@ end subroutine AEAzsub
 
 ! DEFINE PARALLEL ELECTRIC FIELD PARTICLE ACCELERATION TERMS:
 
-subroutine AEPxsub(AEPx, AEPmag, theta, phi, ell)
+subroutine AEPxsub(AEPx, AEPmagS, AEPmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEPx
-	real(kind= dp), intent(in) :: AEPmag, theta, phi, ell
-		AEPx= abs(AEPmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AEPmagS, AEPmag, theta, phi, ell
+		AEPx= AEPmagS*abs(AEPmag)*(3d0*cos(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AEPxsub
 
-subroutine AEPysub(AEPy, AEPmag, theta, phi, ell)
+subroutine AEPysub(AEPy, AEPmagS, AEPmag, theta, phi, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEPy
-	real(kind= dp), intent(in) :: AEPmag, theta, phi, ell
-		AEPy= abs(AEPmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AEPmagS, AEPmag, theta, phi, ell
+		AEPy= AEPmagS*abs(AEPmag)*(3d0*sin(phi)*cos(theta)*sin(theta)/(sqrt(ell)))
 end subroutine AEPysub
 
-subroutine AEPzsub(AEPz, AEPmag, theta, ell)
+subroutine AEPzsub(AEPz, AEPmagS, AEPmag, theta, ell)
 	implicit none
 	real(kind= dp), intent(out) :: AEPz
-	real(kind= dp), intent(in) :: AEPmag, theta, ell
-		AEPz= abs(AEPmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
+	real(kind= dp), intent(in) :: AEPmagS, AEPmag, theta, ell
+		AEPz= AEPmagS*abs(AEPmag)*((3d0*(cos(theta))**2d0- 1d0)/(sqrt(ell)))
 end subroutine AEPzsub
 
 ! ----------------------------------------------------

@@ -290,10 +290,10 @@ contains
 
     do Qind= 1, SpecieT(s)%FluxTubeT(f)%NqGpT(1), 1
       if (Qind /= SpecieT(s)%FluxTubeT(f)%NqGpT(1)) then
-				if (qGA <= 0d0) then ! NMH
+				if (qGA <= 0d0) then ! SMH
 	        SpecieT(s)%FluxTubeT(f)%qGT(Qind)= qGA+ (Qind- 1d0)*(abs(qGB- qGA)/SpecieT(s)%FluxTubeT(f)%NqGpT(1))
 				end if
-				if (qGA > 0d0) then ! SMH
+				if (qGA > 0d0) then ! NMH
 	        SpecieT(s)%FluxTubeT(f)%qGT(Qind)= qGA- (Qind- 1d0)*(abs(qGB- qGA)/SpecieT(s)%FluxTubeT(f)%NqGpT(1))
 				end if
       end if
@@ -966,14 +966,6 @@ contains
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 			end if
 		end do
-
-		! ----------------------------------------------------
-
-		! COMPUTE TOTAL FIELD-LINE ARC LENGTH:
-
-		allocate(SpecieT(s)%FluxTubeT(f)%ellqCT(SpecieT(s)%FluxTubeT(f)%NqG0T(1)))
-		SpecieT(s)%FluxTubeT(f)%ellqCT(:)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1)*SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1)
-		SpecieT(s)%FluxTubeT(f)%SUMellqCT(1)= sum(SpecieT(s)%FluxTubeT(f)%ellqCT(:))
 
 		! ----------------------------------------------------
 
