@@ -174,12 +174,26 @@ contains
 							if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
-									SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind), &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
 									', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
 									' ION MOMENT SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
+
+							!if ((nn == 1) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, NqLB(1)) /= &
+							!	SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1)* &
+							!	(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
+							!	SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%d3xC0T(1)))) then
+							!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							!		' INCONSISTENT INITIAL LB DENSITY= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, NqLB(1)), &
+							!		' AND VALUE= ', SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1)* &
+							!		(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
+							!		SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%d3xC0T(1))), &
+							!		' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
+							!		', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+							!		' ION MOMENT SUBROUTINE' &
+							!		// achar(27) // '[0m.'
+							!end if
 
 							if (((sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%F2PerpphRTp(:, :, :, nn)) /= 0d0) .and. &
 								(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) .or. &
@@ -455,6 +469,29 @@ contains
 			end do
 
 		end if
+
+		! ----------------------------------------------------
+
+		! DIAGNOSTIC FLAG FOR CORRECT INITIAL ALTITUDE PROFILE:
+
+		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
+			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+				if ((n == 1) .and. (nn == 1)) then
+					do Qind= NqLB(1), NqUB(1)- 1, 1
+						if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) <= SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind+ 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+								' NON-DECREASING INITIAL DENSITIES WITH ALTITUDE FOR Qind= ', Qind, &
+								', M0(Qind)= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind), &
+								', M0(Qind+ 1)= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind+ 1), &
+								' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
+								' IN ZEROTH ION MOMENT SUBROUTINE' // achar(27) // '[0m.'
+						end if
+					end do
+				end if
+			end do
+		end if
+
+		! ----------------------------------------------------
 
 		if (rank == 0) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1

@@ -2,15 +2,16 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-NNt= 9
+NNt= 50
 Stot= 1
 Nf= 1
-NqG= 12
+NqG= 30
 NVparG= 28
 NVperp1G= 28
 NVperp2G= 28
 
-Qindval= 6
+Qindval= 7- 1
+print('Qindval= ', Qindval)
 
 if ((NVparG != NVperp1G) or (NVparG != NVperp2G) or (NVperp1G != NVperp2G)):
 	print('ERROR: UNEQUAL VALUES OF NVparG= ', NVparG, ', NVperp1G= ', NVperp1G, ', NVperp2G= ', NVperp2G)
@@ -57,10 +58,8 @@ for nn in range(0, NNt- 1):
 			Nph[nn, Qind, :]= np.fromfile(f)
 
 Nph= np.transpose(Nph)
-print(Nph.shape)
-
 Nph= Nph.reshape(NVperp1G, NVperp2G, NVparG, NqG, NNt)
-print(Nph.shape)
+
 for nn in range(0, NNt- 1):
 	for Qind in range(0, NqG- 1):
 		for Vperp1ind in range(0, NVperp1G- 1):
@@ -121,7 +120,7 @@ plt.show()
 
 fig,axarr= plt.subplots(1, 3)
 figA= 0
-M0plt= axarr[figA].pcolormesh(np.transpose(M0[:, :]))
+M0plt= axarr[figA].pcolormesh(np.transpose(np.log(M0[:, :])))
 fig.colorbar(M0plt)
 figB= 1
 axarr[figB].plot(M0[1, :], alt[:], 'k-', label= 'initial time')

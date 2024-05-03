@@ -222,7 +222,7 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 							QloopKSB1: do Qind= NqLB(1), NqUB(1), 1
 								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= qNp(1)) &
 									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
@@ -250,7 +250,7 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 							QloopKSB2: do Qind= NqLB(1), NqUB(1), 1
 								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= qNp(1)) &
 									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
@@ -280,19 +280,19 @@ contains
 
 						! DIAGNOSTIC FLAG FOR PARTICLE POSITIONS WITHIN BOUNDS:
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere)
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere)
 							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
 								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT IS', &
-									' OUTSIDE LOWER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
+									' OUTSIDE LOWER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
 								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp IS', &
-									' OUTSIDE LOWER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
+									' OUTSIDE LOWER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
@@ -513,7 +513,7 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 							QloopKSB3: do Qind= NqLB(1), NqUB(1), 1
 								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= qNp(1)) &
 									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
@@ -541,7 +541,7 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 							QloopKSB4: do Qind= NqLB(1), NqUB(1), 1
 								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= qNp(1)) &
 									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
@@ -571,7 +571,7 @@ contains
 
 						! DIAGNOSTIC FLAG FOR PARTICLE POSITIONS WITHIN BOUNDS:
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! N. Magnetic Hemisphere)
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere)
 							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
 								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT IS', &
@@ -579,7 +579,7 @@ contains
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, NqLB(1))) .or. &
 								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, NqUB(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp IS', &

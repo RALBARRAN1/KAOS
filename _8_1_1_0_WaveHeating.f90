@@ -129,13 +129,13 @@ contains
 
 			! Resonant cyclotron heating
 			if (SpecieT(s)%FluxTubeT(f)%ICRCOHERENCEflagT(1) == 1) then
-				if (SpecieT(s)%FluxTubeT(f)%hT(1) <= tauPerp(1)) then
+				!if (SpecieT(s)%FluxTubeT(f)%hT(1) <= tauPerp(1)) then
 	        DVperpicr(1)= (SpecieT(s)%FluxTubeT(f)%hT(1)/tauPerp(1))* &
 						sqrt(2d0*(DPerp1(1)+ DPerp2(1))*tauPerp(1))*GammaPerp1(1)
-				end if
-				if (SpecieT(s)%FluxTubeT(f)%hT(1) > tauPerp(1)) then
-					DVperpicr(1)= 0d0
-				end if
+				!end if
+				!if (SpecieT(s)%FluxTubeT(f)%hT(1) > tauPerp(1)) then
+				!	DVperpicr(1)= 0d0
+				!end if
 			end if
 
 			! Stochastic cyclotron heating

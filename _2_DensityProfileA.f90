@@ -61,8 +61,6 @@ contains
 						ICbb(1)= sum(ICbbp(1:Qind))
 	          gC(1)= ICbb(1)- IC0bb(1)
 
-						!write(*, *) 'Qind, gC= ', Qind, gC(1)
-
 						if (qGA <= 0d0) then ! SMH
 		          argC(1)= ((SpecieT(s)%msT(1)*gC(1))/ &
 		           	(kB*(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1)+ SpecieT(s)%FluxTubeT(f)%Te0T(Qind))))
@@ -76,19 +74,9 @@ contains
 						nsC(1)= SpecieT(s)%FluxTubeT(f)%ns0T(1)* &
 							exp(argC(1)) ! Number of ions per flux-tube grid cell [m^-3]
 
-						!write(*, *) 'Qind, nsC= ', Qind, nsC(1)
-
 						! Normalized number of macroparticles per flux-tube grid cell [unitless]
 						nsnormC(1)= (nsC(1)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))* &
 							(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1))
-
-						!write(*, *) 'Qind, nsC/nsnormfacT= ', Qind, (nsC(1)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))
-
-						!write(*, *) 'Qind, d3xC0T= ', Qind, SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1)
-						!write(*, *) 'Qind, d3xC0T/nsnormfacT= ', Qind, &
-						!	nsC(1)*SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)
-
-						!write(*, *) 'Qind, nsnormC= ', Qind, nsnormC(1)
 
 						! Create nested derived data types
 
@@ -321,20 +309,22 @@ contains
 						end if
 					end if
 
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
-						if (rank == 0) then
-							do Qind= NqLB(1), NqUB(1)- 1, 1
-								if (SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind) <= SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1)) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-										' NON-DECREASING PARTICLE NUMBERS WITH ALTITUDE', &
-										', NsFARpT(Qind)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind), &
-										', NsFARpT(Qind+ 1)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1), &
-										' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
-										' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
-								end if
-							end do
-						end if
-					end if
+					!if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
+					!	if (rank == 0) then
+					!		do Qind= NqLB(1), NqUB(1)- 1, 1
+					!			if (SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind) <= SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1)) then
+					!				write(*, *) achar(27) // '[33m WARNING: RANK= ', rank, &
+					!					' NON-DECREASING PARTICLE NUMBERS WITH ALTITUDE', &
+					!					', NsFARpT(Qind)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind), &
+					!					', NsFARpT(Qind+ 1)= ', SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind+ 1), &
+					!					' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
+					!					' IN DENSITY PROFILE A SUBROUTINE:', &
+					!					' (VERIFY DECREASING INITIAL DENSITY WITH ALTITUDE FLAG', &
+					!					' IN _8_6_1_ZerothIonMoments.f90 )' // achar(27) // '[0m.'
+					!			end if
+					!		end do
+					!	end if
+					!end if
 
 					! ----------------------------------------------------
 

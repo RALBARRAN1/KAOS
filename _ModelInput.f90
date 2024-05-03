@@ -166,9 +166,9 @@ integer(kind= dp), parameter :: ENANOISEflag= 0
 ! Define number of particle species and flux tubes
 integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
 integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
-real(kind= dp), parameter :: Lshell= 3d0 ! Initial L-shell
-real(kind= dp), parameter :: qGA= -0.6d0 ! Set lower boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
-real(kind= dp), parameter :: qGB= -0.03d0 ! Set upper boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
+real(kind= dp), parameter :: Lshell= 5d0 ! Initial L-shell
+real(kind= dp), parameter :: qGA= 0.6d0 ! Set lower boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
+real(kind= dp), parameter :: qGB= 0.03d0 ! Set upper boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
 
 integer(kind= dp) :: SMagHemFlag
 real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
@@ -197,10 +197,11 @@ real(kind= dp), parameter :: TNeut= 848d0 ! O neutral temperature [K] from NRLMS
 ! ----------------- ION INITIALIZATION PARAMETERS -----------------
 ! Note: change lower boundary cell (NqICA) and upper boundary cell (NqICB) and macro-particle normalization constant (nsnormfac) such that no cells are empty
 
+! Mind NqICA and NqICB values wrt moment filter sizes below (e.g. M0MAfilterPt, M1Perp1MAfilterPt, ...)
 integer(kind= dp), parameter :: NqICA= 1d0 ! Leave =1 (change grid to adjust)
-integer(kind= dp), parameter :: NqICB= 12d0
+integer(kind= dp), parameter :: NqICB= 30d0
 
-real(kind= dp), parameter :: nsnormfac= 8d14 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
+real(kind= dp), parameter :: nsnormfac= 3.5d14 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
 real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
 real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]
