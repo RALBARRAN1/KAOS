@@ -86,13 +86,13 @@ integer(kind= dp), parameter :: STATICINJECTIONflag= 0
 ! ----------------- ION FORCE FLAGS -----------------
 
 ! Set wave-particle interactions
-integer(kind= dp), parameter :: ICRflag= 0
+integer(kind= dp), parameter :: ICRflag= 1
 
 ! Set coherent wave-particle interactions
 integer(kind= dp), parameter :: ICRCOHERENCEflag= 0
 
 ! Set mirror-force
-integer(kind= dp), parameter :: MIRRORflag= 0
+integer(kind= dp), parameter :: MIRRORflag= 1
 
 ! Set gravitational force
 integer(kind= dp), parameter :: GRAVflag= 1
@@ -113,10 +113,10 @@ integer(kind= dp), parameter :: EAINERTIALflag= 0
 integer(kind= dp), parameter :: EAPRESSUREflag= 1
 
 ! Set parallel electric field
-integer(kind= dp), parameter :: EPARflag= 0
+integer(kind= dp), parameter :: EPARflag= 1
 
-! Set flux-tube converction:
-integer(kind= dp), parameter :: CONVECTIONflag= 0
+! Set flux-tube convection:
+integer(kind= dp), parameter :: CONVECTIONflag= 1
 
 ! Set dynamic configuration-space and statistical time-step:
 integer(kind= dp), parameter :: DYNAMICGRIDflag= 0
@@ -205,7 +205,7 @@ real(kind= dp), parameter :: TNeutIC= 848d0 ! O neutral temperature [K] from NRL
 integer(kind= dp), parameter :: NqLB= 1d0 ! Leave =1 (change q ranges to adjust)
 integer(kind= dp), parameter :: NqUB= 25d0
 
-real(kind= dp), parameter :: nsnormfacIC= 5d18 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
+real(kind= dp), parameter :: nsnormfacIC= 5d17 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
 real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
 real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]

@@ -183,7 +183,7 @@ _8_0_7_1_BCReIndex.o: _KineticMainParams.o _8_0_7_1_BCReIndex.f90
 _8_0_7_BoundaryConditions.o: _KineticMainParams.o _8_0_7_1_BCReIndex.o _8_0_4_DataTypeAllocA.o _8_0_6_DataTypeReAllocA.o _9_MPIReduceSum.o _8_0_7_BoundaryConditions.f90
 	$(comp) $(switch) -c _8_0_7_BoundaryConditions.f90 -o _8_0_7_BoundaryConditions.o
 
-_8_11_Convection.o: _KineticMainParams.o _0_ConfigGridGenerator.o _0_0_VelGridGenerator.o _8_11_Convection.f90
+_8_11_Convection.o: _KineticMainParams.o _0_ConfigGridGenerator.o _8_1_4_RK4DipolePolynomialSolver.o _0_0_VelGridGenerator.o _8_11_Convection.f90
 	$(comp) $(switch) -c _8_11_Convection.f90 -o _8_11_Convection.o 
 
 _9_MPIReduceSum.o: _KineticMainParams.o _9_MPIReduceSum.f90

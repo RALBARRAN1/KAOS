@@ -179,6 +179,8 @@ logical(kind= dp), dimension(:), allocatable :: LBoutfluxIonMskTMP, UBoutfluxIon
 real(kind= dp), dimension(:), allocatable :: BCreal
 integer(kind= dp), dimension(:), allocatable :: BCinteger
 logical(kind= dp), dimension(:), allocatable :: BClogical
+real(kind= dp), dimension(1) :: rConv, thetaConv, ellConv, BmagConv, &
+	muConv, GAConv, phiConv, VparConv, VpConv, VphiConv
 
 ! ----------------- 8_1 KINETIC RK4 UPDATE -----------------
 

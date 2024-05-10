@@ -1527,7 +1527,10 @@ contains
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
 					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
-						write(*, *) trim('KAOS SPIN-UP')
+						write(*, *) trim('KAOS SPIN-UP SIMULATION')
+					end if
+					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
+						write(*, *) trim('KAOS RESTART SIMULATION')
 					end if
 
 					write(*, *)

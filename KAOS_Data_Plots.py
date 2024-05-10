@@ -2,7 +2,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-NNt= 51
+NNt= 23
 Stot= 1
 Nf= 1
 NqG= 25
@@ -17,7 +17,7 @@ if ((NVparG != NVperp1G) or (NVparG != NVperp2G) or (NVperp1G != NVperp2G)):
 	print('ERROR: UNEQUAL VALUES OF NVparG= ', NVparG, ', NVperp1G= ', NVperp1G, ', NVperp2G= ', NVperp2G)
 
 ranksize= 1
-SpinupFlag= 1
+SpinupFlag= 0
 
 if (SpinupFlag == 1):
 	#datadir= '/Users/robertalbarran/Library/Mobile Documents/com~apple~CloudDocs/Desktop/ACADEMICS/DISSERTATION/VPCFinalSims/W0F2ncscOUTPUTa0/KMIODataW0F2ncscOUTPUTa0/'

@@ -220,8 +220,9 @@ contains
 						! ----------------------------------------------------
 
 						! Set initial dipole coordinates
-						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) ! Inject LB on newly convected flux-tube
+						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) ! Inject LB on newly convected flux-tube
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 
 						! ----------------------------------------------------
 
@@ -518,8 +519,9 @@ contains
 						! ----------------------------------------------------
 
 						! Set initial dipole coordinates
-						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) ! Inject UB on newly convected flux-tube
+						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) ! Inject UB on newly convected flux-tube
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
+						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
 
 						! ----------------------------------------------------
 
