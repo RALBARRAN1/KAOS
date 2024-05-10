@@ -26,7 +26,7 @@ contains
 
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					! ----------------------------------------------------
 
@@ -71,10 +71,12 @@ contains
 						end if
 
 						if (SpecieT(s)%FluxTubeT(f)%qGLT(1, 1) <= 0) then
-							if (((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
-								< SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) .or. ((Qind == NqLB(1)) .and. &
+							if (((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
+								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
+								< SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID CELL FOR SPECIE= ', s, &
@@ -82,10 +84,12 @@ contains
 									FAindIC, ' IN DENSITY PROFILE B SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
-							if (((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
-								<= SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) .or. ((Qind /= NqLB(1)) .and. &
+							if (((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
+								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
+								<= SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID CELL FOR SPECIE= ', s, &
@@ -96,10 +100,12 @@ contains
 						end if
 
 						if (SpecieT(s)%FluxTubeT(f)%qGLT(1, 1) > 0) then
-							if (((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
-								> SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) .or. ((Qind == NqLB(1)) .and. &
+							if (((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
+								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
+								> SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID CELL FOR SPECIE= ', s, &
@@ -107,10 +113,12 @@ contains
 									FAindIC, ' IN DENSITY PROFILE B SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
-							if (((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
-								>= SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) .or. ((Qind /= NqLB(1)) .and. &
+							if (((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
+								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) &
+								>= SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID CELL FOR SPECIE= ', s, &
@@ -137,7 +145,7 @@ contains
 
 		! do s= 1, Stot, 1
 ! 			do f= 1, SpecieT(s)%NfT(1), 1
-! 				do Qind= NqLB(1), NqUB(1), 1
+! 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 ! 					if (rank == 0) then
 ! 						write(*, *) 'pniICT= ', s, f, Qind, SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%pniICT(:)
 ! 						write(*, *) 'qniICT= ', s, f, Qind, SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qniICT(:)

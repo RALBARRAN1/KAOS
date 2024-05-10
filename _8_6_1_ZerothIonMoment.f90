@@ -32,11 +32,11 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -171,7 +171,7 @@ contains
 
 							! DIAGNOSTIC FLAGS FOR MOMENT CONSISTENCY:
 
-							if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
+							if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
@@ -180,15 +180,15 @@ contains
 									// achar(27) // '[0m.'
 							end if
 
-							!if ((nn == 1) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, NqLB(1)) /= &
-							!	SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1)* &
+							!if ((nn == 1) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) /= &
+							!	SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%nsnormCT(1)* &
 							!	(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-							!	SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%d3xC0T(1)))) then
+							!	SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1)))) then
 							!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							!		' INCONSISTENT INITIAL LB DENSITY= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, NqLB(1)), &
-							!		' AND VALUE= ', SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1)* &
+							!		' INCONSISTENT INITIAL LB DENSITY= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)), &
+							!		' AND VALUE= ', SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%nsnormCT(1)* &
 							!		(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-							!		SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%d3xC0T(1))), &
+							!		SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1))), &
 							!		' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
 							!		', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
 							!		' ION MOMENT SUBROUTINE' &
@@ -239,11 +239,11 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -396,7 +396,7 @@ contains
 
 								! DIAGNOSTIC FLAG FOR ZERO LOWER BOUNDARY DENSITY:
 
-								if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
+								if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0)) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
@@ -477,7 +477,7 @@ contains
 		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if ((n == 1) .and. (nn == 1)) then
-					do Qind= NqLB(1), NqUB(1)- 1, 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 1, 1
 						if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) <= SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind+ 1)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' NON-DECREASING INITIAL DENSITIES WITH ALTITUDE FOR Qind= ', Qind, &
@@ -496,8 +496,8 @@ contains
 		if (rank == 0) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-					do Qind= NqLB(1), NqUB(1), 1
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						write(*, *) 'M0, nn, Qind= ', nn, Qind, SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)
 					end do
 				end if

@@ -28,7 +28,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 				! ----------------------------------------------------
 
@@ -40,7 +40,7 @@ contains
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -60,11 +60,11 @@ contains
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
-						if (Qind == NqLB(1)) then
+						if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 							EParR(1)= (2d0/(SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind+ 1)+ &
 								SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)))* &
 								(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind+ 1)- &
@@ -72,8 +72,8 @@ contains
 								abs(SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind+ 1)- &
 								SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)))
 						end if
-						if (Qind /= NqLB(1)) then
-							if (Qind < NqUB(1)- 5d0) then
+						if (Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
+							if (Qind < SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 5d0) then
 								EParR(1)= (2d0/(SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind- 1)+ &
 									SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)))* &
 									(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind- 1)- &
@@ -81,7 +81,7 @@ contains
 									abs(SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1)- &
 									SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)))
 							end if
-							if (Qind >= NqUB(1)- 5d0) then
+							if (Qind >= SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 5d0) then
 								EParR(1)= 3d0*((2d0/(SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind- 1)+ &
 									SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)))* &
 									(abs(SpecieT(s)%FluxTubeT(f)%PhiParRT(nn, Qind- 1)- &
@@ -102,7 +102,7 @@ contains
 						if ((isnan(real(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind))) &
 							.eqv. .true.) .or. (size(SpecieT(s)%FluxTubeT(f)%EPmagRT(:, :)) &
 							/= (SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-							((NqUB(1)- NqLB(1))+ 1))) then
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' EPmagRT= ', SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind), &
 								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
@@ -142,12 +142,12 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 				if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) then
 
 					call mpi_barrier(MPI_COMM_WORLD, ierr)
 					call mpi_bcast(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, :), &
-						((NqUB(1)- NqLB(1))+ 1), &
+						((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 						MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 				end if
@@ -162,7 +162,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 				! ----------------------------------------------------
 
@@ -172,13 +172,13 @@ contains
 
 					! Compute Parallel E field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 								! ----------------------------------------------------
 
 								if (nn == 1) then
-									if (Qind == NqLB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -213,7 +213,7 @@ contains
 								end if
 
 								if (nn == 1) then
-									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
+									if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -257,7 +257,7 @@ contains
 								end if
 
 								if (nn == 1) then
-									if (Qind == NqUB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 											SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 											(SpecieT(s)%FluxTubeT(f)%q0T(j) < &
@@ -334,7 +334,7 @@ contains
 								! ----------------------------------------------------
 
 								if (nn /= 1) then
-									if (Qind == NqLB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= &
 		                  qk4(j)) .and. (qk4(j) <= &
 		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
@@ -368,7 +368,7 @@ contains
 								end if
 
 								if (nn /= 1) then
-									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
+									if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 		                  qk4(j)) .and. (qk4(j) <= &
 		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
@@ -411,7 +411,7 @@ contains
 								end if
 
 								if (nn /= 1) then
-									if (Qind == NqUB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) < &
 											qk4(j)) .and. (qk4(j) < &
 											SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
@@ -493,13 +493,13 @@ contains
 
 					! Compute Parallel E field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 								! ----------------------------------------------------
 
 								if (nn == 1) then
-									if (Qind == NqLB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -534,7 +534,7 @@ contains
 								end if
 
 								if (nn == 1) then
-									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
+									if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 		                  SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 		                  (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -578,7 +578,7 @@ contains
 								end if
 
 								if (nn == 1) then
-									if (Qind == NqUB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 											SpecieT(s)%FluxTubeT(f)%q0T(j)) .and. &
 											(SpecieT(s)%FluxTubeT(f)%q0T(j) > &
@@ -655,7 +655,7 @@ contains
 								! ----------------------------------------------------
 
 								if (nn /= 1) then
-									if (Qind == NqLB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= &
 		                  qk4(j)) .and. (qk4(j) >= &
 		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
@@ -689,7 +689,7 @@ contains
 								end if
 
 								if (nn /= 1) then
-									if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
+									if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 		                  qk4(j)) .and. (qk4(j) >= &
 		                  SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
@@ -732,7 +732,7 @@ contains
 								end if
 
 								if (nn /= 1) then
-									if (Qind == NqUB(1)) then
+									if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 										if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind- 1) > &
 											qk4(j)) .and. (qk4(j) > &
 											SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind))) then
@@ -844,10 +844,10 @@ contains
 		! ----------------------------------------------------
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) .or. &
-				((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))))) then
+			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
+				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) .or. &
+				((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
+				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))))) then
 
 				! ----------------------------------------------------
 
@@ -857,12 +857,12 @@ contains
 
 					! Compute Parallel E field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, 1) <= 0) then
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 								! ----------------------------------------------------
 
-								if (Qind == NqLB(1)) then
+								if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 									if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, Qind) <= &
 	                  qk4(j)) .and. (qk4(j) <= &
 	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
@@ -894,7 +894,7 @@ contains
 									end if
 								end if
 
-								if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
+								if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) < &
 	                  qk4(j)) .and. (qk4(j) <= &
 	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
@@ -935,7 +935,7 @@ contains
 									end if
 								end if
 
-								if (Qind == NqUB(1)) then
+								if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) < &
 										qk4(j)) .and. (qk4(j) < &
 										SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
@@ -1016,12 +1016,12 @@ contains
 
 					! Compute Parallel E field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, 1) > 0) then
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 								! ----------------------------------------------------
 
-								if (Qind == NqLB(1)) then
+								if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 									if ((SpecieT(s)%FluxTubeT(f)%qGLT(nn- 1, Qind) >= &
 	                  qk4(j)) .and. (qk4(j) >= &
 	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
@@ -1053,7 +1053,7 @@ contains
 									end if
 								end if
 
-								if ((Qind /= NqLB(1)) .and. (Qind /= NqUB(1))) then
+								if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) > &
 	                  qk4(j)) .and. (qk4(j) >= &
 	                  SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
@@ -1094,7 +1094,7 @@ contains
 									end if
 								end if
 
-								if (Qind == NqUB(1)) then
+								if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 									if ((SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind- 1) > &
 										qk4(j)) .and. (qk4(j) > &
 										SpecieT(s)%FluxTubeT(f)%qGCT(nn- 1, Qind))) then
@@ -1204,8 +1204,8 @@ contains
 		 !if (SpecieT(s)%FluxTubeT(f)%EPARflagT(1) == 1) then
  			!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
  			!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
- 			!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
- 			!		do Qind= NqLB(1), NqUB(1), 1
+ 			!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+ 			!		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 			!			if (rank == 0) then
  			!				if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0) then
 
@@ -1221,7 +1221,7 @@ contains
  			!end do
  			 !do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
- 				!	(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+ 				!	(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
   			!		write(*, *) 'AEPmagN s, f= ', s, f, AEPmagN(:)
  				!end if
   			!end do

@@ -104,9 +104,9 @@ contains
   		thetafinalRK4(1)= theta3RK4(1)
   	end if
 
-  	! Note: Get final (y, z) values with phi= pi/2 s.t. x= 0.
+  	! Note: Get final (y, z) values.
 
-  	phifinalRK4(1)= pi/2d0 ! Select (arbitrary for dipole) B longitude
+  	phifinalRK4(1)= phiNp(1)
 
   	xfinalRK4(1)= rfinalRK4(1)*sin(thetafinalRK4(1))*cos(phifinalRK4(1))
   	yfinalRK4(1)= rfinalRK4(1)*sin(thetafinalRK4(1))*sin(phifinalRK4(1))
@@ -124,7 +124,7 @@ contains
   		zfinalRK4(1)= 0d0
   	end if
 
-  	! Note: Get final (q, p) value and let phid= phi to compare with initial input.
+  	! Note: Get final (q, p) values.
 
   	qfinalRK4(1)= (RE**2d0)*cos(thetafinalRK4(1))/(rfinalRK4(1)**2d0)
   	pfinalRK4(1)= rfinalRK4(1)/(RE*(sin(thetafinalRK4(1))**2d0))

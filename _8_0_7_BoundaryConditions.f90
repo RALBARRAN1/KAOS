@@ -30,7 +30,7 @@ contains
 
     ! ----------------------------------------------------
 
-		do nn= 1, SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1, 1
+		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if ((n == 1) .and. (nn == 1)) then
 				NsTK(1)= SpecieT(s)%FluxTubeT(f)%NsT(1)
 				SpecieT(s)%FluxTubeT(f)%NsnT(nn)= NsTK(1)
@@ -78,7 +78,7 @@ contains
 
 			end if
 			if ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
 
         ! ----------------------------------------------------
 
@@ -86,7 +86,8 @@ contains
 
         do j= 1, NsTK(1), 1
           if ((Qindk1(j) /= 0d0) .and. (Qindk1(j) /= -1d0) &
-            .and. ((Qindk1(j) < 1d0) .and. (Qindk1(j) > ((NqUB(1)- NqLB(1))+ 1)))) then
+            .and. ((Qindk1(j) < 1d0) .and. (Qindk1(j) > &
+						((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))) then
             write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
               ' INCONSISTENT Qindk1(j)= ', Qindk1(j), ' FOR PARTICLE= ', j, &
               ', SPECIE= ', s, ', FLUX TUBE= ', f, ' AND INJECTION TIME-STEP= ', &
@@ -105,7 +106,7 @@ contains
 					SpecieT(s)%FluxTubeT(f)%NqReNormLBreplenishIonT(nn)= jcount
 					jloopLBIonreplenish: do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 						if (ENAflag(j) .eqv. .false.) then
-							if (NqLB(1) == Qindk1(j)) then
+							if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qindk1(j)) then
 
 	              LBreplenishIonMsk(j)= .true.
 
@@ -115,7 +116,7 @@ contains
 								cycle jloopLBIonreplenish
 
 							end if
-	            if (NqLB(1) /= Qindk1(j)) then
+	            if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) /= Qindk1(j)) then
 
 	              LBreplenishIonMsk(j)= .false.
 
@@ -129,7 +130,7 @@ contains
 					SpecieT(s)%FluxTubeT(f)%NqReNormUBreplenishIonT(nn)= jcount
 					jloopUBIonreplenish: do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 						if (ENAflag(j) .eqv. .false.) then
-							if (NqUB(1) == Qindk1(j)) then
+							if (SpecieT(s)%FluxTubeT(f)%NqUBT(1) == Qindk1(j)) then
 
 	              UBreplenishIonMsk(j)= .true.
 
@@ -139,7 +140,7 @@ contains
 								cycle jloopUBIonreplenish
 
 							end if
-	            if (NqUB(1) /= Qindk1(j)) then
+	            if (SpecieT(s)%FluxTubeT(f)%NqUBT(1) /= Qindk1(j)) then
 
 	              UBreplenishIonMsk(j)= .false.
 
@@ -201,8 +202,8 @@ contains
 					 	SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of LB escaped ions (unitless)
 					SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn)= & ! LB ion escape flux [m^-2 s-1]
 						SpecieT(s)%FluxTubeT(f)%NqLBoutfluxIonRT(nn)/ &
-						(SpecieT(s)%FluxTubeT(f)%sigmaLBT(1)* &
-						SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+						(SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)* &
+						SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
 
 					if (isnan(real(SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn))) .eqv. .true.) then
 						SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn)= 0d0
@@ -213,7 +214,7 @@ contains
 			    ! DIAGNOSTIC FLAG FOR PROPER ARRAY SIZE AND FINITE VALUE:
 
 					if ((isnan(real(SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn))) .eqv. .true.) &
-						.or. (size(SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(:)) /= SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1)) then
+						.or. (size(SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(:)) /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)) then
 			      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' LBoutfluxIonRT HAS', &
 			        ' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 			        f, ', AND INJECTION TIME-STEP= ', nn, &
@@ -276,8 +277,8 @@ contains
 						NqUBoutfluxIonR(1)*SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of UB escaped ions (unitless)
 					SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn)= & ! UB ion escape flux [m^-2 s-1]
 						SpecieT(s)%FluxTubeT(f)%NqUBoutfluxIonRT(nn)/ &
-						(SpecieT(s)%FluxTubeT(f)%sigmaUBT(1)* &
-						SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+						(SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)* &
+						SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
 
 					if (isnan(real(SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn))) .eqv. .true.) then
 						SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn)= 0d0
@@ -288,7 +289,7 @@ contains
 			    ! DIAGNOSTIC FLAG FOR PROPER ARRAY SIZE AND FINITE VALUE:
 
 					if ((isnan(real(SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn))) .eqv. .true.) &
-						.or. (size(SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(:)) /= SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1)) then
+						.or. (size(SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(:)) /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)) then
 			      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' UBoutfluxIonRT HAS', &
 			        ' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 			        f, ', AND INJECTION TIME-STEP= ', nn, &
@@ -355,8 +356,8 @@ contains
 						 	SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of LB escaped ENAs (unitless)
 						SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn)= & ! LB ENA escape flux [m^-2 s-1]
 							SpecieT(s)%FluxTubeT(f)%NqLBoutfluxENART(nn)/ &
-							(SpecieT(s)%FluxTubeT(f)%sigmaLBT(1)* &
-							SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+							(SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)* &
+							SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
 
 						if (isnan(real(SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn))) .eqv. .true.) then
 							SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn)= 0d0
@@ -367,7 +368,7 @@ contains
 				    ! DIAGNOSTIC FLAG FOR PROPER ARRAY SIZE AND FINITE VALUE:
 
 						if ((isnan(real(SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn))) .eqv. .true.) &
-							.or. (size(SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(:)) /= SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1)) then
+							.or. (size(SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(:)) /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)) then
 				      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' LBoutfluxENART HAS', &
 				        ' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 				        f, ', AND INJECTION TIME-STEP= ', nn, &
@@ -435,8 +436,8 @@ contains
 							NqUBoutfluxENAR(1)*SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of UB escaped ENAs (unitless)
 						SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn)= & ! UB ENA escape flux [m^-2 s-1]
 							SpecieT(s)%FluxTubeT(f)%NqUBoutfluxENART(nn)/ &
-							(SpecieT(s)%FluxTubeT(f)%sigmaUBT(1)* &
-							SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+							(SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)* &
+							SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
 
 						if (isnan(real(SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn))) .eqv. .true.) then
 							SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn)= 0d0
@@ -447,7 +448,7 @@ contains
 				    ! DIAGNOSTIC FLAG FOR PROPER ARRAY SIZE AND FINITE VALUE:
 
 						if ((isnan(real(SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn))) .eqv. .true.) &
-							.or. (size(SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(:)) /= SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1)) then
+							.or. (size(SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(:)) /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)) then
 				      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' UBoutfluxENART HAS', &
 				        ' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 				        f, ', AND INJECTION TIME-STEP= ', nn, &
@@ -736,10 +737,10 @@ contains
 					! ----------------------------------------------------
 
 					if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 1) then
-						SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)/ranksize(1))
+						SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)/ranksize(1))
 					end if
 					if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 0) then
-						SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)/ranksize(1))
+						SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)/ranksize(1))
 					end if
 
           dNsTK2(1)= SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)
@@ -754,11 +755,11 @@ contains
 							nn, ' IN BOUNDARY CONDITIONS SUBROUTINE' // achar(27) // '[0m.'
 					end if
 
-					if ((SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn) > SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)) &
+					if ((SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn) > SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)) &
 						.and. (SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn) == 0d0)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT NET LB ION INJECTION DENSITY= ', &
 							SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn), ', NORMALIZED DENSITY= ', &
-							SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1), &
+							SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn), &
 							' AND LB OUTFLUX= ', SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn), &
 							' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND INJECTION TIME-STEP= ', &
 							nn, ' IN BOUNDARY CONDITIONS SUBROUTINE' // achar(27) // '[0m.'
@@ -795,7 +796,7 @@ contains
 
 					! ----------------------------------------------------
 
-					SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)/ranksize(1))
+					SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)/ranksize(1))
 
 					dNsTK3(1)= SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn)
 
@@ -803,11 +804,11 @@ contains
 
 					! DIAGNOSTICS FOR CONSISTENT UB ION INJECTION DENSITY:
 
-					if ((SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn) > SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)) &
+					if ((SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn) > SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)) &
 						.and. (SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn) == 0d0)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT NET UB ION INJECTION DENSITY= ', &
 							SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn), ', NORMALIZED DENSITY= ', &
-							SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1), &
+							SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn), &
 							' AND UB OUTFLUX= ', SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn), &
 							' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND INJECTION TIME-STEP= ', &
 							nn, ' IN BOUNDARY CONDITIONS SUBROUTINE' // achar(27) // '[0m.'
@@ -883,11 +884,11 @@ contains
 
 		! ----------------------------------------------------
 
-		do nn= 1, SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1, 1
-			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) .or. &
-				((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))))) then
+		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
+				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) .or. &
+				((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
+				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))))) then
 
 				NsTK(1)= NsTK(1)
 				SpecieT(s)%FluxTubeT(f)%NsT(1)= NsTK(1)

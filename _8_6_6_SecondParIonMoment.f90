@@ -34,11 +34,11 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -227,11 +227,11 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -434,7 +434,7 @@ contains
 		if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					call IonNeutralCollisionFrequencyASub
 
@@ -451,11 +451,11 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 				! ----------------------------------------------------
 
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					! ----------------------------------------------------
 
@@ -660,8 +660,8 @@ contains
 		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-					do Qind= NqLB(1), NqUB(1), 1
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						SpecieT(s)%FluxTubeT(f)%DensityOutputRT(Qind)= SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)
 						SpecieT(s)%FluxTubeT(f)%TemperatureOutputRT(Qind)= &
@@ -680,11 +680,11 @@ contains
 
 		!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)))) then
-		!		do Qind= NqLB(1), NqUB(1), 1
+		!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+		!		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!			if ((SpecieT(s)%FluxTubeT(f)%PHASEDENSITYIONMOMENTflagT(1) == 1) .and. &
 		!				(rank == 0)) then
-		!				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%LBCONDITIONflagT(1) == 1) .and. &
+		!				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%LBCONDITIONflagT(1) == 1) .and. &
 		!					(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind) == 0d0)) then
 		!					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 		!						' EMPTY LB GRID CELL WITH ION INJECTION FOR SPECIE= ', s, &
@@ -701,8 +701,8 @@ contains
 
 	  !do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
  		!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
- 		!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
- 		!		do Qind= NqLB(1), NqUB(1), 1
+ 		!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+ 		!		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
  		!				if ((SpecieT(s)%FluxTubeT(f)% &
  		!				PHASEDENSITYIONMOMENTflagT(1) == 1) .and. &
  		!				(rank == 0)) then

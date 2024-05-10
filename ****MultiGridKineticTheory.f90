@@ -6,6 +6,6 @@ a per-particle computation of metric factors, phase-space limits, and volumes fo
 
 do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. & 
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then 
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then 
 				
 				

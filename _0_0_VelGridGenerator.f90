@@ -35,7 +35,7 @@ contains
     ! SET PRELIMINARY NUMBER OF VELOCITY-SPACE GRID CELLS PER ION PARTICLE SPECIES AND
     ! FLUX TUBE:
 
-    do Qind= NqLB(1), NqUB(1), 1
+    do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
       if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GpT(1)= NVperp1GpF
@@ -57,7 +57,7 @@ contains
     ! CREATE PRELIMINARY FIELD-ALIGNED ION VELOCITY SPACE GRID:
 
     if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         ! Set range of Eulerian Vperp1 coords.
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1)= (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GpT(1)/ddVperp1)- 1d0
@@ -67,7 +67,7 @@ contains
 
         ! Positive Vperp1 values
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%Vperp1GAT(1)= 0d0
-        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%Vperp1GBT(1)= Vperp12sigmaFac*Vperp12sigma
+        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%Vperp1GBT(1)= VperpsigmaFac(1)*Vperp12sigma
 
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%Vperp1GpT(int(2d0*Vperp12NlinRange- 1)))
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%Vperp2GpT(int(2d0*Vperp12NlinRange- 1)))
@@ -117,14 +117,14 @@ contains
     end if
 
     if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 0) then
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         ! Set range of Eulerian Vperp coords.
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGT(1)= (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGpT(1)/ddVperp)- 1d0
 
         ! Positive Vperp values
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VperpGAT(1)= 0d0
-        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VperpGBT(1)= VperpsigmaFac*Vperpsigma
+        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VperpGBT(1)= VperpsigmaFac(1)*Vperpsigma
 
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VperpGpT(int(2d0*VperpNlinRange- 1)))
 
@@ -162,14 +162,14 @@ contains
     end if
 
     ! Construct Vpar Grid
-    do Qind= NqLB(1), NqUB(1), 1
+    do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
       ! Set range of Eulerian Vpar coords.
       SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)= int((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGpT(1)/ddVpar)- 1d0)
 
       if (SpecieT(s)%FluxTubeT(f)%SYMVPARflagT(1) == 1) then
         ! Positive Vpar values
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGAT(1)= 0d0
-        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGBT(1)= VparsigmaFac*Vparsigma
+        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGBT(1)= VparsigmaFac(1)*Vparsigma
 
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGp1T(VparNlinRange))
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGp2T(VparNlinRange))
@@ -203,7 +203,7 @@ contains
       if (SpecieT(s)%FluxTubeT(f)%SYMVPARflagT(1) == 0) then
         ! Positive Vpar values
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGAT(1)= -4d0*Vparsigma
-        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGBT(1)= VparsigmaFac*Vparsigma
+        SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGBT(1)= VparsigmaFac(1)*Vparsigma
 
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGp1T(VparNlinRange))
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGpT(VparNlinRange))
@@ -252,7 +252,7 @@ contains
 
     if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%Vperp1GT(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GpT(1), &
           SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GpT(1), SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGpT(1)))
@@ -282,7 +282,7 @@ contains
 
     if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 0) then
 
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperpGpT(1), 1
           do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGpT(1), 1
@@ -303,7 +303,7 @@ contains
 		! ALLOCATE VELOCITY-SPACE DERIVED DATA TYPES NESTED IN CONFIGURATION-SPACE
 		! TYPE NESTED IN FLUX TUBE TYPES NESTED IN PARTICLE SPECIES TYPE:
 
-		do Qind= NqLB(1), NqUB(1), 1
+		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 			if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 				! Allocate V2PerpCellT(Vperp1ind, Vperp2ind, Vparind) derived data type nested in
@@ -335,7 +335,7 @@ contains
 
     ! COMPUTE VELOCITY SPACE GRID BOUNDARIES, CENTER VALUES, METRIC FACTORS, AND VOLUMES:
 
-    do Qind= NqLB(1), NqUB(1), 1
+    do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
       if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 
         do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
@@ -475,7 +475,7 @@ contains
     ! FLUX TUBE:
 
     if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         ! Total number of Vp, Vq, Vphi grid values (Make odd number for 2D distrib fnc. moment integration)
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGpT(1)= NVpGpF
@@ -490,7 +490,7 @@ contains
     ! CREATE PRELIMINARY DIPOLE ENA VELOCITY SPACE GRID:
 
     if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         ! Set range of Eulerian Vp coords.
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1)= (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGpT(1)/ddVp)- 1d0
@@ -609,7 +609,7 @@ contains
       end do
 
       ! Construct Vq Grid
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
         ! Set range of Eulerian Vq coords.
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1)= (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGpT(1)/ddVq)- 1d0
 
@@ -709,7 +709,7 @@ contains
         end do
       end do
 
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
         allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VpGT(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGpT(1), &
           SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGpT(1), SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGpT(1)))
@@ -740,7 +740,7 @@ contains
     ! COMPUTE ENA VELOCITY SPACE GRID BOUNDARIES, CENTER VALUES, METRIC FACTORS, AND VOLUMES:
 
     if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-      do Qind= NqLB(1), NqUB(1), 1
+      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
         do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVpGT(1), 1
           do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1), 1
             do Vphiind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVphiGT(1), 1
@@ -865,7 +865,7 @@ contains
 		! ION VELOCITY-SPACE GRID DIMENSIONS:
 
 		if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
-			do Qind= NqLB(1), NqUB(1), 1
+			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 				! ----------------------------------------------------
 
@@ -897,7 +897,7 @@ contains
 
 			! ----------------------------------------------------
 
-			do Qind= NqLB(1), NqUB(1), 1
+			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 				! ----------------------------------------------------
 
@@ -921,7 +921,7 @@ contains
 
 		! ----------------------------------------------------
 
-		do Qind= NqLB(1), NqUB(1), 1
+		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 			! ----------------------------------------------------
 
@@ -944,7 +944,7 @@ contains
 		! ENA VELOCITY-SPACE GRID DIMENSIONS:
 
 		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
-			do Qind= NqLB(1), NqUB(1), 1
+			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 				! ----------------------------------------------------
 
@@ -983,7 +983,7 @@ contains
 
 		! ION EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
 
-		do Qind= NqLB(1), NqUB(1), 1
+		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 			if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 
 				! ----------------------------------------------------
@@ -1284,7 +1284,7 @@ contains
 		! ENA EULERIAN VELOCITY-SPACE GRID LIMITS AND VOLUMES:
 
 		if (SpecieT(1)%FluxTubeT(1)%QEXCHANGEflagT(1) == 1) then
-			do Qind= NqLB(1), NqUB(1), 1
+			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 				! ----------------------------------------------------
 

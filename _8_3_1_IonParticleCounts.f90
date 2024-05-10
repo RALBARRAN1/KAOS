@@ -32,7 +32,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 				! ----------------------------------------------------
 
@@ -43,7 +43,7 @@ contains
 				! COMPUTE RAW ION CONFIG-SPACE COUNTS:
 
 				if ((n == 1) .and. (nn == 1)) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						jcount= 0d0
 						SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)= jcount
 						jloopic1: do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -61,8 +61,8 @@ contains
 					end do
 				end if
 				if ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1))) then
-					do Qind= NqLB(1), NqUB(1), 1
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						jcount= 0d0
 						SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)= jcount
 						jloopic2: do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -111,7 +111,7 @@ contains
 
 				! REDUCE ALL STATISTICAL PARTICLE COUNTS IN CONFIG-SPACE TO MPI ROOT RANK (0):
 
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					! ----------------------------------------------------
 
@@ -146,8 +146,8 @@ contains
 				! DIAGNOSTIC FLAG FOR NaN VALUES OF NqRT AND CONSISTENCY:
 
 				if (rank == 0) then
-					do Qind= NqLB(1), NqUB(1), 1
-						if (Qind == NqLB(1)) then
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+						if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 							if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn) == 0d0) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO LOWER BOUNDARY ION COUNT NqRT= ', &
@@ -158,10 +158,10 @@ contains
 							end if
 						end if
 						if (nn == 1) then
-							!if (Qind == NqLB(1)) then
+							!if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 							!	if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 							!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))- &
-							!		nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)*(SpecieT(s)%FluxTubeT(f)%d3xCLBT(1)/ &
+							!		nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)*(SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)/ &
 							!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))) > 1d0) then
 							!		write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 							!			' CONFIG-SPACE GRID COUNTS= ', &
@@ -169,17 +169,17 @@ contains
 							!			(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 							!			SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 							!			' ARE UNEQUAL TO LB NOMINAL DENSITY= ', &
-							!			nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)* &
-							!			(SpecieT(s)%FluxTubeT(f)%d3xCLBT(1)/ &
+							!			nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)* &
+							!			(SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)/ &
 							!			SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 							!			' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
 							!			' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
 							!	end if
 							!end if
-						!	if (Qind == NqUB(1)) then
+						!	if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 						!		if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 						!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))- &
-						!		nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)*(SpecieT(s)%FluxTubeT(f)%d3xCUBT(1)/ &
+						!		nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)*(SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)/ &
 						!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))) > 1d0) then
 						!			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 						!				' CONFIG-SPACE GRID COUNTS= ', &
@@ -187,20 +187,20 @@ contains
 						!				(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 						!				SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 						!				' ARE UNEQUAL TO UB NOMINAL DENSITY= ', &
-						!				nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)* &
-						!				(SpecieT(s)%FluxTubeT(f)%d3xCUBT(1)/ &
+						!				nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)* &
+						!				(SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)/ &
 						!				SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 						!				' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
 						!				' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
 						!		end if
 						!	end if
 							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-								if (SpecieT(s)%FluxTubeT(f)%NqICAT(1) == Qind) then
+								if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
 										(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 										SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) /= &
 										SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
-										SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%NsFARRT(1)) then
+										SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%NsFARRT(1)) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' TEST CONFIG-SPACE GRID COUNTS= ', &
 											nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
@@ -209,7 +209,7 @@ contains
 											' AT INITIAL TIME ARE UNEQUAL', &
 											' TO INITIAL Q CELL POPULATION= ', &
 											SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
-											SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%NsFARRT(1), &
+											SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%NsFARRT(1), &
 											' FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 											' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
@@ -217,12 +217,12 @@ contains
 								end if
 							end if
 							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-								if (SpecieT(s)%FluxTubeT(f)%NqICAT(1) == Qind) then
+								if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
 										(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
 										SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) /= &
 										SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
-										SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%NsFARRT(1)) then
+										SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%NsFARRT(1)) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' TEST CONFIG-SPACE GRID COUNTS= ', &
 											nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
@@ -231,7 +231,7 @@ contains
 											' AT INITIAL TIME ARE UNEQUAL', &
 											' TO INITIAL Q CELL POPULATION= ', &
 											SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
-											SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%NsFARRT(1), &
+											SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%NsFARRT(1), &
 											' FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 											' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
@@ -289,13 +289,13 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					! ----------------------------------------------------
 
 					! COMPUTE LOGICAL FLAGS FOR PHASE-SPACE STATISTICAL BINNING:
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -334,7 +334,7 @@ contains
 								end do
 							end if
 							if ((n /= 1) .and. (nn /= 1) .and. &
-								(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1))) then
+								(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
 								do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
 									do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
 										do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
@@ -370,7 +370,7 @@ contains
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -524,7 +524,7 @@ contains
 						! ----------------------------------------------------
 
 						if (rank == 0) then
-							if (Qind == NqLB(1)) then
+							if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 								!do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
 								!	do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
 								!		do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
@@ -567,13 +567,13 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 					! ----------------------------------------------------
 
 					! COMPUTE LOGICAL FLAGS FOR PHASE-SPACE STATISTICAL BINNING:
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -610,7 +610,7 @@ contains
 								end do
 							end if
 							if ((n /= 1) .and. (nn /= 1) .and. &
-								(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1))) then
+								(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
 								do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
 									do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
 										jcount= 0d0
@@ -644,7 +644,7 @@ contains
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -806,8 +806,8 @@ contains
 		!if (rank == 0) then
 		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!		if (((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-		!			do Qind= NqLB(1), NqUB(1), 1
+		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+		!			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 		!				if (sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 		!					N2PerpphReNormRT(nn, :, :, :)) /= 0d0) then

@@ -128,7 +128,7 @@ contains
 		!if (j < SpecieT(s)%FluxTubeT(f)%NsnT(1)) then
 		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!		if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 		!			pdriftion(j)= abs(pk4(j)- SpecieT(s)%FluxTubeT(f)%p0T(1))
 
@@ -359,17 +359,6 @@ contains
 				cos(phik4(j))+ AGyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
 				AGzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
 
-			!if (qk4(j) <= 0d0) then  ! S Mag Hemisphere
-			!	AGpark4(1)= abs(3d0*cos(thetak4(j))*sin(thetak4(j))*(AGxk4p(1)* &
-			!		cos(phik4(j))+ AGyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!		AGzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-			!end if
-			!if (qk4(j) > 0d0) then  ! N Mag Hemisphere
-			!	AGpark4(1)= -abs(3d0*cos(thetak4(j))*sin(thetak4(j))*(AGxk4p(1)* &
-			!		cos(phik4(j))+ AGyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!		AGzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-			!end if
-
 			AGpk4(1)= 0d0
 			AGphik4(1)= 0d0
 
@@ -543,25 +532,6 @@ contains
 				cos(phik4(j))+ AEAyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
 				AEAzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
 
-			!if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
-			!	if (qk4(j) <= 0d0) then  ! S Mag Hemisphere
-			!		AEApark4(1)= -abs(3d0*cos(thetak4(j))*sin(thetak4(j))*(AEAxk4p(1)* &
-			!			cos(phik4(j))+ AEAyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!			AEAzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-			!	end if
-			!	if (qk4(j) > 0d0) then  ! N Mag Hemisphere
-			!		AEApark4(1)= abs(3d0*cos(thetak4(j))*sin(thetak4(j))*(AEAxk4p(1)* &
-			!			cos(phik4(j))+ AEAyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!			AEAzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-			!	end if
-			!end if
-
-			!if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
-			!	AEApark4(1)= 3d0*cos(thetak4(j))*sin(thetak4(j))*(AEAxk4p(1)* &
-			!		cos(phik4(j))+ AEAyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!		AEAzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j))
-			!end if
-
 			AEApk4(1)= 0d0
 			AEAphik4(1)= 0d0
 
@@ -710,17 +680,6 @@ contains
 			AEPpark4(1)= (3d0*cos(thetak4(j))*sin(thetak4(j))*(AEPxk4p(1)* &
 				cos(phik4(j))+ AEPyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
 				AEPzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-
-			!if (qk4(j) <= 0d0) then  ! S Mag Hemisphere
-			!	AEPpark4(1)= abs(3d0*cos(thetak4(j))*sin(thetak4(j))*(AEPxk4p(1)* &
-			!		cos(phik4(j))+ AEPyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!		AEPzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-			!end if
-			!if (qk4(j) > 0d0) then  ! N Mag Hemisphere
-			!	AEPpark4(1)= -abs(3d0*cos(thetak4(j))*sin(thetak4(j))*(AEPxk4p(1)* &
-			!		cos(phik4(j))+ AEPyk4p(1)*sin(phik4(j)))/sqrt(ellk4(j))+ &
-			!		AEPzk4p(1)*(3d0*(cos(thetak4(j))**2d0)- 1d0)/sqrt(ellk4(j)))
-			!end if
 
 			AEPpk4(1)= 0d0
 			AEPphik4(1)= 0d0

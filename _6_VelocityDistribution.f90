@@ -34,7 +34,7 @@ contains
 
 				ICflag(1)= 1d0
 
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					! ----------------------------------------------------
 
@@ -65,11 +65,11 @@ contains
 							ellfinalICT(FAindIC)
 
 						if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 1) then
-							TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)
+							TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)
 						end if
 						if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
 							TsMB(1)= SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)% &
-				  			FluxTubeT(f)%NqICAT(1)+ Qind- 1)%TemperatureInputT(1)
+				  			FluxTubeT(f)%NqLBT(1)+ Qind- 1)%TemperatureInputT(1)
 						end if
 
 						! ----------------------------------------------------
@@ -193,7 +193,7 @@ contains
 
 		! do s= 1, Stot, 1
 ! 			do f= 1, SpecieT(s)%NfT(1), 1
-! 				do Qind= NqLB(1), NqUB(1), 1
+! 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 ! 					if (rank == 0) then
 ! 						! write(*, *) 'Vperp1ICT= ', &
 ! ! 						SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%Vperp1ICT(:)

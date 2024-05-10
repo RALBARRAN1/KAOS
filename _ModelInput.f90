@@ -18,16 +18,16 @@ complex(kind= dp) :: i ! Square-root of -1
 ! ----------------- I/O PATHS -----------------
 
 ! Set (=1) for spin-up simulations (output initial conditions, i.e. spin up simulation (=1))
-integer(kind= dp), parameter :: SPINUPflag= 1
+integer(kind= dp), parameter :: SPINUPflag= 0
 
 ! Define I/O paths:
 character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDensityInput/'
 
 !if (SPINUPflag == 1) then
-  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
+  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
 !end if
 !if (SPINUPflag == 0) then
-  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
+  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
 !end if
 
 ! ----------------- PHYSICAL CONSTANTS -----------------
@@ -91,7 +91,7 @@ integer(kind= dp), parameter :: ICRflag= 0
 ! Set coherent wave-particle interactions
 integer(kind= dp), parameter :: ICRCOHERENCEflag= 0
 
-! Set mirro-force
+! Set mirror-force
 integer(kind= dp), parameter :: MIRRORflag= 0
 
 ! Set gravitational force
@@ -117,6 +117,9 @@ integer(kind= dp), parameter :: EPARflag= 0
 
 ! Set flux-tube converction:
 integer(kind= dp), parameter :: CONVECTIONflag= 0
+
+! Set dynamic configuration-space and statistical time-step:
+integer(kind= dp), parameter :: DYNAMICGRIDflag= 0
 
 ! ----------------- ION MOMENT FLAGS -----------------
 
@@ -166,9 +169,10 @@ integer(kind= dp), parameter :: ENANOISEflag= 0
 ! Define number of particle species and flux tubes
 integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
 integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
-real(kind= dp), parameter :: Lshell= 5d0 ! Initial L-shell
-real(kind= dp), parameter :: qGA= 0.6d0 ! Set lower boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
-real(kind= dp), parameter :: qGB= 0.03d0 ! Set upper boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
+real(kind= dp), parameter :: LshellIC= 10d0 ! Initial L-shell
+real(kind= dp), parameter :: phiLshellIC= pi/2d0 ! Initial L-shell longitude
+real(kind= dp), parameter :: qGAIC= 0.6d0 ! Set lower boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
+real(kind= dp), parameter :: qGBIC= 0.1d0 ! Set upper boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
 
 integer(kind= dp) :: SMagHemFlag
 real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
@@ -187,34 +191,32 @@ integer(kind= dp) :: NqGpF ! Preliminary number of Q Grid Cells (including lower
 
 real(kind= dp), parameter :: NVparGpF= 30d0 ! Preliminary number of Vpar Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
 real(kind= dp), parameter :: NVperpGpF= 30d0 ! Preliminary number of Vperp Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
-real(kind= dp), parameter :: VperpsigmaFac= 4d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
-real(kind= dp), parameter :: VparsigmaFac= 4d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
+real(kind= dp), parameter :: VperpsigmaFacIC= 8d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
+real(kind= dp), parameter :: VparsigmaFacIC= 8d0 ! (=4 for thermal) Sigma factor with linear grid to resolve thermal core of MB distrib.
 
-real(kind= dp), parameter :: Ti= 5d3 ! Ion initialization temperature [K]
-real(kind= dp), parameter :: Te= 5d3 ! Electron initialization temperature [K]
-real(kind= dp), parameter :: TNeut= 848d0 ! O neutral temperature [K] from NRLMSISE-00
+real(kind= dp), parameter :: TiIC= 5d3 ! Ion initialization temperature [K]
+real(kind= dp), parameter :: TeIC= 1d4 ! Electron initialization temperature [K]
+real(kind= dp), parameter :: TNeutIC= 848d0 ! O neutral temperature [K] from NRLMSISE-00
 
 ! ----------------- ION INITIALIZATION PARAMETERS -----------------
-! Note: change lower boundary cell (NqICA) and upper boundary cell (NqICB) and macro-particle normalization constant (nsnormfac) such that no cells are empty
+! Note: change lower boundary cell (NqLB) and upper boundary cell (NqUB) and macro-particle normalization constant (nsnormfac) such that no cells are empty
 
-! Mind NqICA and NqICB values wrt moment filter sizes below (e.g. M0MAfilterPt, M1Perp1MAfilterPt, ...)
-integer(kind= dp), parameter :: NqICA= 1d0 ! Leave =1 (change grid to adjust)
-integer(kind= dp), parameter :: NqICB= 30d0
+! Mind NqLB and NqUB values wrt moment filter sizes below (e.g. M0MAfilterPt, M1Perp1MAfilterPt, ...)
+integer(kind= dp), parameter :: NqLB= 1d0 ! Leave =1 (change q ranges to adjust)
+integer(kind= dp), parameter :: NqUB= 25d0
 
-real(kind= dp), parameter :: nsnormfac= 3.5d14 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
+real(kind= dp), parameter :: nsnormfacIC= 5d18 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
 real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
 real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]
-real(kind= dp), parameter :: dns0= 1d0 ! Multiplicative factor of reference ion density
 
-real(kind= dp), parameter :: zns0= RE+ 400d3 ! RE+ 370.78d3 ! Initial ion density profile reference altitude [km]
-real(kind= dp), parameter :: ns0= 1d8*dns0 ! (W0F2) ! Initial ion density profile reference density at zns0 [m-3]
+real(kind= dp), parameter :: ns0IC= 1d8 ! Initial ion reference density at LB ghost cell (Qindns0) [m-3]
 
 ! ----------------- NEUTRAL OXYGEN INITIALIZATION PARAMETERS -----------------
 
 ! Use from NRLMSISE-00 data at PFISR at VISIONS-1 tof for neutral density profile
-real(kind= dp), parameter :: zns0Neut= RE+ 719d3 ! Reference O neutral r value [m]
-real(kind= dp), parameter :: ns0Neut= 1.423d11 ! Reference O neutral number density at zns0Neut [m^-3]
+real(kind= dp), parameter :: zns0NeutIC= RE+ 719d3 ! Reference O neutral r value [m]
+real(kind= dp), parameter :: ns0NeutIC= 1.423d11 ! Reference O neutral number density at zns0Neut [m^-3]
 
 ! ----------------- ICR HEATING PARAMETERS -----------------
 

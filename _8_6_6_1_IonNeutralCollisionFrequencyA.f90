@@ -40,13 +40,13 @@ contains
 			! Filter Parallel Velocity Moment
 			if (SpecieT(s)%FluxTubeT(f)%NqICT(1) >= nint((M1ParMAfilterPt- 1d0)/2d0)) then
 				MAfilterPt(1)= M1ParMAfilterPt
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					call MomentFilterSub
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)
 				end do
 			end if
@@ -54,13 +54,13 @@ contains
 			! Filter Perp1 Velocity Moment
 			if (SpecieT(s)%FluxTubeT(f)%NqICT(1) >= nint((M1Perp1MAfilterPt- 1d0)/2d0)) then
 				MAfilterPt(1)= M1Perp1MAfilterPt
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M1Perp1phRT(nn, Qind)
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					call MomentFilterSub
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%M1Perp1FiltAvrgRT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)
 				end do
 			end if
@@ -68,13 +68,13 @@ contains
 			! Filter Perp2 Velocity Moment
 			if (SpecieT(s)%FluxTubeT(f)%NqICT(1) >= nint((M1Perp2MAfilterPt- 1d0)/2d0)) then
 				MAfilterPt(1)= M1Perp2MAfilterPt
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M1Perp2phRT(nn, Qind)
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					call MomentFilterSub
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%M1Perp2FiltAvrgRT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)
 				end do
 			end if
@@ -82,13 +82,13 @@ contains
 			! Filter Parallel Energy Moment
 			if (SpecieT(s)%FluxTubeT(f)%NqICT(1) >= nint((M2ParMAfilterPt- 1d0)/2d0)) then
 				MAfilterPt(1)= M2ParMAfilterPt
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M2ParphRT(nn, Qind)
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					call MomentFilterSub
 				end do
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					SpecieT(s)%FluxTubeT(f)%M2ParFiltAvrgRT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)
 				end do
 			end if
@@ -97,7 +97,7 @@ contains
 
 		! ----------------------------------------------------
 
-		do Qind= NqLB(1), NqUB(1), 1
+		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
       ! ----------------------------------------------------
 
@@ -180,7 +180,7 @@ contains
 				VzNeutp(1)= GaussianRN(1)
 
 				! MB distribution standard deviations (Global Cartesian coords.)
-  			sigmaVxNeut(1)= sqrt(kB*TNeut/(mNeut)) ! Where TparX= TparY= TparZ= TNeut
+  			sigmaVxNeut(1)= sqrt(kB*TNeut(1)/(mNeut)) ! Where TparX= TparY= TparZ= TNeut
   			sigmaVyNeut(1)= sigmaVxNeut(1)
   			sigmaVzNeut(1)= sigmaVxNeut(1)
 
@@ -360,7 +360,7 @@ contains
 
   ! DIAGNOSTIC FLAGS FOR CONSISTENT TOTAL NUMBER OF ION-NEUTRAL COLLISIONS:
 
-	do Qind= NqLB(1), NqUB(1), 1
+	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		if (rank == 0) then
 			if (SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind) > &
 				SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
@@ -392,18 +392,18 @@ contains
 
 	call mpi_barrier(MPI_COMM_WORLD, ierr)
 	call mpi_bcast(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, :), &
-		(((NqUB(1)- NqLB(1))+ 1)), &
+		(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)), &
 		MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 	! ----------------------------------------------------
 
   ! DIAGNOSTIC FLAGS FOR PROPER ARRAY SIZES AND FINITE VALUES:
 
-  do Qind= NqLB(1), NqUB(1), 1
+  do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
     if ((isnan(real(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind))) &
       .eqv. .true.) .or. (size(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(:, :)) /= &
       (SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-      (((NqUB(1)- NqLB(1))+ 1)))) then
+      (((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
         ' nuIonNeutRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
         s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &

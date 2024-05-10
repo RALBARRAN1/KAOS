@@ -58,21 +58,23 @@ contains
 
 					if (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)) then
 						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)
-					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, (NqUB(1)- NqLB(1))+ 1)) then
-						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGHT(nn, ((NqUB(1)- NqLB(1))+ 1))
+					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) > &
+						SpecieT(s)%FluxTubeT(f)%qGHT(nn, (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						SpecieT(s)%FluxTubeT(f)%q0T(j)= &
+							SpecieT(s)%FluxTubeT(f)%qGHT(nn, ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
 					end if
 
   				! ----------------------------------------------------
 
-					QloopKSA1: do Qind= NqLB(1), NqUB(1), 1
-						if ((Qind == NqLB(1)) .and. &
+					QloopKSA1: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+						if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
 
 							exit QloopKSA1
 
-						else if ((Qind /= NqLB(1)) .and. &
+						else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
@@ -120,21 +122,23 @@ contains
 
 					if (SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)) then
 						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1)
-					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, (NqUB(1)- NqLB(1))+ 1)) then
-						SpecieT(s)%FluxTubeT(f)%q0T(j)= SpecieT(s)%FluxTubeT(f)%qGHT(nn, ((NqUB(1)- NqLB(1))+ 1))
+					else if (SpecieT(s)%FluxTubeT(f)%q0T(j) < &
+						SpecieT(s)%FluxTubeT(f)%qGHT(nn, (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						SpecieT(s)%FluxTubeT(f)%q0T(j)= &
+							SpecieT(s)%FluxTubeT(f)%qGHT(nn, ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
 					end if
 
   				! ----------------------------------------------------
 
-					QloopKSA2: do Qind= NqLB(1), NqUB(1), 1
-						if ((Qind == NqLB(1)) .and. &
+					QloopKSA2: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+						if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
 
 							exit QloopKSA2
 
-						else if ((Qind /= NqLB(1)) .and. &
+						else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 							(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 							.and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
 							Qindk0(j)= Qind
@@ -341,9 +345,9 @@ contains
 			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
-							do Qind= NqLB(1), NqUB(1), 1
+							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' SPIN-UP SIMULATION HAS ZERO DENSITY AT FINAL TIME FOR SPECIE= ', &
@@ -406,7 +410,7 @@ contains
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+  				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
   				! ----------------------------------------------------
 
@@ -423,7 +427,7 @@ contains
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if (((n == 1) .and. (nn == 1)) .and. &
-  				(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)) .and. &
+  				(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
   				((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
   				(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
   				call DataExport1Sub
@@ -434,11 +438,11 @@ contains
 			! Export injection data on injection time-step
 			if ((SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1)  .and. &
 				(rank == 0)) then
-				do nn= 1, SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1, 1
+				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 	  			if (((n == 1) .and. (nn == 1)) .and. &
-	  				(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)) .and. &
+	  				(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
 	  				((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
-	  				(nn /= SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)+ 1))) then
+	  				(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
 						write(nnstring, '(I5)') nn
 						write(sstring, '(I5)') s

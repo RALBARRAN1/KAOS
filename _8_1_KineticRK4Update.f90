@@ -163,6 +163,7 @@ contains
 			call qsub(qNp(1), rNp(1), thetaNp(1))
 
 			pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1) ! Reset particle on correct L-shell
+			phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1) ! Reset particle on correct L-shell longitude
 
 			! ----------------------------------------------------
 
@@ -227,9 +228,7 @@ contains
 		call thetasub(thetaN(1), zN(j), rN(1))
 
 		if (ENAflag(j) .eqv. .false.) then
-			! Note: Without cross L-shell convection, solar forcing or other azimuthal asymmetries, ion motion is phi-invariant.
 			phiN(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)
-
 		else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 			(ENAflag(j) .eqv. .true.)) then
 			call phisub(phiN(1), xN(j), yN(j))
@@ -247,9 +246,16 @@ contains
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC RK4', &
 					' UPDATE SUBROUTINE' // achar(27) // '[0m.'
 			end if
+			if (phiNp(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION phiNp= ', phiNp(1), &
+					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
+					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC RK4', &
+					' UPDATE SUBROUTINE' // achar(27) // '[0m.'
+			end if
 			if (pNp(1) /= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION pNp= ', pNp(1), &
-					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1), &
+					' AND pGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC RK4', &
 					' UPDATE SUBROUTINE' // achar(27) // '[0m.'
@@ -352,7 +358,7 @@ contains
 		end if
 
 		if (rank == 0) then
-			if ((n == SpecieT(s)%FluxTubeT(f)%ndatfacT(1)- 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+			if ((n == SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)- 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S81End)
 				write(S81string, '(i10)')  nint(S81End)
 				write(*, *) trim('%% 8.11- RANK= ' // adjustl(rankstring)) // &

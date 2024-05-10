@@ -45,7 +45,63 @@ contains
 			write(expint) SpecieT(s)%FluxTubeT(f)%TimeT(nn)
 			close(expint)
 
-			!do Qind= NqLB(1), NqUB(1), 1
+			ndatfacTfile= adjustl(adjustr(expstring) // adjustl(adjustr('ndatfacTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(ndatfacTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)
+			close(expint)
+
+			ns0Tfile= adjustl(adjustr(expstring) // adjustl(adjustr('ns0Tfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(ns0Tfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%ns0T(nn)
+			close(expint)
+
+			qGCTfile= adjustl(adjustr(expstring) // adjustl(adjustr('qGCTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(qGCTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%qGCT(nn, :)
+			close(expint)
+
+			pGCTfile= adjustl(adjustr(expstring) // adjustl(adjustr('pGCTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(pGCTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%pGCT(nn, :)
+			close(expint)
+
+			rGCTfile= adjustl(adjustr(expstring) // adjustl(adjustr('rGCTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(rGCTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%rGCT(nn, :)
+			close(expint)
+
+			phiGCTfile= adjustl(adjustr(expstring) // adjustl(adjustr('phiGCTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(phiGCTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%phiGCT(nn, :)
+			close(expint)
+
+			thetaGCTfile= adjustl(adjustr(expstring) // adjustl(adjustr('thetaGCTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(thetaGCTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, :)
+			close(expint)
+
+			TsTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TsTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(TsTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%TsT(nn, :)
+			close(expint)
+
+			!do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 			!	TeNTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TeNTfort.bin')))
 			!	open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
 			!		adjustl(adjustr(TeNTfile))), &
@@ -62,7 +118,7 @@ contains
 			(rank == 0)) then
 			if (SpecieT(s)%FluxTubeT(f)%PHASEIONDISTRIBflagT(1) == 1) then
 				if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						write(nnstring, '(I5)') nn
 						write(sstring, '(I5)') s
@@ -99,7 +155,7 @@ contains
 			(rank == 0)) then
 			if (SpecieT(s)%FluxTubeT(f)%PHASEIONDISTRIBflagT(1) == 1) then
 				if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 0) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						write(nnstring, '(I5)') nn
 						write(sstring, '(I5)') s
@@ -127,7 +183,7 @@ contains
 
 		if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1)  .and. &
 			(rank == 0)) then
-			do Qind= NqLB(1), NqUB(1), 1
+			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 				write(nnstring, '(I5)') nn
 				write(sstring, '(I5)') s
@@ -182,7 +238,7 @@ contains
 		! ----------------------------------------------------
 
 		!if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-		!	do Qind= NqLB(1), NqUB(1), 1
+		!	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!		if (rank == 0) then
 
 		!			write(nnstring, '(I5)') nn
@@ -456,7 +512,7 @@ contains
 		! ----------------------------------------------------
 
 		!if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-		!	do Qind= NqLB(1), NqUB(1), 1
+		!	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!		if (rank == 0) then
 
 		!			write(nnstring, '(I5)') nn
@@ -483,7 +539,7 @@ contains
 		! ----------------------------------------------------
 
 		!if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-		!	do Qind= NqLB(1), NqUB(1), 1
+		!	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!		if (rank == 0) then
 
 		!			write(nnstring, '(I5)') nn
@@ -510,7 +566,7 @@ contains
 		! ----------------------------------------------------
 
 		!if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-		!	do Qind= NqLB(1), NqUB(1), 1
+		!	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!		if (rank == 0) then
 
 		!			write(nnstring, '(I5)') nn
@@ -537,7 +593,7 @@ contains
 		! ----------------------------------------------------
 
 		!if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-		!	do Qind= NqLB(1), NqUB(1), 1
+		!	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!		if (rank == 0) then
 
 		!			write(nnstring, '(I5)') nn
@@ -658,6 +714,22 @@ contains
 			expstring= adjustl(adjustr(sstring) // '_' // &
 				adjustl(adjustr(fstring) // '_'))
 
+			NqLBTfile= adjustl(adjustr(expstring) // &
+				adjustl(adjustr('NqLBTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(Densitydatadir) // &
+				adjustl(adjustr(NqLBTfile))), status= 'replace', &
+				form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%NqLBT(1)
+			close(expint)
+
+			NqUBTfile= adjustl(adjustr(expstring) // &
+				adjustl(adjustr('NqUBTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(Densitydatadir) // &
+				adjustl(adjustr(NqUBTfile))), status= 'replace', &
+				form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%NqUBT(1)
+			close(expint)
+
 			DensityOutputRTfile= adjustl(adjustr(expstring) // &
 				adjustl(adjustr('DensityOutputRTfort.bin')))
 			open(unit= expint, file= adjustl(adjustr(Densitydatadir) // &
@@ -736,7 +808,7 @@ contains
 		! ----------------------------------------------------
 
 		if (((n == 1) .and. (nn == 1)) .and. &
-			(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)) .and. &
+			(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
 			((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 			(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 			if (SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) then
@@ -760,7 +832,7 @@ contains
 		end if
 
 		if (((n /= 1) .and. (nn /= 1)) .and. &
-			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)) .and. &
+			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
 			((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 			(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 			if (SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) then

@@ -29,11 +29,11 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 				! ----------------------------------------------------
 
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					! ----------------------------------------------------
 
@@ -249,8 +249,8 @@ contains
 
 		! do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 ! 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-! 				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-! 				do Qind= NqLB(1), NqUB(1), 1
+! 				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+! 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 ! 					if (rank == 0) then
 ! 						if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqENART(nn) /= 0) then
 ! 							write(*, *) 'M2PphENART s, f, nn, Qind= ', s, f, nn, Qind, &

@@ -48,7 +48,7 @@ contains
 
 				! ----------------------------------------------------
 
-        do Qind= NqLB(1), NqUB(1), 1
+        do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					do FAindIC= 1, SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFAT(1), 1
 
 						SpecieT(s)%FluxTubeT(f)%x0T(sum(SpecieT(s)%FluxTubeT(f)% &
@@ -122,7 +122,7 @@ contains
 					! if ((SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
 ! 						SpecieT(s)%FluxTubeT(f)%qGLT(1, 1)) .or. &
 ! 						(SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%QCellT( &
-! 						((NqUB(1)- NqLB(1))+ 1))%qGHT(1))) then
+! 						((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))%qGHT(1))) then
 ! 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 ! 							' q0T= ', SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF CONFIG-SPACE', &
 ! 							' GRID FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND PARTICLE= ', j, &
@@ -322,7 +322,7 @@ contains
 ! 				if (SpecieT(s)%FluxTubeT(f)%QCellT(1)%PHASEDISTRIBflagT(1) == 1) then
 ! 					if (rank == 0) then
 ! 						write(*, *) 'NqqReNormE1T= ', SpecieT(s)%FluxTubeT(f)%NqqReNormE1T(1)
-! 						do Qind= NqLB(1), NqUB(1), 1
+! 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 ! 							write(*, *) 'NqReNorm1pT= ', SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqReNorm1pT(1)
 ! 							write(*, *) 'NqReNorm1T= ', SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqReNorm1T(1)
 ! 							do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1

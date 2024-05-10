@@ -92,8 +92,6 @@ contains
 			! COMPUTE WAVE-PARTICLE INTERACTION TIME FROM (Schulz and Lanzerotti '74):
 
 			! Compute field line arc length of heating region
-			SpecieT(s)%FluxTubeT(f)%dsICRT(nnind, Qindk1(j))= &
-				SpecieT(s)%FluxTubeT(f)%hqCT(nnind, Qindk1(j))*SpecieT(s)%FluxTubeT(f)%dqCT(nnind, Qindk1(j))
 			SUMdsICR(1)= sum(SpecieT(s)%FluxTubeT(f)%dsICRT(nnind, :))
 
 			! Compute epsilon factor (unitless)

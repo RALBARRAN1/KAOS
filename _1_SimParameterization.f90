@@ -47,239 +47,6 @@ contains
 
 		! ----------------------------------------------------
 
-		! CONSTRUCT INITIAL CONFIGURATION-SPACE GRID:
-
-		if (abs(qGA) <= abs(qGB)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-				' INCONSISTENT qGA AND qGB WITH MAGNETIC HEMISPHERE', &
-				' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-		end if
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				call ConfigGridGeneratorSub
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
-		! PARTICLE MASS, CHARGE, AND ATOMIC RADIUS PER PARTICLE SPECIES:
-
-		do s= 1, Stot, 1
-
-			SpecieT(s)%msT= mO
-			SpecieT(s)%qsT= qO
-
-			! ----------------------------------------------------
-
-			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-			if ((size(SpecieT(s)%Qindns0T(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%Qindns0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0T HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-			end if
-
-			if ((mO /= SpecieT(s)%msT(1)) .or. (size(SpecieT(s)%msT(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%msT(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' msT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-			end if
-
-			if ((qO /= SpecieT(s)%qsT(1)) .or. (size(SpecieT(s)%qsT(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%qsT(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qsT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
-			end if
-
-			! ----------------------------------------------------
-
-		end do
-
-		! ----------------------------------------------------
-
-		! SET SIMULATION DURATION AND TIME-STEP FOR MOMENT COMPUTATION:
-
-		do s= 1, Stot, 1
-			do f= 1, SpecieT(s)%NfT(1), 1
-
-				h(1)= (B- A)/Nt ! Time-step size [s]
-
-				! Injection time-step [s] (must be > 2 and excludes initial time-step)
-				! Mean transit time through LB ghost cell
-
-				Q0ndatfac(1)= SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1))%hqC0T(1)* &
-					SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1))%dqC0T(1)* &
-					(abs(sqrt(SpecieT(s)%msT(1)/ &
-					((kB/1d0)*(SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1))%TsPar0T(1))))))/h(1)
-
-				Q0NNt(1)= Nt/Q0ndatfac(1) ! Number of time-steps for injection
-				!Q0NNt(1)= Nt/10d0 ! Number of time-steps for injection
-
-				! Time-step interval for moment computation (must be > 2 and excludes initial time-step)
-				NNt(1)= Q0NNt(1)
-				ndatfac(1)= Nt/NNt(1)
-
-				SpecieT(s)%FluxTubeT(f)%AT= A ! Create nested derived data types
-				SpecieT(s)%FluxTubeT(f)%BT= B
-				SpecieT(s)%FluxTubeT(f)%NtT= Nt
-				SpecieT(s)%FluxTubeT(f)%hT= h
-				SpecieT(s)%FluxTubeT(f)%Q0ndatfacT= Q0ndatfac
-				SpecieT(s)%FluxTubeT(f)%Q0NNtT= Q0NNt
-				SpecieT(s)%FluxTubeT(f)%NNtT= NNt
-				SpecieT(s)%FluxTubeT(f)%ndatfacT= ndatfac
-
-				! ----------------------------------------------------
-
-				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
-
-				if ((A /= SpecieT(s)%FluxTubeT(f)%AT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%AT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%AT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((B /= SpecieT(s)%FluxTubeT(f)%BT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%BT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%BT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((Nt /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NtT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NtT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NtT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((h(1) /= SpecieT(s)%FluxTubeT(f)%hT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%hT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%hT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((Q0NNt(1) /= SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%Q0NNtT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%Q0NNtT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Q0NNtT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((Q0ndatfac(1) /= SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Q0ndatfacT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((NNt(1) /= SpecieT(s)%FluxTubeT(f)%NNtT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%NNtT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%NNtT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NNtT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if ((ndatfac(1) /= SpecieT(s)%FluxTubeT(f)%ndatfacT(1)) .or. &
-					(size(SpecieT(s)%FluxTubeT(f)%ndatfacT(:)) /= 1) .or. &
-					(isnan(real(SpecieT(s)%FluxTubeT(f)%ndatfacT(1))) .eqv. .true.)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ndatfacT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if (SpecieT(s)%FluxTubeT(f)%ndatfacT(1) < 3d0) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ndatfacT= ', &
-					SpecieT(s)%FluxTubeT(f)%ndatfacT(1), &
-					' IS NOT COMPATIBLE WITH KINETIC SOLVER TIME FORMAT FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				if (SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1) < 3d0) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Q0ndatfacT= ', &
-					SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1), &
-					' IS NOT COMPATIBLE WITH KINETIC SOLVER TIME FORMAT FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-				end if
-
-				! ----------------------------------------------------
-
-				! SET NOISE FILTERS FOR ION MOMENTS:
-
-				if (SpecieT(1)%FluxTubeT(1)%MOMENTFILTERflagT(1) == 1) then
-
-					! ----------------------------------------------------
-
-					! DIAGNOSTIC FLAGS CONSISTENT MOMENT FILTER MOVING AVERAGE POINTS:
-
-					if (M0MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION DENSITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M1Perp1MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP1 VELOCITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M1Perp2MAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP2 VELOCITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M1ParMAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL VELOCITY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					if (M2ParMAfilterPt > ((NqUB(1)- NqLB(1))+ 1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL ENERGY MOMENT FILTER', &
-							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
-							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-				end if
-
-			end do
-		end do
-
-		! ----------------------------------------------------
-
 		! SET SIMULATION FLAGS:
 
 		do s= 1, Stot, 1
@@ -314,6 +81,7 @@ contains
 
 				SpecieT(s)%FluxTubeT(f)%EPARflagT= EPARflag
 				SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT= CONVECTIONflag
+				SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT= DYNAMICGRIDflag
 
 				SpecieT(s)%FluxTubeT(s)%MOMENTFILTERflagT= MOMENTFILTERflag
 				SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT= ION2VPERPflag
@@ -534,6 +302,16 @@ contains
 					(isnan(real(SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1))) &
 					.eqv. .true.)) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' CONVECTIONflagT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((DYNAMICGRIDflag /= SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1))) &
+					.eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' DYNAMICGRIDflagT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
 					' SUBROUTINE' // achar(27) // '[0m.'
@@ -910,6 +688,14 @@ contains
 						' SUBROUTINE' // achar(27) // '[0m.'
 				end if
 
+				if ((SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1) == 1) .and. &
+					(SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 0)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+						' INCONSISTENT DYNAMICGRIDflagT AND CONVECTIONflagT FOR SPECIE= ', s, &
+						' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+						' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
 				if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. &
 					(SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 0)) then
 					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
@@ -919,6 +705,401 @@ contains
 				end if
 
 				! ----------------------------------------------------
+
+			end do
+		end do
+
+		! ----------------------------------------------------
+
+		! PARTICLE MASS, CHARGE, AND ATOMIC RADIUS PER PARTICLE SPECIES:
+
+		do s= 1, Stot, 1
+
+			SpecieT(s)%msT= mO
+			SpecieT(s)%qsT= qO
+
+			! ----------------------------------------------------
+
+			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+			if ((size(SpecieT(s)%Qindns0T(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%Qindns0T(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0T HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((mO /= SpecieT(s)%msT(1)) .or. (size(SpecieT(s)%msT(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%msT(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' msT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			if ((qO /= SpecieT(s)%qsT(1)) .or. (size(SpecieT(s)%qsT(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%qsT(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qsT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+			end if
+
+			! ----------------------------------------------------
+
+		end do
+
+		! ----------------------------------------------------
+
+		! SET SIMULATION DURATION AND COMPUTATIONAL TIME-STEP:
+
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
+
+				h(1)= (B- A)/Nt ! Time-step size [s]
+
+				SpecieT(s)%FluxTubeT(f)%AT= A ! Create nested derived data types
+				SpecieT(s)%FluxTubeT(f)%BT= B
+				SpecieT(s)%FluxTubeT(f)%NtT= Nt
+				SpecieT(s)%FluxTubeT(f)%hT= h
+
+				! ----------------------------------------------------
+
+				! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+
+				if ((A /= SpecieT(s)%FluxTubeT(f)%AT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%AT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%AT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((B /= SpecieT(s)%FluxTubeT(f)%BT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%BT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%BT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((Nt /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%NtT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%NtT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NtT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if ((h(1) /= SpecieT(s)%FluxTubeT(f)%hT(1)) .or. &
+					(size(SpecieT(s)%FluxTubeT(f)%hT(:)) /= 1) .or. &
+					(isnan(real(SpecieT(s)%FluxTubeT(f)%hT(1))) .eqv. .true.)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hT HAS', &
+					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+					' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+					' SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				! ----------------------------------------------------
+
+			end do
+		end do
+
+		! ----------------------------------------------------
+
+		! DIAGNOSTIC FLAG FOR CORRECT CONFIGURATION-SPACE GRID WITH MAGNETIC HEMSIPHERE:
+
+		if (abs(qGAIC) <= abs(qGBIC)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+				' INCONSISTENT qGAIC AND qGBIC WITH MAGNETIC HEMISPHERE', &
+				' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+		end if
+
+		! ----------------------------------------------------
+
+		! DEFINE CONFIGURATION-SPACE BOUNDARY GRID CELLS:
+
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
+				if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
+
+					SpecieT(s)%FluxTubeT(f)%NqLBT= NqLB
+					SpecieT(s)%FluxTubeT(f)%NqUBT= NqUB
+
+				end if
+				if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
+					write(sstring, '(I5)') s
+					write(fstring, '(I5)') f
+
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'NqLBTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) NqLBp
+					close(0)
+
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'NqUBTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) NqUBp
+					close(0)
+
+					SpecieT(s)%FluxTubeT(f)%NqLBT(1)= NqLBp
+					SpecieT(s)%FluxTubeT(f)%NqUBT(1)= NqUBp
+
+				end if
+			end do
+		end do
+
+		! ----------------------------------------------------
+
+		! ALLOCATE CONFIGURATION-SPACE DERIVED DATA TYPES NESTED IN FLUX TUBE TYPES NESTED IN
+		! PARTICLE SPECIES TYPE:
+
+		! Allocate QCellT(Qind) derived data type nested in FluxTubeT(f)
+		! nested in SpecieT(s)
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
+				allocate(SpecieT(s)%FluxTubeT(f)%QCellT(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
+				allocate(SpecieT(s)%FluxTubeT(f)%QCell0T(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3)))
+			end do
+		end do
+
+		! ----------------------------------------------------
+
+		! IMPORT EQUILIBRIUM DENSITY PARAMETERS FROM PREVIOUS SIMULATION:
+
+		if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
+
+			do s= 1, Stot, 1
+				do f= 1, SpecieT(s)%NfT(1), 1
+
+					allocate(DensityInput(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1), &
+						TemperatureInput(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1), &
+						EAInertialInput(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1), &
+						EAPressureInput(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1), &
+						EAmagInput(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))
+
+				end do
+			end do
+
+			! ----------------------------------------------------
+
+			do s= 1, Stot, 1
+				write(sstring, '(I5)') s
+				do f= 1, SpecieT(s)%NfT(1), 1
+					write(fstring, '(I5)') f
+
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'nsnormCLBOutputfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) nsnormCLBInput
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'nsnormCUBOutputfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) nsnormCUBInput
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'DensityOutputRTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) DensityInput(:)
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'TemperatureOutputRTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) TemperatureInput(:)
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'EAInertialOutputRTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) EAInertialInput(:)
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'EAPressureOutputRTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) EAPressureInput(:)
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'EAmagOutputRTfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) EAmagInput(:)
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'LBREPLENISHflagTOutputfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) LBREPLENISHflagInput
+					close(0)
+					open (unit= 0, file= Densitydatadir &
+						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
+						// '_' // 'UBREPLENISHflagTOutputfort.bin')), &
+						status= 'old', form= 'unformatted', access= 'stream')
+					read(0) UBREPLENISHflagInput
+					close(0)
+
+					! ----------------------------------------------------
+
+					SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)= nsnormCLBInput
+					SpecieT(s)%FluxTubeT(f)%nsnormCUBInputT(1)= nsnormCUBInput
+
+				end do
+			end do
+
+			do s= 1, Stot, 1
+				do f= 1, SpecieT(s)%NfT(1), 1
+
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%DensityInputT(1)= DensityInput(Qind)
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TemperatureInputT(1)= TemperatureInput(Qind)
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAInertialInputT(1)= EAInertialInput(Qind)
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAPressureInputT(1)= EAPressureInput(Qind)
+						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAmagInputT(1)= EAmagInput(Qind)
+					end do
+
+					! ----------------------------------------------------
+
+					if (LBREPLENISHflagInput /= SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' INCONSISTENT LBREPLENISHflagInputT FOR SPECIE= ', s, &
+							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+					if (UBREPLENISHflagInput /= SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' INCONSISTENT UBREPLENISHflagInputT FOR SPECIE= ', s, &
+							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					! ----------------------------------------------------
+
+				end do
+			end do
+		end if
+
+		! ----------------------------------------------------
+
+		! CONSTRUCT INITIAL CONFIGURATION-SPACE GRID:
+
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
+
+				! ----------------------------------------------------
+
+				INITIALGRIDflag= 1
+				nn= 1
+
+				! ----------------------------------------------------
+
+				if ((SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 1) .or. &
+					((SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) .and. &
+					(SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1) == 0))) then
+
+					! Set initial grid and density profile:
+					ns0(1)= ns0IC ! Reference density at lower boundary ghost cell [m^-3]
+					SpecieT(s)%FluxTubeT(f)%nsnormfacT(nn)= nsnormfacIC ! Macroparticle normalization constant
+					zns0Neut(1)= zns0NeutIC ! Reference altitude of neutral density [km]
+					ns0Neut(1)= ns0NeutIC ! Reference neutral density [m^-3]
+					VperpsigmaFac(1)= VperpsigmaFacIC ! Number of MB standard deviations spanned by Vperp grid
+					VparsigmaFac(1)= VparsigmaFacIC ! Number of MB standard deviations spanned by Vpar grid
+					Ti(1)= TiIC ! Thermal ion temperature [K]
+					Te(1)= TeIC ! Electron temperature [K]
+					TNeut(1)= TNeutIC ! Neutral temperature [K]
+					qGA(1)= qGAIC ! Lower boundary q value
+					qGB(1)= qGBIC ! Upper boundary q value
+
+				end if
+				if ((SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) .and. &
+					(SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1) == 1)) then
+
+					! Set initial grid and density profile:
+					ns0(1)= ns0IC ! Reference density at lower boundary ghost cell [m^-3]
+					SpecieT(s)%FluxTubeT(f)%nsnormfacT(nn)= nsnormfacIC ! Macroparticle normalization constant
+					zns0Neut(1)= zns0NeutIC ! Reference altitude of neutral density [km]
+					ns0Neut(1)= ns0NeutIC ! Reference neutral density [m^-3]
+					VperpsigmaFac(1)= VperpsigmaFacIC ! Number of MB standard deviations spanned by Vperp grid
+					VparsigmaFac(1)= VparsigmaFacIC ! Number of MB standard deviations spanned by Vpar grid
+					Ti(1)= SpecieT(s)%FluxTubeT(f)%QCellT(1)%TemperatureInputT(1) ! Thermal ion temperature [K]
+					Te(1)= TeIC ! Electron temperature [K]
+					TNeut(1)= TNeutIC ! Neutral temperature [K]
+					qGA(1)= qGAIC ! Lower boundary q value
+					qGB(1)= qGBIC ! Upper boundary q value
+
+				end if
+
+				Lshell(1)= LshellIC ! L-shell [RE]
+				phiLshell(1)= phiLshellIC ! invariant longitude [rads]
+
+				! ----------------------------------------------------
+
+				call ConfigGridGeneratorSub
+
+				! ----------------------------------------------------
+
+			end do
+		end do
+
+		! ----------------------------------------------------
+
+		! SET NOISE FILTERS FOR ION MOMENTS:
+
+		do s= 1, Stot, 1
+			do f= 1, SpecieT(s)%NfT(1), 1
+
+				if (SpecieT(1)%FluxTubeT(1)%MOMENTFILTERflagT(1) == 1) then
+
+					! ----------------------------------------------------
+
+					! DIAGNOSTIC FLAGS CONSISTENT MOMENT FILTER MOVING AVERAGE POINTS:
+
+					if (M0MAfilterPt > ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION DENSITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M1Perp1MAfilterPt > ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP1 VELOCITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M1Perp2MAfilterPt > ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PERP2 VELOCITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M1ParMAfilterPt > ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL VELOCITY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					if (M2ParMAfilterPt > ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION PARALLEL ENERGY MOMENT FILTER', &
+							' MOVING AVERAGE POINT IS GREATER THAN NUMBER OF CONFIGURATION-SPACE GRID CELLS', &
+							' FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
+							' SUBROUTINE' // achar(27) // '[0m.'
+					end if
+
+					! ----------------------------------------------------
+
+				end if
 
 			end do
 		end do
@@ -1004,114 +1185,6 @@ contains
 
 			end do
 		end do
-
-		! ----------------------------------------------------
-
-		! IMPORT EQUILIBRIUM DENSITY PARAMETERS FROM PREVIOUS SIMULATION:
-
-		if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
-
-			! ----------------------------------------------------
-
-			allocate(DensityInput(NqUB(1)- NqLB(1)+ 1), TemperatureInput(NqUB(1)- NqLB(1)+ 1), &
-				EAInertialInput(NqUB(1)- NqLB(1)+ 1), EAPressureInput(NqUB(1)- NqLB(1)+ 1), &
-				EAmagInput(NqUB(1)- NqLB(1)+ 1))
-
-			! ----------------------------------------------------
-
-			do s= 1, Stot, 1
-				write(sstring, '(I5)') s
-				do f= 1, SpecieT(s)%NfT(1), 1
-					write(fstring, '(I5)') f
-
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'nsnormCLBOutputfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) nsnormCLBInput
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'nsnormCUBOutputfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) nsnormCUBInput
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'DensityOutputRTfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) DensityInput(:)
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'TemperatureOutputRTfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) TemperatureInput(:)
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'EAInertialOutputRTfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) EAInertialInput(:)
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'EAPressureOutputRTfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) EAPressureInput(:)
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'EAmagOutputRTfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) EAmagInput(:)
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'LBREPLENISHflagTOutputfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) LBREPLENISHflagInput
-					close(0)
-					open (unit= 0, file= Densitydatadir &
-						// adjustl(adjustr(sstring) // '_' // adjustl(adjustr(fstring) &
-						// '_' // 'UBREPLENISHflagTOutputfort.bin')), &
-						status= 'old', form= 'unformatted', access= 'stream')
-					read(0) UBREPLENISHflagInput
-					close(0)
-
-					! ----------------------------------------------------
-
-					SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)= nsnormCLBInput
-					SpecieT(s)%FluxTubeT(f)%nsnormCUBInputT(1)= nsnormCUBInput
-
-					do Qind= NqLB(1), NqUB(1), 1
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%DensityInputT(1)= DensityInput(Qind)
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TemperatureInputT(1)= TemperatureInput(Qind)
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAInertialInputT(1)= EAInertialInput(Qind)
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAPressureInputT(1)= EAPressureInput(Qind)
-						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAmagInputT(1)= EAmagInput(Qind)
-					end do
-
-					! ----------------------------------------------------
-
-					if (LBREPLENISHflagInput /= SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' INCONSISTENT LBREPLENISHflagInputT FOR SPECIE= ', s, &
-							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-					if (UBREPLENISHflagInput /= SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-							' INCONSISTENT UBREPLENISHflagInputT FOR SPECIE= ', s, &
-							' AND FLUX TUBE= ', f, ' IN SIMULATION PARAMETERIZATION', &
-							' SUBROUTINE' // achar(27) // '[0m.'
-					end if
-
-					! ----------------------------------------------------
-
-				end do
-			end do
-		end if
 
 		! ----------------------------------------------------
 
@@ -1251,25 +1324,23 @@ contains
 				if (SpecieT(s)%FluxTubeT(f)%ICRflagT(1) == 1) then
 
 					allocate(SpecieT(s)%FluxTubeT(f)%lambdaPerppT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%EtaLHpT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%XiPerp1pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%XiPerp2pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%S0pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%OmegaG0pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-	          ((NqUB(1)- NqLB(1))+ 1)))
+	          ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 					allocate(SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-						((NqUB(1)- NqLB(1))+ 1)))
-					allocate(SpecieT(s)%FluxTubeT(f)%dsICRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
-						((NqUB(1)- NqLB(1))+ 1)))
+						((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 
 							! ----------------------------------------------------
@@ -1292,7 +1363,7 @@ contains
 
 							if ((lambdaPerpp /= SpecieT(s)%FluxTubeT(f)%lambdaPerppT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%lambdaPerppT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%lambdaPerppT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' lambdaPerppT HAS', &
@@ -1305,7 +1376,7 @@ contains
 
 							if ((EtaLHp /= SpecieT(s)%FluxTubeT(f)%EtaLHpT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%EtaLHpT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%EtaLHpT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EtaLHpT HAS', &
@@ -1318,7 +1389,7 @@ contains
 
 							if ((XiPerp1p /= SpecieT(s)%FluxTubeT(f)%XiPerp1pT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%XiPerp1pT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%XiPerp1pT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp1pT HAS', &
@@ -1331,7 +1402,7 @@ contains
 
 							if ((XiPerp2p /= SpecieT(s)%FluxTubeT(f)%XiPerp2pT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%XiPerp2pT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%XiPerp2pT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp2pT HAS', &
@@ -1344,7 +1415,7 @@ contains
 
 							if ((S0p /= SpecieT(s)%FluxTubeT(f)%S0pT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%S0pT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%S0pT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' S0pT HAS', &
@@ -1357,7 +1428,7 @@ contains
 
 							if ((OmegaG0p(1) /= SpecieT(s)%FluxTubeT(f)%OmegaG0pT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%OmegaG0pT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%OmegaG0pT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' OmegaG0pT HAS', &
@@ -1370,7 +1441,7 @@ contains
 
 							if ((ChiPerp1p /= SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp1pT HAS', &
@@ -1383,7 +1454,7 @@ contains
 
 							if ((ChiPerp2p /= SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(nn, Qind)) .or. &
 								(size(SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(:, :)) /= &
-									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((NqUB(1)- NqLB(1))+ 1))) .or. &
+									((SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)*((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) .or. &
 								(isnan(real(SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(nn, Qind))) &
 								.eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp2pT HAS', &
@@ -1493,13 +1564,13 @@ contains
 						QCell0T(2)%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Lower Grid Altitude [km]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T &
-					(((NqUB(1)- NqLB(1))+ 3))%rGC0T(1)*1d-3- RE*1d-3
+					(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3))%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Upper Grid Altitude [km]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)% &
-						QCell0T(SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ 1)%rGC0T(1)*1d-3- RE*1d-3
+						QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Lower Ion Injection Altitude [km]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T &
-					(SpecieT(s)%FluxTubeT(f)%NqICBT(1)+ 1)%rGC0T(1)*1d-3- RE*1d-3
+					(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Upper Ion Initialization Altitude [km]= ' // adjustl(paramstring))
 
 					write(paramstring, '(i10)') Stot
@@ -1543,7 +1614,7 @@ contains
 					write(*, *) trim('Total Number of Ion Vpar Grid Cells= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') Vperp12sigma*1d-3
 					write(*, *) trim('Vperp1 and Vperp2 Standard Deviation [km/s]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') Vperp12sigmaFac
+					write(paramstring, '(D10.2)') VperpsigmaFac
 					write(*, *) trim('Number of Linear Vperp1 and Vperp2 Standard Deviations &
 						Spanned by Linear Grid= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') Vperp12NlinRange
@@ -1602,13 +1673,11 @@ contains
 					write(*, *) trim('Total Number of Base Time-Steps= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%hT(1)
 					write(*, *) trim('Base Time-Step Duration [s]= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%Q0NNtT(1)
-					write(*, *) trim('Total Number of Injection Time-Steps= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NNtT(1)
 					write(*, *) trim('Total Number of Statistical Time-Steps= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%Q0ndatfacT(1)*SpecieT(s)%FluxTubeT(f)%hT(1)
-					write(*, *) trim('Injection Time-Step Duration [s]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ndatfacT(1)*SpecieT(s)%FluxTubeT(f)%hT(1)
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)
+					write(*, *) trim('Number of Base Time-Steps per Statistical Time-Step= ' // adjustl(paramstring))
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1)
 					write(*, *) trim('Statistical Time-Step Duration [s]= ' // adjustl(paramstring))
 
 					write(*, *)
@@ -1668,6 +1737,8 @@ contains
 					write(*, *) trim('Parallel Electric Field Flag= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1)
 					write(*, *) trim('Flux-tube Convection Flag= ' // adjustl(paramstring))
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1)
+					write(*, *) trim('Dynamic Resolution Flag= ' // adjustl(paramstring))
 
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
@@ -1714,19 +1785,20 @@ contains
 					write(*, *) 'ION INITIALIZATION PARAMETERS:'
 					write(*, *)
 
-					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NqICAT(1)
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NqLBT(1)
 					write(*, *) trim('Ion Initialization LB Grid Cell= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NqICBT(1)
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NqUBT(1)
 					write(*, *) trim('Ion Initialization UB Grid Cell= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T( &
-						SpecieT(s)%FluxTubeT(f)%NqICAT(1))%rGC0T(1)*1d-3- RE*1d-3
+						SpecieT(s)%FluxTubeT(f)%NqLBT(1))%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Ion Initialization Lower Altitude Boundary [km]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T( &
-						SpecieT(s)%FluxTubeT(f)%NqICBT(1))%rGC0T(1)*1d-3- RE*1d-3
+						SpecieT(s)%FluxTubeT(f)%NqUBT(1))%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Ion Initialization Upper Altitude Boundary [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%zns0T(1)- RE)*1d-3
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T( &
+						SpecieT(s)%FluxTubeT(f)%NqLBT(1))%rGC0T(1)*1d-3- RE*1d-3
 					write(*, *) trim('Ion Initialization Reference Altitude [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ns0T(1)
+					write(paramstring, '(D10.2)') ns0IC
 					write(*, *) trim('Ion Initialization Reference Density [m^-3]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCell0T(1)%Ts0T(1)
 					write(*, *) trim('Ion Initialization Temperature [K]= ' // adjustl(paramstring))
@@ -1740,8 +1812,6 @@ contains
 					write(*, *) trim('Additive Increment of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') dNTeEND
 					write(*, *) trim('Additive Increment Cap of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') dns0
-					write(*, *) trim('Multiplicative Factor of Reference Ion Density= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%Qindns0T(1)
 					write(*, *) trim('Reference Density Grid Cell= ' // adjustl(paramstring))
 
@@ -1752,9 +1822,9 @@ contains
 						write(*, *) 'NEUTRAL OXYGEN INITIALIZATION PARAMETERS:'
 						write(*, *)
 
-						write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%zns0neutT(1)- RE)*1d-3
+						write(paramstring, '(D10.2)') (zns0neutIC- RE)*1d-3
 						write(*, *) trim('Neutral Oxygen Initialization Reference Altitude [km]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ns0neutT(1)
+						write(paramstring, '(D10.2)') ns0neutIC
 						write(*, *) trim('Neutral Oxygen Initialization Reference Density [m^-3]= ' // adjustl(paramstring))
 						write(paramstring, '(D10.2)') TNeut
 						write(*, *) trim('Neutral Oxygen Initialization Temperature [K]= ' // adjustl(paramstring))

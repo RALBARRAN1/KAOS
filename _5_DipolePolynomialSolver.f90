@@ -27,7 +27,7 @@ contains
 
 		do s= 1, Stot, 1
 			do f= 1, SpecieT(s)%NfT(1), 1
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					! ----------------------------------------------------
 
@@ -140,9 +140,9 @@ contains
 							thetafinalIC(1)= theta3IC(1)
 						end if
 
-						! Note: Get final (y, z) values with phi= pi/2 s.t. x= 0.
+						! Note: Get final (y, z) values
 
-						phifinalIC(1)= pi/2d0 ! Select (arbitrary for dipole) B longitude
+						phifinalIC(1)= phiLshellIC
 
 						xfinalIC(1)= rfinalIC(1)*sin(thetafinalIC(1))*cos(phifinalIC(1))
 						yfinalIC(1)= rfinalIC(1)*sin(thetafinalIC(1))*sin(phifinalIC(1))
@@ -160,7 +160,7 @@ contains
 							zfinalIC(1)= 0d0
 						end if
 
-						! Note: Get final (q, p) value and let phid= phi to compare with initial input.
+						! Note: Get final (q, p) value.
 
 						qfinalIC(1)= (RE**2d0)*cos(thetafinalIC(1))/(rfinalIC(1)**2d0)
 						pfinalIC(1)= rfinalIC(1)/(RE*(sin(thetafinalIC(1))**2d0))
@@ -204,24 +204,24 @@ contains
 						! DIAGNOSTIC FLAGS FOR ALL qfinalICT VALUES WITHIN CONFIGURATION-SPACE GRID:
 
 						if (SpecieT(s)%FluxTubeT(f)%qGLT(1, 1) <= 0) then
-							if (((Qind == NqLB(1)) .and. &
+							if (((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
-								.or. ((Qind == NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', Qind= ', Qind, ', AND FAindIC= ', FAindIC, ' IN DIPOLE', &
 									' POLYNOMIAL SOLVER SUBROUTINE' // achar(27) // '[0m.'
 							end if
-							if (((Qind /= NqLB(1)) .and. &
+							if (((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) <= &
-								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
-								.or. ((Qind /= NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
@@ -230,24 +230,24 @@ contains
 							end if
 						end if
 						if (SpecieT(s)%FluxTubeT(f)%qGLT(1, 1) > 0) then
-							if (((Qind == NqLB(1)) .and. &
+							if (((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) > &
-								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
-								.or. ((Qind == NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', Qind= ', Qind, ', AND FAindIC= ', FAindIC, ' IN DIPOLE', &
 									' POLYNOMIAL SOLVER SUBROUTINE' // achar(27) // '[0m.'
 							end if
-							if (((Qind /= NqLB(1)) .and. &
+							if (((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) >= &
-								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1))) &
-								.or. ((Qind /= NqLB(1)) .and. &
+								SpecieT(s)%FluxTubeT(f)%qGLT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))) &
+								.or. ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 								(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC) < &
-								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1)))) then
+								SpecieT(s)%FluxTubeT(f)%qGHT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qfinalICT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%qfinalICT(FAindIC), &
 									' VALUE OUT OF CONFIG-SPACE GRID FOR SPECIE= ', s, ', FLUX TUBE= ', &
@@ -400,7 +400,7 @@ contains
 
 		! do s= 1, Stot, 1
 ! 			do f= 1, SpecieT(s)%NfT(1), 1
-! 				do Qind= NqLB(1), NqUB(1), 1
+! 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 ! 					if (rank == 0) then
 ! 						write(*, *) 'thetafinalICT= ', &
 ! 						SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%thetafinalICT(:)

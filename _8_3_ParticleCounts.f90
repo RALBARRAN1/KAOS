@@ -53,7 +53,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%FLUIDIONREFflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -76,7 +76,7 @@ contains
 	                    if (nn == 1) then
 	                      ! North Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -89,7 +89,7 @@ contains
 														cycle jjloop1
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -105,7 +105,7 @@ contains
 	                      end if
 	                      ! South Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -118,7 +118,7 @@ contains
 														cycle jjloop1
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -137,7 +137,7 @@ contains
 	                    if (nn /= 1) then
 	                      ! North Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												<= qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -149,7 +149,7 @@ contains
 														cycle jjloop1
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												< qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -164,7 +164,7 @@ contains
 	  										end if
 	  										! South Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												>= qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -176,7 +176,7 @@ contains
 														cycle jjloop1
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												> qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -269,7 +269,7 @@ contains
 	                    if (nn == 1) then
 	                      ! North Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -281,7 +281,7 @@ contains
 														cycle jjloop2
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -296,7 +296,7 @@ contains
 	                      end if
 	                      ! South Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -308,7 +308,7 @@ contains
 														cycle jjloop2
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -326,7 +326,7 @@ contains
 	                    if (nn /= 1) then
 	                      ! North Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												<= qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -337,7 +337,7 @@ contains
 														cycle jjloop2
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												< qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -351,7 +351,7 @@ contains
 	  										end if
 	  										! South Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												>= qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -362,7 +362,7 @@ contains
 														cycle jjloop2
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												> qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -433,7 +433,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -454,7 +454,7 @@ contains
 
   										! North Magnetic Hemisphere
   										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-  											if ((Qind == NqLB(1)) .and. &
+  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												<= qk4(j)) .and. (qk4(j) <= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -466,7 +466,7 @@ contains
 													cycle jjloop3
 
   											end if
-  											if ((Qind /= NqLB(1)) .and. &
+  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												< qk4(j)) .and. (qk4(j) <= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -481,7 +481,7 @@ contains
   										end if
   										! South Magnetic Hemisphere
   										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-  											if ((Qind == NqLB(1)) .and. &
+  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												>= qk4(j)) .and. (qk4(j) >= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -493,7 +493,7 @@ contains
 													cycle jjloop3
 
   											end if
-  											if ((Qind /= NqLB(1)) .and. &
+  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												> qk4(j)) .and. (qk4(j) >= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -582,7 +582,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%FLUIDIONREFflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
 
@@ -637,7 +637,7 @@ contains
 
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%Vperp1REFRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%Vperp1REFRT(:, :)) /= &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp1REFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -647,7 +647,7 @@ contains
 
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%Vperp2REFRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%Vperp2REFRT(:, :)) /= &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp2REFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -657,7 +657,7 @@ contains
 
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VparREFRT(:, :)) /= &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -727,7 +727,7 @@ contains
 
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%VperpREFRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VperpREFRT(:, :)) /= &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VperpREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -737,7 +737,7 @@ contains
 
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VparREFRT(:, :)) /= &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -767,7 +767,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -823,7 +823,7 @@ contains
 
 							if ((isnan(SpecieT(s)%FluxTubeT(f)%VpENAREFRT(nn, Qind)) .eqv. &
 								.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VpENAREFRT(:, :)) /= &
-								((NqUB(1)- NqLB(1))+ 1))) then
+								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VpENAREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -833,7 +833,7 @@ contains
 
 							if ((isnan(SpecieT(s)%FluxTubeT(f)%VqENAREFRT(nn, Qind)) .eqv. &
 								.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VqENAREFRT(:, :)) /= &
-								((NqUB(1)- NqLB(1))+ 1))) then
+								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VqENAREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -843,7 +843,7 @@ contains
 
 							if ((isnan(SpecieT(s)%FluxTubeT(f)%VphiENAREFRT(nn, Qind)) .eqv. &
 								.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VphiENAREFRT(:, :)) /= &
-								((NqUB(1)- NqLB(1))+ 1))) then
+								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VphiENAREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -881,44 +881,44 @@ contains
 					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%Vperp1REFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%Vperp2REFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 					end if
 					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 0) then
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%VperpREFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 					end if
 					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%VpENAREFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%VqENAREFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 						call mpi_barrier(MPI_COMM_WORLD, ierr)
 						call mpi_bcast(SpecieT(s)%FluxTubeT(f)%VphiENAREFRT(nn, :), &
-							((NqUB(1)- NqLB(1))+ 1), &
+							((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1), &
 							MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 					end if
 
@@ -941,7 +941,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%FLUIDIONREFflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -964,7 +964,7 @@ contains
 	                    if (nn == 1) then
 	                      ! North Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -980,7 +980,7 @@ contains
 														cycle jjloop4
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -999,7 +999,7 @@ contains
 	                      end if
 	                      ! South Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -1015,7 +1015,7 @@ contains
 														cycle jjloop4
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -1037,7 +1037,7 @@ contains
 	                    if (nn /= 1) then
 	                      ! North Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												<= qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1052,7 +1052,7 @@ contains
 														cycle jjloop4
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												< qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1070,7 +1070,7 @@ contains
 	  										end if
 	  										! South Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												>= qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1085,7 +1085,7 @@ contains
 														cycle jjloop4
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												> qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1181,7 +1181,7 @@ contains
 	                    if (nn == 1) then
 	                      ! North Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          <= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -1195,7 +1195,7 @@ contains
 														cycle jjloop5
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          < SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
@@ -1212,7 +1212,7 @@ contains
 	                      end if
 	                      ! South Magnetic Hemisphere
 	                      if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	                        if ((Qind == NqLB(1)) .and. &
+	                        if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          >= SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -1226,7 +1226,7 @@ contains
 														cycle jjloop5
 
 	                        end if
-	                        if ((Qind /= NqLB(1)) .and. &
+	                        if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	                          ((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	                          > SpecieT(s)%FluxTubeT(f)%q0T(j)) &
 	                          .and. (SpecieT(s)%FluxTubeT(f)%q0T(j) >= &
@@ -1246,7 +1246,7 @@ contains
 	                    if (nn /= 1) then
 	                      ! North Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												<= qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1259,7 +1259,7 @@ contains
 														cycle jjloop5
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												< qk4(j)) .and. (qk4(j) <= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1275,7 +1275,7 @@ contains
 	  										end if
 	  										! South Magnetic Hemisphere
 	  										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-	  											if ((Qind == NqLB(1)) .and. &
+	  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												>= qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1288,7 +1288,7 @@ contains
 														cycle jjloop5
 
 	  											end if
-	  											if ((Qind /= NqLB(1)) .and. &
+	  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
 	  												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
 	  												> qk4(j)) .and. (qk4(j) >= &
 	  												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1361,7 +1361,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -1382,7 +1382,7 @@ contains
 
   										! North Magnetic Hemisphere
   										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
-  											if ((Qind == NqLB(1)) .and. &
+  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												<= qk4(j)) .and. (qk4(j) <= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1397,7 +1397,7 @@ contains
 													cycle jjloop6
 
   											end if
-  											if ((Qind /= NqLB(1)) .and. &
+  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												< qk4(j)) .and. (qk4(j) <= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1415,7 +1415,7 @@ contains
   										end if
   										! South Magnetic Hemisphere
   										if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
-  											if ((Qind == NqLB(1)) .and. &
+  											if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												>= qk4(j)) .and. (qk4(j) >= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1430,7 +1430,7 @@ contains
 													cycle jjloop6
 
   											end if
-  											if ((Qind /= NqLB(1)) .and. &
+  											if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
   												((SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) &
   												> qk4(j)) .and. (qk4(j) >= &
   												SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)))) then
@@ -1522,7 +1522,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%FLUIDIONREFflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
 
@@ -1578,7 +1578,7 @@ contains
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%Vperp1REFsigRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%Vperp1REFsigRT(:, :)) /= &
 									(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp1REFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1589,7 +1589,7 @@ contains
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%Vperp2REFsigRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%Vperp2REFsigRT(:, :)) /= &
 									(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp2REFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1600,7 +1600,7 @@ contains
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(:, :)) /= &
 									(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1671,7 +1671,7 @@ contains
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%VperpREFsigRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VperpREFsigRT(:, :)) /= &
 									(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VperpREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1682,7 +1682,7 @@ contains
 								if ((isnan(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(nn, Qind)) .eqv. &
 									.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(:, :)) /= &
 									(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-									((NqUB(1)- NqLB(1))+ 1))) then
+									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1712,7 +1712,7 @@ contains
 				! ----------------------------------------------------
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
@@ -1768,7 +1768,7 @@ contains
 							if ((isnan(SpecieT(s)%FluxTubeT(f)%VpENAREFsigRT(nn, Qind)) .eqv. &
 								.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VpENAREFsigRT(:, :)) /= &
 								(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-								((NqUB(1)- NqLB(1))+ 1))) then
+								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VpENAREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1779,7 +1779,7 @@ contains
 							if ((isnan(SpecieT(s)%FluxTubeT(f)%VqENAREFsigRT(nn, Qind)) .eqv. &
 								.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VqENAREFsigRT(:, :)) /= &
 								(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-								((NqUB(1)- NqLB(1))+ 1))) then
+								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VqENAREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1790,7 +1790,7 @@ contains
 							if ((isnan(SpecieT(s)%FluxTubeT(f)%VphiENAREFsigRT(nn, Qind)) .eqv. &
 								.true.) .or. (size(SpecieT(s)%FluxTubeT(f)%VphiENAREFsigRT(:, :)) /= &
 								(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1)* &
-								((NqUB(1)- NqLB(1))+ 1))) then
+								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VphiENAREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
@@ -1820,7 +1820,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 				pdriftionMax(1)= maxval(pdriftion(:))
 
@@ -2149,40 +2149,56 @@ contains
 				if (SpecieT(s)%FluxTubeT(f)%FLUIDIONREFflagT(1) == 1) then
 					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
 						write(*, *) 'Mean Vperp1 mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%Vperp1REFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%Vperp1REFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vperp1 sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%Vperp1REFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%Vperp1REFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vperp2 mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%Vperp2REFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%Vperp2REFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vperp2 sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%Vperp2REFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%Vperp2REFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vpar mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vpar sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 					else
 						write(*, *) 'Mean Vperp mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VperpREFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VperpREFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vperp sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VperpREFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VperpREFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vpar mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VparREFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vpar sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VparREFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 					end if
 					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 						write(*, *) 'Mean Vp mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VpENAREFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VpENAREFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vp sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VpENAREFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VpENAREFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vq mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VqENAREFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VqENAREFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vq sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VqENAREFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VqENAREFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vphi mean over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VphiENAREFRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VphiENAREFRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 						write(*, *) 'Mean Vphi sigma over all altitude [km/s]= ', &
-							(sum(SpecieT(s)%FluxTubeT(f)%VphiENAREFsigRT(nn, :))/(NqUB(1)- NqLB(1)+ 1))*1d-3
+							(sum(SpecieT(s)%FluxTubeT(f)%VphiENAREFsigRT(nn, :))/(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+								SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1))*1d-3
 					end if
 				end if
 			end if
@@ -2284,7 +2300,7 @@ contains
 		!if (rank == 0) then
 		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!		if (((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 		!			call cpu_time(S83End)
 		!			write(S83string, '(i10)')  nint(S83End)
 		!			write(nnstring, '(I5)') nn

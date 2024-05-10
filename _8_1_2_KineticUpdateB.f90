@@ -336,17 +336,6 @@ contains
 				cos(phik2(1))+ AGyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
 				AGzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
 
-			!if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-			!	AGpark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AGxk2p(1)* &
-			!		cos(phik2(1))+ AGyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!		AGzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			!end if
-			!if (qk2(1) > 0d0) then  ! N Mag Hemisphere
-			!	AGpark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AGxk2p(1)* &
-			!		cos(phik2(1))+ AGyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!		AGzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			!end if
-
 			AGpk2(1)= 0d0
 			AGphik2(1)= 0d0
 
@@ -520,25 +509,6 @@ contains
 				cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
 				AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
 
-			!if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
-			!	if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-			!		AEApark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
-			!			cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!			AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			!	end if
-			!	if (qk2(1) > 0d0) then  ! N Mag Hemisphere
-			!		AEApark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
-			!			cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!			AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			!	end if
-			!end if
-
-			!if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
-			!	AEApark2(1)= 3d0*cos(thetak2(1))*sin(thetak2(1))*(AEAxk2p(1)* &
-			!		cos(phik2(1))+ AEAyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!		AEAzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1))
-			!end if
-
 			AEApk2(1)= 0d0
 			AEAphik2(1)= 0d0
 
@@ -687,17 +657,6 @@ contains
 			AEPpark2(1)= (3d0*cos(thetak2(1))*sin(thetak2(1))*(AEPxk2p(1)* &
 				cos(phik2(1))+ AEPyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
 				AEPzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-
-			!if (qk2(1) <= 0d0) then  ! S Mag Hemisphere
-			!	AEPpark2(1)= abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEPxk2p(1)* &
-			!		cos(phik2(1))+ AEPyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!		AEPzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			!end if
-			!if (qk2(1) > 0d0) then  ! N Mag Hemisphere
-			!	AEPpark2(1)= -abs(3d0*cos(thetak2(1))*sin(thetak2(1))*(AEPxk2p(1)* &
-			!		cos(phik2(1))+ AEPyk2p(1)*sin(phik2(1)))/sqrt(ellk2(1))+ &
-			!		AEPzk2p(1)*(3d0*(cos(thetak2(1))**2d0)- 1d0)/sqrt(ellk2(1)))
-			!end if
 
 			AEPpk2(1)= 0d0
 			AEPphik2(1)= 0d0

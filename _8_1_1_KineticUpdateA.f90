@@ -219,14 +219,14 @@ contains
 		! COMPUTE EACH PARTICLE CONFIGURATION-SPACE GRID CELL:
 
 		if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, 1) <= 0) then ! N. Magnetic Hemisphere
-			QloopKUA1: do Qind= NqLB(1), NqUB(1), 1
-				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) <= qk1(1)) &
+			QloopKUA1: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) <= qk1(1)) &
 					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA1
 
-				else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) < qk1(1)) &
+				else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) < qk1(1)) &
 					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
@@ -235,10 +235,10 @@ contains
 				end if
 			end do QloopKUA1
 
-			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, NqLB(1)) > qk1(1)) then
+			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qk1(1)) then
 				! SMH Lower boundary escape
 				Qindk1(j)= 0d0
-			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, NqUB(1)) < qk1(1)) then
+			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qk1(1)) then
 				! SMH Upper boundary escape
 				Qindk1(j)= -1d0
 			end if
@@ -247,14 +247,14 @@ contains
 		! ----------------------------------------------------
 
 		if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, 1) > 0) then ! S. Magnetic Hemisphere
-			QloopKUA2: do Qind= NqLB(1), NqUB(1), 1
-				if ((Qind == NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) >= qk1(1)) &
+			QloopKUA2: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) >= qk1(1)) &
 					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA2
 
-				else if ((Qind /= NqLB(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) > qk1(1)) &
+				else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) > qk1(1)) &
 					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
@@ -263,10 +263,10 @@ contains
 				end if
 			end do QloopKUA2
 
-			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, NqLB(1)) < qk1(1)) then
+			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qk1(1)) then
 				! NMH Lower boundary escape
 				Qindk1(j)= 0d0
-			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, NqUB(1)) > qk1(1)) then
+			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qk1(1)) then
 				! NMH Upper boundary escape
 				Qindk1(j)= -1d0
 			end if
@@ -491,17 +491,6 @@ contains
 				cos(phik1(1))+ AGyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
 				AGzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
 
-			!if (qk1(1) <= 0d0) then  ! S Mag Hemisphere
-			!	AGpark1(1)= abs(3d0*cos(thetak1(1))*sin(thetak1(1))*(AGxk1p(1)* &
-			!		cos(phik1(1))+ AGyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!		AGzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-			!end if
-			!if (qk1(1) > 0d0) then  ! N Mag Hemisphere
-			!	AGpark1(1)= -abs(3d0*cos(thetak1(1))*sin(thetak1(1))*(AGxk1p(1)* &
-			!		cos(phik1(1))+ AGyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!		AGzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-			!end if
-
 			AGpk1(1)= 0d0
 			AGphik1(1)= 0d0
 
@@ -676,25 +665,6 @@ contains
 				cos(phik1(1))+ AEAyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
 				AEAzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
 
-			!if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
-			!	if (qk1(1) <= 0d0) then  ! S Mag Hemisphere
-			!		AEApark1(1)= -abs(3d0*cos(thetak1(1))*sin(thetak1(1))*(AEAxk1p(1)* &
-			!			cos(phik1(1))+ AEAyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!			AEAzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-			!	end if
-			!	if (qk1(1) > 0d0) then  ! N Mag Hemisphere
-			!		AEApark1(1)= abs(3d0*cos(thetak1(1))*sin(thetak1(1))*(AEAxk1p(1)* &
-			!			cos(phik1(1))+ AEAyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!			AEAzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-			!	end if
-			!end if
-
-			!if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
-			!	AEApark1(1)= 3d0*cos(thetak1(1))*sin(thetak1(1))*(AEAxk1p(1)* &
-			!		cos(phik1(1))+ AEAyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!		AEAzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1))
-			!end if
-
 			AEApk1(1)= 0d0
 			AEAphik1(1)= 0d0
 
@@ -844,17 +814,6 @@ contains
 			AEPpark1(1)= (3d0*cos(thetak1(1))*sin(thetak1(1))*(AEPxk1p(1)* &
 				cos(phik1(1))+ AEPyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
 				AEPzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-
-			!if (qk1(1) <= 0d0) then  ! S Mag Hemisphere
-			!	AEPpark1(1)= abs(3d0*cos(thetak1(1))*sin(thetak1(1))*(AEPxk1p(1)* &
-			!		cos(phik1(1))+ AEPyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!		AEPzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-			!end if
-			!if (qk1(1) > 0d0) then  ! N Mag Hemisphere
-			!	AEPpark1(1)= -abs(3d0*cos(thetak1(1))*sin(thetak1(1))*(AEPxk1p(1)* &
-			!		cos(phik1(1))+ AEPyk1p(1)*sin(phik1(1)))/sqrt(ellk1(1))+ &
-			!		AEPzk1p(1)*(3d0*(cos(thetak1(1))**2d0)- 1d0)/sqrt(ellk1(1)))
-			!end if
 
 			AEPpk1(1)= 0d0
 			AEPphik1(1)= 0d0

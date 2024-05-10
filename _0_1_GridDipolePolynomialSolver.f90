@@ -103,11 +103,9 @@ contains
   		thetaGridOut(1)= theta3Grid(1)
   	end if
 
-  	! Note: Get final (y, z) values with phi= pi/2 s.t. x= 0.
+  	! Note: Get final (y, z) values
 
-    ! FIXME Set phiGridOut according to initial input phi with ExB drift
-
-  	phiGridOut(1)= pi/2d0 ! Select B longitude
+  	phiGridOut(1)= phiGridIn(1) ! Select B longitude
 
   	xGridOut(1)= rGridOut(1)*sin(thetaGridOut(1))*cos(phiGridOut(1))
   	yGridOut(1)= rGridOut(1)*sin(thetaGridOut(1))*sin(phiGridOut(1))

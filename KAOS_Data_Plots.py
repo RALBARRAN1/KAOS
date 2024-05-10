@@ -2,10 +2,10 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-NNt= 50
+NNt= 51
 Stot= 1
 Nf= 1
-NqG= 30
+NqG= 25
 NVparG= 28
 NVperp1G= 28
 NVperp2G= 28
@@ -164,22 +164,39 @@ axarr[figC].set_xlabel('Time [s]')
 axarr[figC].set_ylabel('$u_\parallel$ [m/s]')
 plt.show()
 
-for nn in range(NNt- 5, NNt- 1):
+#for nn in range(1, NNt- 1):
+nn= 1
+fig,axarr= plt.subplots(1, 3)
+NphVperp1Vparplt= axarr[0].pcolormesh(NphVperp1Vpar[:, :, Qindval, nn])
+fig.colorbar(NphVperp1Vparplt)
+axarr[0].set_xlabel('$N(v_{\perp 1},\:v_{\parallel})$')
+#plt.title('Time [s]= ', Time[nn])
 
-	fig,axarr= plt.subplots(1, 3)
-	NphVperp1Vparplt= axarr[0].pcolormesh(NphVperp1Vpar[:, :, Qindval, nn])
-	fig.colorbar(NphVperp1Vparplt)
-	axarr[0].set_xlabel('$N(v_{\perp 1},\:v_{\parallel})$')
-	#plt.title('Time [s]= ', Time[nn])
+NphVperp2Vparplt= axarr[1].pcolormesh(NphVperp1Vperp2[:, :, Qindval, nn])
+fig.colorbar(NphVperp2Vparplt)
+axarr[1].set_xlabel('$N(v_{\perp 2},\:v_{\parallel})$')
 
-	NphVperp2Vparplt= axarr[1].pcolormesh(NphVperp1Vperp2[:, :, Qindval, nn])
-	fig.colorbar(NphVperp2Vparplt)
-	axarr[1].set_xlabel('$N(v_{\perp 2},\:v_{\parallel})$')
+NphVperp1Vperp2plt= axarr[2].pcolormesh(NphVperp2Vpar[:, :, Qindval, nn])
+fig.colorbar(NphVperp1Vperp2plt)
+axarr[2].set_xlabel('$N(v_{\perp 1},\:v_{\perp 2})$')
+plt.show()
 
-	NphVperp1Vperp2plt= axarr[2].pcolormesh(NphVperp2Vpar[:, :, Qindval, nn])
-	fig.colorbar(NphVperp1Vperp2plt)
-	axarr[2].set_xlabel('$N(v_{\perp 1},\:v_{\perp 2})$')
-	plt.show()
+nn= NNt- 2
+fig,axarr= plt.subplots(1, 3)
+NphVperp1Vparplt= axarr[0].pcolormesh(NphVperp1Vpar[:, :, Qindval, nn])
+fig.colorbar(NphVperp1Vparplt)
+axarr[0].set_xlabel('$N(v_{\perp 1},\:v_{\parallel})$')
+#plt.title('Time [s]= ', Time[nn])
+
+NphVperp2Vparplt= axarr[1].pcolormesh(NphVperp1Vperp2[:, :, Qindval, nn])
+fig.colorbar(NphVperp2Vparplt)
+axarr[1].set_xlabel('$N(v_{\perp 2},\:v_{\parallel})$')
+
+NphVperp1Vperp2plt= axarr[2].pcolormesh(NphVperp2Vpar[:, :, Qindval, nn])
+fig.colorbar(NphVperp1Vperp2plt)
+axarr[2].set_xlabel('$N(v_{\perp 1},\:v_{\perp 2})$')
+plt.show()
+
 
 print('End Sim Time [hr]= ', (0.18e5/60e0)/60e0)
 print('Current Time [hr]= ', (Time[NNt- 2]/60e0)/60e0) 

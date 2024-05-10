@@ -37,13 +37,13 @@ contains
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						! ----------------------------------------------------
 
 						! Number of particles in each FA cell
 						NsFARRp(Qind)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T( &
-							SpecieT(s)%FluxTubeT(f)%NqICAT(1)+ Qind- 1+ 1)%nsnormCT(1))
+							SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1+ 1)%nsnormCT(1))
 
 						NsFARR(1)= NsFARRp(Qind)
 
@@ -99,7 +99,7 @@ contains
 
 					! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						if ((NsFARRp(Qind) /= SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFARRT(1)) .or. &
 							(size(SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFARRT(:)) /= 1) .or. &
@@ -216,7 +216,7 @@ contains
 					NsFARRpTSum(1)= sum(SpecieT(s)%FluxTubeT(f)%NsFARRpT(:))
 
 					if (NsFARRpTSum(1) > SpecieT(s)%FluxTubeT(f)%NsRRT(1)) then
-						Qloop: do Qind= NqUB(1), NqLB(1), -1
+						Qloop: do Qind= SpecieT(s)%FluxTubeT(f)%NqUBT(1), SpecieT(s)%FluxTubeT(f)%NqLBT(1), -1
 							if (SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind) <= &
 								(NsFARRpTSum(1)- SpecieT(s)%FluxTubeT(f)%NsRRT(1))) then
 								SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind)= SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind) !0d0
@@ -241,7 +241,7 @@ contains
 
 					! ----------------------------------------------------
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						if (SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind) /= 0d0) then
 							NsFARRmsk(Qind)= .true.
 						else
@@ -254,17 +254,17 @@ contains
 					deallocate(SpecieT(s)%FluxTubeT(f)%NsFARRpT)
 
 					SpecieT(s)%FluxTubeT(f)%NqICT(1)= SpecieT(s)%FluxTubeT(f)%NqICT(1)- count(NsFARRmsk .eqv. .false.)
-					SpecieT(s)%FluxTubeT(f)%NqICBT(1)= SpecieT(s)%FluxTubeT(f)%NqICBT(1)- count(NsFARRmsk .eqv. .false.)
+					SpecieT(s)%FluxTubeT(f)%NqUBT(1)= SpecieT(s)%FluxTubeT(f)%NqUBT(1)- count(NsFARRmsk .eqv. .false.)
 
 					! ----------------------------------------------------
 
 					! DIAGNOSTIC FOR CORRECT INITIALIZATION GRID CELLS:
 
 					if (SpecieT(s)%FluxTubeT(f)%NqICT(1) /= &
-						(abs(SpecieT(s)%FluxTubeT(f)%NqICBT(1)- SpecieT(s)%FluxTubeT(f)%NqICAT(1)))+ 1d0) then
+						(abs(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)))+ 1d0) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT NqICT=  ', &
 							SpecieT(s)%FluxTubeT(f)%NqICT(1), ', AND (NqICB- NqICA)+ 1= ', &
-							(abs(SpecieT(s)%FluxTubeT(f)%NqICBT(1)- SpecieT(s)%FluxTubeT(f)%NqICAT(1)))+ 1d0, &
+							(abs(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)))+ 1d0, &
 							' VALUES FOR SPECIE= ', s, ' AND FLUX TUBE= ', f, ' IN DENSITY PROFILE A1', &
 							' SUBROUTINE' // achar(27) // '[0m.'
 					end if
@@ -273,7 +273,7 @@ contains
 
 					allocate(SpecieT(s)%FluxTubeT(f)%NsFARRpT(SpecieT(s)%FluxTubeT(f)%NqICT(1)))
 
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind)= NsFARRpTMP(Qind)
 
 						! ----------------------------------------------------
@@ -332,62 +332,22 @@ contains
 
 		    ! ----------------------------------------------------
 
-				if (SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1) == 0) then
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
-				    nsnormCLB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1))
-					end if
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
-						nsnormCLB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)
-					end if
-				end if
-				if (SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1) == 1) then
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
-						nsnormCLB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqLB(1)+ 1)%nsnormCT(1))
-					end if
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
-						nsnormCLB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCLBInputT(1)
-					end if
-				end if
-
-				if (SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1) == 0) then
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
-				    nsnormCUB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqUB(1)+ 1)%nsnormCT(1))
-					end if
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
-						nsnormCUB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCUBInputT(1)
-					end if
-				end if
-				if (SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1) == 1) then
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) then
-				    nsnormCUB(1)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(NqUB(1)+ 1)%nsnormCT(1))
-					end if
-					if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
-						nsnormCUB(1)= SpecieT(s)%FluxTubeT(f)%nsnormCUBInputT(1)
-					end if
-				end if
-
-				SpecieT(s)%FluxTubeT(f)%nsnormCLBT(1)= nsnormCLB(1)
-				SpecieT(s)%FluxTubeT(f)%nsnormCUBT(1)= nsnormCUB(1)
-
-		    ! Broadcast boundary ion densities to all ranks
-		    call mpi_barrier(MPI_COMM_WORLD, ierr)
-		    call mpi_bcast(nsnormCLB(1), 1, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
-		    call mpi_barrier(MPI_COMM_WORLD, ierr)
-		    call mpi_bcast(nsnormCUB(1), 1, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
+				SpecieT(s)%FluxTubeT(f)%nsnormCLBT(1)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)
+				SpecieT(s)%FluxTubeT(f)%nsnormCUBT(1)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)
 
 		    ! ----------------------------------------------------
 
 		    ! Broadcast neutral densities to all ranks
 		    if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 
-		      allocate(nsnormCNeut0(((NqUB(1)- NqLB(1))+ 3)))
+		      allocate(nsnormCNeut0(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3)))
 
-		      do Qind= NqLB(1), NqUB(1)+ 2, 1
+		      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 2, 1
 		        nsnormCNeut0(Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCNeut0T(1)
 		      end do
 
 		      call mpi_barrier(MPI_COMM_WORLD, ierr)
-		      call mpi_bcast(nsnormCNeut0(:), int((NqUB(1)- NqLB(1))+ 3), &
+		      call mpi_bcast(nsnormCNeut0(:), int((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3), &
 		        MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, ierr)
 
 		    end if
@@ -450,7 +410,7 @@ contains
 
 				do rr= 0, ranksize(1)- 1, 1
 					if ((rank == 0) .and. (rr == rank)) then
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							if (sum(SpecieT(s)%FluxTubeT(f)%NsFARRpT(1:Qind)) < SpecieT(s)%FluxTubeT(f)%NsT(1)) then
 								SpecieT(s)%FluxTubeT(f)%NsFApT(Qind)= SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind)
 							end if
@@ -471,7 +431,7 @@ contains
 							end if
 						end do
 
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFAT(1)= SpecieT(s)%FluxTubeT(f)%NsFApT(Qind)
 
 							! ----------------------------------------------------
@@ -528,7 +488,7 @@ contains
 
 						! ----------------------------------------------------
 
-						Qindloop: do Qind= NqLB(1), NqUB(1), 1
+						Qindloop: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							if (Qind < NsTqind(1)) then
 								SpecieT(s)%FluxTubeT(f)%NsFApT(Qind)= 0d0
 							end if
@@ -596,7 +556,7 @@ contains
 									end if
 								end if
 							end if
-							if (Qind == NqUB(1)) then
+							if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 								if (SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind) == &
 									(SpecieT(s)%FluxTubeT(f)%NsT(1)- &
 									sum(SpecieT(s)%FluxTubeT(f)%NsFApT(1:Qind- 1)))) then
@@ -612,7 +572,7 @@ contains
 								end if
 							end if
 						end do Qindloop
-						do Qind= NqLB(1), NqUB(1), 1
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							if (Qind > NsTqind(1)) then
 								SpecieT(s)%FluxTubeT(f)%NsFApT(Qind)= 0d0
 							end if
@@ -673,7 +633,7 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 
 				if (rank == 0) then
-					do Qind= NqLB(1), NqUB(1), 1
+					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						if (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFARRT(1) /= SpecieT(s)%FluxTubeT(f)%NsFARRpT(Qind)) then
 
 							SpecieT(s)%FluxTubeT(f)%NsFApT(Qind)= &
@@ -709,7 +669,7 @@ contains
 
 				! ----------------------------------------------------
 
-				do Qind= NqLB(1), NqUB(1), 1
+				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 					call mpi_barrier(MPI_COMM_WORLD, ierr)
 					NsFAp(1)= SpecieT(s)%FluxTubeT(f)%NsFApT(Qind)

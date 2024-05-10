@@ -40,8 +40,8 @@ contains
 
       do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
         if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-          (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-          do Qind= NqLB(1), NqUB(1), 1
+          (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+          do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
             ! ----------------------------------------------------
 
@@ -52,7 +52,7 @@ contains
 									!SpecieT(s)%FluxTubeT(f)%nuIonNeutPoiT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)
 
 									write(*, *) 'test= ', SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)
-									
+
 									SpecieT(s)%FluxTubeT(f)%nuIonNeutPoiT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)
 
 									!SpecieT(s)%FluxTubeT(f)%nuIonNeutPoiT(nn, Qind)= 0d0
@@ -108,10 +108,11 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 		      call mpi_send(SpecieT(s)%FluxTubeT(f)%nuIonNeutRankSumRT(nn, :), &
-						(((NqUB(1)- NqLB(1))+ 1)), MPI_DOUBLE_PRECISION, rank+ 1, 0, MPI_COMM_WORLD, ierr)
+						(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+						SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)), MPI_DOUBLE_PRECISION, rank+ 1, 0, MPI_COMM_WORLD, ierr)
 
 				end if
 			end do
@@ -134,10 +135,11 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 		      call mpi_recv(SpecieT(s)%FluxTubeT(f)%nuIonNeutRankSumRT(nn, :), &
-						(((NqUB(1)- NqLB(1))+ 1)), MPI_DOUBLE_PRECISION, rank- 1, 0, MPI_COMM_WORLD, status, ierr)
+						(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+						SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)), MPI_DOUBLE_PRECISION, rank- 1, 0, MPI_COMM_WORLD, status, ierr)
 
 				end if
 			end do
@@ -146,8 +148,8 @@ contains
 
       do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
         if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-          (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
-          do Qind= NqLB(1), NqUB(1), 1
+          (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+          do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
             ! ----------------------------------------------------
 
@@ -237,10 +239,11 @@ contains
 			if (rr < ranksize(1)- 1) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-			      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)))) then
+			      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
 
 						call mpi_send(SpecieT(s)%FluxTubeT(f)%nuIonNeutRankSumRT(nn, :), &
-							(((NqUB(1)- NqLB(1))+ 1)), MPI_DOUBLE_PRECISION, rank+ 1, 0, MPI_COMM_WORLD, ierr)
+							(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)), &
+							MPI_DOUBLE_PRECISION, rank+ 1, 0, MPI_COMM_WORLD, ierr)
 
 					end if
 				end do

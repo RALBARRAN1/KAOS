@@ -32,8 +32,9 @@ character(10) :: rankstring
 
 ! Define all running indices
 integer(kind= dp) :: s, f, Qind, FAindIC, Vperp1ind, Vperp2ind, Vperpind, Vparind, Vpind, Vqind, Vphiind, &
-	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2, nnind
-character(50) :: Nsstring, sstring, fstring, Qindstring, Vperp1indstring, Vperp2indstring, Vperpindstring, Vparindstring, &
+	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2, nnind, INITIALGRIDflag
+character(50) :: Nsstring, Lshellstring, sstring, fstring, Qindstring, Vperp1indstring, &
+	Vperp2indstring, Vperpindstring, Vparindstring, &
 	Vpindstring, Vqindstring, Vphiindstring, nnstring, jstring, expstring, &
 	paramstring, pdriftmaxstring, pdriftmeanstring, Timestring
 
@@ -51,7 +52,8 @@ character(50) :: Totstring, S1string, S2string, S3string, S4string, S5string, &
 
 real(kind= dp) :: NVperp1GpF, NVperp2GpF
 integer(kind= dp) :: VperpNlinRange, Vperp12NlinRange, VparNlinRange, VpphiNlinRange, VqNlinRange
-real(kind= dp) :: Vperp12sigmaFac
+real(kind= dp), dimension(1) :: ns0, zns0Neut, ns0Neut
+real(kind= dp), dimension(1) :: VperpsigmaFac, VparsigmaFac, Ti, Te, TNeut, Lshell, phiLshell, qGA, qGB
 real(kind= dp) :: NVpGpF, NVqGpF, NVphiGpF
 real(kind= dp) :: VpphisigmaFac, VqsigmaFac
 real(kind= dp) :: TsPerp, TsPar, Vperp12sigma, Vperpsigma, Vparsigma
@@ -60,11 +62,13 @@ real(kind= dp) :: mNeut, Vpphisigma, Vqsigma
 ! ----------------- 0_1 GRID DIPOLE POLYNOMIAL SOLVER -----------------
 
 ! Define all grid quartic dipole polynomial solver variables
-real(kind= dp), dimension(1) :: pGridIn, qGridIn, ApGrid, BpGrid, CpGrid, DpGrid, &
+real(kind= dp), dimension(1) :: pGridIn, qGridIn, phiGridIn, ApGrid, BpGrid, CpGrid, DpGrid, &
 	AbGrid, BbGrid, CbGrid, D3Grid, D4Grid, AbbGrid, BbbGrid, DeltaGrid, EpsilonGrid, sigmaGrid, &
 	muGrid, piiGrid, r3Grid, theta3Grid, qtest3Grid, ptest3Grid, rGridOut, thetaGridOut, &
 	phiGridOut, xGridOut, yGridOut, zGridOut, qGridOut, pGridOut
 complex(kind= dp), dimension(1) :: ThetapGrid, nuGrid, gamma3Grid, sigma23Grid
+real(kind= dp), dimension(:), allocatable :: pGp, qGp, phiGp, rGridOutp, thetaGridOutp, &
+	xGridOutp, yGridOutp, zGridOutp
 
 ! ----------------- 0_0 VELOCITY-SPACE GRID GENERATOR -----------------
 
@@ -83,15 +87,16 @@ integer(kind= dp) :: nsnormCLBInput, nsnormCUBInput
 integer(kind= dp) :: LBREPLENISHflagInput, UBREPLENISHflagInput
 real(kind= dp), dimension(:), allocatable :: DensityInput, TemperatureInput, &
 	EAInertialInput, EAPressureInput, EAmagInput
+integer(kind= dp) :: NqLBp, NqUBp
 
 ! Define all simulation time parameters
 real(kind= dp), dimension(1) :: h
-integer(kind= dp), dimension(1) :: NNt, ndatfac, Q0NNt, Q0ndatfac
+integer(kind= dp), dimension(1) :: NNtp, Q0ndatfac
 real(kind= dp), dimension(1) :: IonNoiseLimit, ENANoiseLimit
 integer(kind= dp), parameter :: dt= 1d0
 
 ! Define range of configuration-space field-aligned grid cells
-integer(kind= dp), dimension(1) :: NqIC, NqLB, NqUB
+integer(kind= dp), dimension(1) :: NqIC
 
 ! Define drift limits over each time-step and on entire simulation duration
 real(kind= dp), dimension(1) :: pdriftLim, rdriftLim, thetadriftLim, phidriftLim
@@ -231,7 +236,7 @@ real(kind= dp), dimension(1) ::  Rperpk4, Bmagk4, OmegaGk4, dBdsk4, muk4, &
 ! ----------------- 8_1_4 RK4 DIPOLE POLYNOMIAL SOLVER -----------------
 
 ! Define all RK4 quartic dipole polynomial solver variables
-real(kind= dp), dimension(1) :: qNp, pNp, ApRK4, BpRK4, CpRK4, DpRK4, &
+real(kind= dp), dimension(1) :: qNp, pNp, phiNp, ApRK4, BpRK4, CpRK4, DpRK4, &
 	AbRK4, BbRK4, CbRK4, D3RK4, D4RK4, AbbRK4, BbbRK4, DeltaRK4, EpsilonRK4, sigmaRK4, &
 	muRK4, piiRK4, r3RK4, theta3RK4, qtest3RK4, ptest3RK4, rfinalRK4, thetafinalRK4, &
 	phifinalRK4, xfinalRK4, yfinalRK4, zfinalRK4, qfinalRK4, pfinalRK4
@@ -349,7 +354,8 @@ character(50) :: RNtest1file, RNtest2file, NsnTfile, NsnRRTfile, NqLBoutfluxIonR
 	M0FiltAvrgRTfile, M1Perp1FiltAvrgRTfile, M1Perp2FiltAvrgRTfile, M1ParFiltAvrgRTfile, M2ParFiltAvrgRTfile, &
 	nsnormCLBTfile, nsnormCUBTfile, DensityOutputRTfile, TemperatureOutputRTfile, &
 	EAInertialOutputRTfile, EAPressureOutputRTfile, EAmagOutputRTfile, &
-	LBREPLENISHflagTfile, UBREPLENISHflagTfile
+	LBREPLENISHflagTfile, UBREPLENISHflagTfile, ndatfacTfile, ns0Tfile, qGCTfile, pGCTfile, &
+	rGCTfile, phiGCTfile, thetaGCTfile, TsTfile, NqLBTfile, NqUBTfile
 
 ! ----------------- ALL DERIVED DATA TYPES -----------------
 
@@ -451,31 +457,30 @@ end type QCelltype
 
 type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
   ! Simulation Parameterization:
-	integer(kind= dp), dimension(1) :: NqGpT, NqGT, NqG0T
-	real(kind= dp), dimension(:), allocatable :: pGT, qGT, rGridOutT, thetaGridOutT, phiGridOutT, &
-		xGridOutT, yGridOutT, zGridOutT
+	real(kind= dp), dimension(1) :: nsnormfacT
+	integer(kind= dp), dimension(1) :: NqGpT, NqGT, NqGTp, NqG0T
 	real(kind= dp), dimension(:), allocatable :: hpC0T, hphiC0T, &
-		Te0T, rGL0T, rGH0T, phiGL0T, phiGH0T, thetaGL0T, thetaGH0T, ellGL0T, ellGH0T, &
+		Te0T, rGL0T, rGH0T, thetaGL0T, thetaGH0T, ellGL0T, ellGH0T, &
 		xGC0T, xGL0T, xGH0T, yGC0T, yGL0T, yGH0T, zGC0T, zGL0T, zGH0T
 	integer(kind= dp), dimension(1) :: nsnormCLBInputT, nsnormCUBInputT
 	real(kind= dp), dimension(:, :), allocatable :: dsICRT
-	real(kind= dp), dimension(1) :: LBNominalDensityT, UBNominalDensityT, &
+	real(kind= dp), dimension(:), allocatable :: LBNominalDensityT, UBNominalDensityT, ns0T, &
 		d3xCLBT, d3xCUBT, sigmaLBT, sigmaUBT
 	real(kind= dp), dimension(1) :: AT, BT, hT
-	integer(kind= dp), dimension(1) :: NtT, NNtT, ndatfacT, Q0NNtT, Q0ndatfacT
+	integer(kind= dp), dimension(1) :: NtT, NNtT
+	integer(kind= dp), dimension(:), allocatable :: ndatfacT
 	real(kind= dp), dimension(1) :: IonNoiseLimitT, ENANoiseLimitT
 	integer(kind= dp), dimension(1) :: IONNOISEflagT, FLUIDIONEXPORTflagT, FLUIDENAEXPORTflagT, &
 		LBCONDITIONflagT, UBCONDITIONflagT, LBREPLENISHflagT, UBREPLENISHflagT, &
 		DENSITYPROFILEflagT, STATICINJECTIONflagT, SPINUPflagT, &
 		ICRflagT, ICRCOHERENCEflagT, MIRRORflagT, GRAVflagT, EAMBSELFCONSISTflagT, EAMBSIGNflagT, EAMBflagT, &
-		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, CONVECTIONflagT, SYMVPARflagT, &
-		ION2VPERPflagT, PHASEIONDISTRIBflagT, PHASEDENSITYIONMOMENTflagT, &
+		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, CONVECTIONflagT, DYNAMICGRIDflagT, &
+		SYMVPARflagT, ION2VPERPflagT, PHASEIONDISTRIBflagT, PHASEDENSITYIONMOMENTflagT, &
 		PHASEVELPERPIONMOMENTflagT, PHASEVELPARIONMOMENTflagT, PHASEENERGYIONMOMENTflagT, &
 		PHASEENERGYPERPIONMOMENTflagT, PHASEENERGYPARIONMOMENTflagT, PHASEENERGYPERPIONMOMENTCENTERflagT, &
 		PHASEENERGYPARIONMOMENTCENTERflagT, FLUIDIONREFflagT, &
 		ENANOISEflagT, QEXCHANGEflagT
-	integer(kind= dp), dimension(1) :: NqICAT, NqICBT, NqICT
-	real(kind= dp), dimension(1) :: zns0T, ns0T, nsnormfacT, zns0NeutT, ns0NeutT
+	integer(kind= dp), dimension(1) :: NqLBT, NqUBT, NqICT
 	real(kind= dp), dimension(1) :: pdriftLimT, rdriftLimT, thetadriftLimT, &
 		phidriftLimT
 	real(kind= dp), dimension(1) :: PhiPar0BT

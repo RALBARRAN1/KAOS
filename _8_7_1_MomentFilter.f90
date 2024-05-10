@@ -27,12 +27,12 @@ contains
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 
-	  if ((Qind >= NqLB(1)) .and. (Qind <= NqUB(1))) then
+	  if ((Qind >= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind <= SpecieT(s)%FluxTubeT(f)%NqUBT(1))) then
 
 			! ----------------------------------------------------
 
 			! Filter low altitude moments
-			if (Qind <= nint(NqLB(1)- 1d0+ (MAfilterPt(1)- 1d0)/2d0)) then
+			if (Qind <= nint(SpecieT(s)%FluxTubeT(f)%NqLBT(1)- 1d0+ (MAfilterPt(1)- 1d0)/2d0)) then
 
 				! Average moments above (and including) given cell
 				FiltSum1(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)+ &
@@ -44,24 +44,24 @@ contains
 				FiltAvrg1(1)= FiltSum1(1)/(nint((MAfilterPt(1)- 1d0)/2d0)+ 1)
 
 				! Average moments below given cell
-				if (Qind == NqLB(1)) then
+				if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 					FiltSum2(1)= 0d0
 
 					SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)= FiltAvrg1(1)
 
-				else if (Qind == NqLB(1)+ 1d0) then
-					FiltSum2(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, NqLB(1))
+				else if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1d0) then
+					FiltSum2(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 
 					FiltAvrg2(1)= FiltSum2(1)
 					SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)= (FiltAvrg1(1)+ FiltAvrg2(1))/2d0
 
 				else
 					FiltSum2(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind- 1)
-					do MAfilterQind2= 2, nint(real(Qind- NqLB(1))), 1
+					do MAfilterQind2= 2, nint(real(Qind- SpecieT(s)%FluxTubeT(f)%NqLBT(1))), 1
 						FiltSum2(1)= FiltSum2(1)+ SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, (Qind- MAfilterQind2))
 					end do
 
-					FiltAvrg2(1)= FiltSum2(1)/nint(real(Qind- NqLB(1)))
+					FiltAvrg2(1)= FiltSum2(1)/nint(real(Qind- SpecieT(s)%FluxTubeT(f)%NqLBT(1)))
 					SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)= (FiltAvrg1(1)+ FiltAvrg2(1))/2d0
 
 				end if
@@ -71,8 +71,8 @@ contains
 			! ----------------------------------------------------
 
 			! Filter mid altitude moments
-			if ((Qind > nint(NqLB(1)- 1d0+ (MAfilterPt(1)- 1d0)/2d0)) .and. &
-				(Qind < (NqUB(1)- nint((MAfilterPt(1)- 1d0)/2d0)))) then
+			if ((Qind > nint(SpecieT(s)%FluxTubeT(f)%NqLBT(1)- 1d0+ (MAfilterPt(1)- 1d0)/2d0)) .and. &
+				(Qind < (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- nint((MAfilterPt(1)- 1d0)/2d0)))) then
 
 				! Average moments above (and including) given cell
 				FiltSum1(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)+ &
@@ -97,7 +97,7 @@ contains
 			! ----------------------------------------------------
 
 			! Filter high altitude moments
-			if (Qind >= (NqUB(1)- nint((MAfilterPt(1)- 1d0)/2d0))) then
+			if (Qind >= (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- nint((MAfilterPt(1)- 1d0)/2d0))) then
 
 				! Average moments below (and including) given cell
 				FiltSum2(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)+ &
@@ -109,24 +109,24 @@ contains
 				FiltAvrg2(1)= FiltSum2(1)/(nint((MAfilterPt(1)- 1d0)/2d0)+ 1)
 
 				! Average moments above given cell
-				if (Qind == NqUB(1)) then
+				if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
 					FiltSum1(1)= 0d0
 
 					SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)= FiltAvrg2(1)
 
-				else if (Qind == NqUB(1)- 1d0) then
-					FiltSum1(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, NqUB(1))
+				else if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 1d0) then
+					FiltSum1(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
 
 					FiltAvrg1(1)= FiltSum1(1)
 					SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)= (FiltAvrg1(1)+ FiltAvrg2(1))/2d0
 
 				else
 					FiltSum1(1)= SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind+ 1)
-					do MAfilterQind1= 2, nint(real(NqUB(1)- Qind)), 1
+					do MAfilterQind1= 2, nint(real(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- Qind)), 1
 						FiltSum1(1)= FiltSum1(1)+ SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, (Qind+ MAfilterQind1))
 					end do
 
-					FiltAvrg1(1)= FiltSum1(1)/nint(real(NqUB(1)- Qind))
+					FiltAvrg1(1)= FiltSum1(1)/nint(real(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- Qind))
 					SpecieT(s)%FluxTubeT(f)%MomentFiltOutT(nn, Qind)= (FiltAvrg1(1)+ FiltAvrg2(1))/2d0
 
 				end if

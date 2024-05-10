@@ -62,8 +62,8 @@ contains
 ! 				abs(Vz(j)- M1zT(1))**2d0))
 !
 ! 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1), 1
-! 				if ((n > (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1)) .and. &
-! 					(n <= (nn)*SpecieT(s)%FluxTubeT(f)%ndatfacT(1))) then
+! 				if ((n > (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+! 					(n <= (nn)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
 ! 					if (SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qindk1(j)) /= 0) then
 !
 ! 						nuENAIon(j)= SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qindk1(j))* &
