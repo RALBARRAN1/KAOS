@@ -40,7 +40,7 @@ contains
 			if (SpecieT(s)%FluxTubeT(f)%NqICT(1) >= nint((M0MAfilterPt- 1d0)/2d0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 						MAfilterPt(1)= M0MAfilterPt
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
@@ -64,7 +64,7 @@ contains
 			if (SpecieT(s)%FluxTubeT(f)%NqICT(1) >= nint((M1ParMAfilterPt- 1d0)/2d0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 						MAfilterPt(1)= M1ParMAfilterPt
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
@@ -89,7 +89,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 				! ----------------------------------------------------
 
@@ -97,7 +97,7 @@ contains
 					((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) .and. &
 					((SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 1) .or. (dNTe /= 0d0)) .and. &
 					((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))))) then
 
 					! ----------------------------------------------------
 
@@ -1392,7 +1392,7 @@ contains
 			.and. (SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 0) .and. (dNTe == 0d0)) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						SpecieT(s)%FluxTubeT(f)%EAInertialRT(nn, Qind)= &
 							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%EAInertialInputT(1)
@@ -1414,7 +1414,7 @@ contains
 		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						SpecieT(s)%FluxTubeT(f)%EAInertialOutputRT(Qind)= SpecieT(s)%FluxTubeT(f)%EAInertialRT(nn, Qind)
 						SpecieT(s)%FluxTubeT(f)%EAPressureOutputRT(Qind)= SpecieT(s)%FluxTubeT(f)%EAPressureRT(nn, Qind)
@@ -1432,7 +1432,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 				if (SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 1) then
 
 					call mpi_barrier(MPI_COMM_WORLD, ierr)
@@ -1452,7 +1452,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 				! ----------------------------------------------------
 
@@ -2294,10 +2294,10 @@ contains
 		! ----------------------------------------------------
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) .or. &
-				((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))))) then
+			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
+				(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) .or. &
+				((nn > 2d0) .and. ((n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
+				(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))))) then
 
 				! ----------------------------------------------------
 
@@ -2733,7 +2733,7 @@ contains
 		if (SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 1) then
 		 do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			 if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				 (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+				 (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 				 do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 					 if (rank == 0) then
 						 if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0) then
@@ -2746,7 +2746,7 @@ contains
 		 end do
 			!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-			!		 (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+			!		 (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 					 !write(*, *) 'AEAmagN s, f= ', s, f, AEAmagN(:)
 			!	end if
 			!end do

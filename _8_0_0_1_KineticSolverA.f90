@@ -345,7 +345,7 @@ contains
 			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
@@ -410,7 +410,7 @@ contains
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
   				! ----------------------------------------------------
 
@@ -427,7 +427,7 @@ contains
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if (((n == 1) .and. (nn == 1)) .and. &
-  				(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+  				(n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
   				((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
   				(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
   				call DataExport1Sub
@@ -440,7 +440,7 @@ contains
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 	  			if (((n == 1) .and. (nn == 1)) .and. &
-	  				(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+	  				(n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 	  				((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 	  				(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 

@@ -78,7 +78,7 @@ contains
 
 			end if
 			if ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 
         ! ----------------------------------------------------
 
@@ -885,10 +885,10 @@ contains
 		! ----------------------------------------------------
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) .or. &
-				((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
-				(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))))) then
+			if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
+				(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) .or. &
+				((nn > 2d0) .and. ((n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
+				(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))))) then
 
 				NsTK(1)= NsTK(1)
 				SpecieT(s)%FluxTubeT(f)%NsT(1)= NsTK(1)

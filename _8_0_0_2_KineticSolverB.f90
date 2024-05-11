@@ -57,17 +57,17 @@ contains
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 					exit nnloopKS0
 				end if
-				if (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
 					SpecieT(s)%FluxTubeT(f)%TimeT(nn)= Time(1)
 				end if
 			end do nnloopKS0
 
 			! Set to nnFlag= 1 for injection time-step (0 otherwise)
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
+				if (n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
 					nnFlag(1)= 0d0
 				end if
-				if (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
 					nnFlag(1)= 1d0
 				end if
 			end do
@@ -84,7 +84,7 @@ contains
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 					exit nnloopKS1
 				end if
-				if (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
 
  					nnFlag(1)= 1d0
 
@@ -149,7 +149,7 @@ contains
 			!if (nnFlag(1) == 1) then
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
 
 					nnind= nn
 
@@ -199,7 +199,7 @@ contains
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 					exit nnloopKS2
 				end if
-				if (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
 
 					! ----------------------------------------------------
 					! Initialize all LB injected particle variables
@@ -804,11 +804,11 @@ contains
 			! Update variables on all other time-steps (without injection)
 			!if (nnFlag(1) == 0) then
 			nnloopKSnonstat: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) then
-					if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
-						(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) .or. &
-						((nn > 2d0) .and. ((n >= (nn- 2)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)+ 1d0) .and. &
-						(n < (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))))) then
+				if (n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+					if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
+						(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) .or. &
+						((nn > 2d0) .and. ((n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
+						(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))))) then
 
 						nnind= nn- 1
 
@@ -1058,7 +1058,7 @@ contains
 			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
@@ -1100,7 +1100,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n /= 1) .and. (nn /= 1)) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 					((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 					(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
@@ -1114,7 +1114,7 @@ contains
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n /= 1) .and. (nn /= 1)) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 						((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 						(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
@@ -1226,7 +1226,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n /= 1) .and. (nn /= 1)) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 					((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 					(nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 					call DataExport2Sub
@@ -1238,7 +1238,7 @@ contains
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n /= 1) .and. (nn /= 1)) .and. &
-						(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 						((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 						(nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
@@ -1350,7 +1350,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 					if (rank == 0) then
 						call cpu_time(KS0End)
 						write(Nsstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)
@@ -1379,7 +1379,7 @@ contains
 
 			!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			!	if ((n /= 1) .and. (nn /= 1) .and. &
-			!		(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+			!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 			!		if (rank == 0) then
 			!			call cpu_time(KS0End)
 			!			write(Nsstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)

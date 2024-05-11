@@ -358,7 +358,7 @@ contains
 		end if
 
 		if (rank == 0) then
-			if ((n == SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)- 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+			if ((n == SpecieT(s)%FluxTubeT(f)%ndatfacT(1)- 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S81End)
 				write(S81string, '(i10)')  nint(S81End)
 				write(*, *) trim('%% 8.11- RANK= ' // adjustl(rankstring)) // &

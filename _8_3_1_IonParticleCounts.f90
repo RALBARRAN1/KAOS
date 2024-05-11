@@ -32,7 +32,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 				! ----------------------------------------------------
 
@@ -61,7 +61,7 @@ contains
 					end do
 				end if
 				if ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						jcount= 0d0
 						SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)= jcount
@@ -289,7 +289,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -334,7 +334,7 @@ contains
 								end do
 							end if
 							if ((n /= 1) .and. (nn /= 1) .and. &
-								(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+								(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 								do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
 									do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
 										do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
@@ -567,7 +567,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -610,7 +610,7 @@ contains
 								end do
 							end if
 							if ((n /= 1) .and. (nn /= 1) .and. &
-								(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+								(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 								do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
 									do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
 										jcount= 0d0
@@ -806,7 +806,7 @@ contains
 		!if (rank == 0) then
 		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!		if (((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+		!			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 		!			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 		!				if (sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &

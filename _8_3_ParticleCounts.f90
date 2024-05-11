@@ -1820,7 +1820,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 				pdriftionMax(1)= maxval(pdriftion(:))
 
@@ -2300,7 +2300,7 @@ contains
 		!if (rank == 0) then
 		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!		if (((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+		!			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 		!			call cpu_time(S83End)
 		!			write(S83string, '(i10)')  nint(S83End)
 		!			write(nnstring, '(I5)') nn

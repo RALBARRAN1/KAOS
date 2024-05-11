@@ -40,7 +40,7 @@ contains
 
       do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
         if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-          (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+          (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
           do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
             ! ----------------------------------------------------
@@ -108,7 +108,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+		      (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 		      call mpi_send(SpecieT(s)%FluxTubeT(f)%nuIonNeutRankSumRT(nn, :), &
 						(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
@@ -135,7 +135,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+		      (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 		      call mpi_recv(SpecieT(s)%FluxTubeT(f)%nuIonNeutRankSumRT(nn, :), &
 						(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
@@ -148,7 +148,7 @@ contains
 
       do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
         if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-          (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+          (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
           do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
             ! ----------------------------------------------------
@@ -239,7 +239,7 @@ contains
 			if (rr < ranksize(1)- 1) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-			      (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)))) then
+			      (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
 
 						call mpi_send(SpecieT(s)%FluxTubeT(f)%nuIonNeutRankSumRT(nn, :), &
 							(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)), &

@@ -27,54 +27,54 @@ contains
 
   	! ----------------------------------------------------
 
-  	! UPDATE TIME-DEPENDENT PHASE-SPACE GRID WITHOUT CONVECTING FLUX-TUBES:
+  	! UPDATE GRID PARAMETERS WITHOUT CONVECTION:
+		! Note: These are the grid parameters out put from ConfigGridGenerator.f90.
+		! Note: Leave all grid parameters in (nn) for BoundaryConditions.f90, and KineticSolverB.f90
 
-		if (n == 2) then
-	  	if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 0) then
-	  		do nn= 2, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+  	if ((SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 0) .and. (n == 2)) then
+  		do nn= 2, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 
-	  			! ----------------------------------------------------
+  			! ----------------------------------------------------
 
-	  			SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)= SpecieT(s)%FluxTubeT(f)%ndatfacT(1)
+  			SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)= SpecieT(s)%FluxTubeT(f)%ndatfacT(1)
 
-	  			SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCLBT(1)
-	  			SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaLBT(1)
-	  			SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCUBT(1)
-	  			SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaUBT(1)
-	  			SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)
-	  			SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)
-	  			SpecieT(s)%FluxTubeT(f)%ns0T(nn)= SpecieT(s)%FluxTubeT(f)%ns0T(1)
+  			SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCLBT(1)
+  			SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaLBT(1)
+  			SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCUBT(1)
+  			SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaUBT(1)
+  			SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)
+  			SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)
+  			SpecieT(s)%FluxTubeT(f)%ns0T(nn)= SpecieT(s)%FluxTubeT(f)%ns0T(1)
 
-	  			! ----------------------------------------------------
+  			! ----------------------------------------------------
 
-	  			SpecieT(s)%FluxTubeT(f)%qGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)= SpecieT(s)%FluxTubeT(f)%hqCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%dpCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dpCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%dqCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dqCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%dphiCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dphiCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%rGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%rGCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%phiGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%phiGCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%thetaGCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%ellGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%ellGCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%qGLT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGLT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%qGHT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGHT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%pGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%pGCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%d3xCT(nn, :)= SpecieT(s)%FluxTubeT(f)%d3xCT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%TsPerpT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsPerpT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%TsParT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsParT(1, :)
-	  			SpecieT(s)%FluxTubeT(f)%TsT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%qGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)= SpecieT(s)%FluxTubeT(f)%hqCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dpCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dpCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dqCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dqCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dphiCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dphiCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%rGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%rGCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%phiGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%phiGCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%thetaGCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%ellGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%ellGCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%qGLT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGLT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%qGHT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGHT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%pGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%pGCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%d3xCT(nn, :)= SpecieT(s)%FluxTubeT(f)%d3xCT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%TsPerpT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsPerpT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%TsParT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsParT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%TsT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsT(1, :)
 
-	  			if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-	  				SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(nn, :)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(1, :)
-	  			end if
+  			if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
+  				SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(nn, :)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(1, :)
+  			end if
 
-	  			SpecieT(s)%FluxTubeT(f)%dsICRT(nn, :)= SpecieT(s)%FluxTubeT(f)%dsICRT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dsICRT(nn, :)= SpecieT(s)%FluxTubeT(f)%dsICRT(1, :)
 
-	  			! ----------------------------------------------------
+  			! ----------------------------------------------------
 
-	  		end do
-	  	end if
-		end if
+  		end do
+  	end if
 
   	! ----------------------------------------------------
 
@@ -85,11 +85,11 @@ contains
   	if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 1) then
   		convnloop: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn- 1))) then
+  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 
   				! ----------------------------------------------------
 
-					! UPDATE PHASE-SPACE GRID:
+					! UPDATE GRID WITH CONVECTION:
 
   				INITIALGRIDflag= 0
 
@@ -140,7 +140,7 @@ contains
 
   				! ----------------------------------------------------
 
-					! FIXME Keep static velocity grid for now
+					! FIXME Keep static velocity grid for now but add dynamic grid later
   				!call VelGridGeneratorSub
 
   				! ----------------------------------------------------
@@ -158,9 +158,7 @@ contains
   	if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 1) then
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn- 1))) then
-
-write(*, *) rank, 'C1'
+  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
 
 					do j= 1, (NsTK(1)- dNsTK2(1)- dNsTK3(1)), 1
 
@@ -473,7 +471,7 @@ write(*, *) rank, 'C1'
 		! ----------------------------------------------------
 
   	!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-  	!	if ((n /= 1) .and. (nn /= 1) .and. (n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn))) then
+  	!	if ((n /= 1) .and. (nn /= 1) .and. (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
   	! update grid with conservation of f and particle number,
   	! update LBNominalDensityT and UBNominalDensityT
   	! update all current particle positions and velocities with convection and with betatron acceleration

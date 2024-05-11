@@ -808,7 +808,7 @@ contains
 		! ----------------------------------------------------
 
 		if (((n == 1) .and. (nn == 1)) .and. &
-			(n /= (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+			(n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 			((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 			(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 			if (SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) then
@@ -832,7 +832,7 @@ contains
 		end if
 
 		if (((n /= 1) .and. (nn /= 1)) .and. &
-			(n == (nn- 1)*SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)) .and. &
+			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
 			((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 			(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 			if (SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) then
