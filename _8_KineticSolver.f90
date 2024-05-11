@@ -48,8 +48,6 @@ contains
 
 				! ----------------------------------------------------
 
-				! BEGIN KINETIC SOLVER ROUTINE:
-
 				ComputationalTimeStepLoop: do n= 1, SpecieT(s)%FluxTubeT(f)%NtT(1), dt
 
 					! ----------------------------------------------------
@@ -190,25 +188,25 @@ contains
 
 					! ----------------------------------------------------
 
+					! GET NEW GRID PARAMETERS, INJECTION DENSITIES, AND TRANSLATED IONS IN EXB ON STATISTICAL TIME-STEPS:
+					! Note: Everything after this section has operations in nn in (nn)
+					! Note: xN in -> xN out
+
+					call ConvectionSub
+					
+					! ----------------------------------------------------
+
 					! RUN KINETIC CODE (3D CARTESIAN RK4) AT INITIAL TIME, ON STATISTICAL TIME-STEPS AND ALL OTHER TIME:
 					! Note: All moments at nn are computed for grid parameters at (nn)
+					! Note: xN in -> x -> xN out by KineticRK4Solver.f90
 
 					call KineticSolverASub
 					call KineticSolverBSub
 
 					! ----------------------------------------------------
 
-					! GET NEW GRID PARAMETERS, INJECTION DENSITIES, AND TRANSLATED IONS IN EXB ON STATISTICAL TIME-STEPS:
-					! Note: Everything before this section has all grid parameters for (nn- 1)
-
-					call ConvectionSub
-
-					! Note: Now we have new grid parameters, statistical time-steps, and
-					! ----------------------------------------------------
-
 					! END KAOS AT LAST STATISTICAL TIME-STEP:
-					! Note: End KAOS since the ending computational time-step (n= NtT)
-					! may exceed the last statistical time (nn= NNtT+ 1).
+					! Note: Last computational time-step may exceed last statistical time.
 
 					if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1- 1))) then
 						exit ComputationalTimeStepLoop

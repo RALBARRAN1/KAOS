@@ -78,7 +78,7 @@ contains
 
   	! ----------------------------------------------------
 
-  	! CONVECT ALL FLUX-TUBES:
+  	! CONVECT ALL FLUX-TUBES ON STATISTICAL TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -108,8 +108,8 @@ contains
   					qGA(1)= qGAIC ! Lower boundary q value
   					qGB(1)= qGBIC ! Upper boundary q value
 
-  					Lshell(1)= LshellIC ! L-shell [RE]
-  					phiLshell(1)= phiLshellIC ! invariant longitude [rads]
+  					Lshell(1)= Lshell(1)+ 1 ! L-shell [RE]
+  					phiLshell(1)= phiLshell(1)+ 1 ! invariant longitude [rads]
 
   				end if
 
@@ -153,7 +153,8 @@ contains
 
 		! ----------------------------------------------------
 
-		! UPDATE ION POSITIONS AND VELOCITIES WITH BETRATRON ACCELERATION:
+		! UPDATE EXISTING ION POSITIONS AND VELOCITIES WITH BETRATRON ACCELERATION:
+		! Note: Newly injected particle coordinates are set in KineticSolverB.f90
 
   	if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 1) then
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
@@ -400,6 +401,8 @@ contains
 
 						! RE-ALIGN VELOCITY VECTOR INTO LOCAL DIPOLE COORDINATES:
 
+						! FIXME Do correct projections of Vpar onto Vx, Vy, Vz
+
 						VparConv(1)= 3d0*cos(thetaConv(1))*sin(thetaConv(1))*(VxN(j)* &
 							cos(phiConv(1))+ VyN(j)*sin(phiConv(1)))/sqrt(ellConv(1))+ &
 							VzN(j)*(3d0*(cos(thetaConv(1))**2d0)- 1d0)/sqrt(ellConv(1))
@@ -461,8 +464,6 @@ contains
 						! ----------------------------------------------------
 
 					end do
-
-					write(*, *) rank, 'C2'
 
 				end if
 			end do

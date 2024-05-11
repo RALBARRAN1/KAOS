@@ -51,40 +51,37 @@ contains
 
 		! ----------------------------------------------------
 
-		if (INITIALGRIDflag == 1) then
+		NqGpF= (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 4)
+		NqIC(1)= abs(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1d0 ! Q cell range for density initialization
+		SpecieT(s)%FluxTubeT(f)%NqICT= NqIC
 
-			NqGpF= (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 4)
-			NqIC(1)= abs(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1d0 ! Q cell range for density initialization
-			SpecieT(s)%FluxTubeT(f)%NqICT= NqIC
+		! ----------------------------------------------------
 
-			! ----------------------------------------------------
+		! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
+		if ((size(SpecieT(s)%FluxTubeT(f)%NqLBT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqLBT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
+				' SUBROUTINE' // achar(27) // '[0m.'
+		end if
 
-			if ((size(SpecieT(s)%FluxTubeT(f)%NqLBT(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqLBT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-			end if
+		if ((size(SpecieT(s)%FluxTubeT(f)%NqUBT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqUBT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqUBT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
+				' SUBROUTINE' // achar(27) // '[0m.'
+		end if
 
-			if ((size(SpecieT(s)%FluxTubeT(f)%NqUBT(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%FluxTubeT(f)%NqUBT(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqUBT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-			end if
-
-			if ((NqIC(1) /= SpecieT(s)%FluxTubeT(f)%NqICT(1)) .or. &
-				(size(SpecieT(s)%FluxTubeT(f)%NqICT(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICT(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICT HAS', &
-					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
-					' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
-					' SUBROUTINE' // achar(27) // '[0m.'
-			end if
+		if ((NqIC(1) /= SpecieT(s)%FluxTubeT(f)%NqICT(1)) .or. &
+			(size(SpecieT(s)%FluxTubeT(f)%NqICT(:)) /= 1) .or. &
+			(isnan(real(SpecieT(s)%FluxTubeT(f)%NqICT(1))) .eqv. .true.)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqICT HAS', &
+				' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
+				' AND FLUX TUBE= ', f, ' IN CONFIGURATION-SPACE GRID GENERATOR', &
+				' SUBROUTINE' // achar(27) // '[0m.'
 		end if
 
 		! ----------------------------------------------------
@@ -103,14 +100,12 @@ contains
     ! SET PRELIMINARY NUMBER OF CONFIGURATION-SPACE GRID CELLS PER PARTICLE SPECIES AND
     ! FLUX TUBE:
 
-		if (INITIALGRIDflag == 1) then
-	    if (qGA(1) <= 0d0) then ! Southern Magnetic Hemisphere
-	      SMagHemFlag= 1
-	    end if
-	    if (qGA(1) > 0d0) then ! Northern Magnetic Hemisphere
-	      SMagHemFlag= 0
-	    end if
-		end if
+    if (qGA(1) <= 0d0) then ! Southern Magnetic Hemisphere
+      SMagHemFlag= 1
+    end if
+    if (qGA(1) > 0d0) then ! Northern Magnetic Hemisphere
+      SMagHemFlag= 0
+    end if
 
     ! Set Vperp parameters
     if (ION2VPERPflag == 1) then
@@ -183,34 +178,31 @@ contains
 
     ! ----------------------------------------------------
 
-		if (INITIALGRIDflag == 1) then
-	    ! Total number of q grid values (Make even number to avoid equatorial
-	    ! grid boundary):
-	    if ((s == 1) .and. (f .lt. SpecieT(s)%NfT(1)/2d0)) then
-	      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
-	    end if
-	    if ((s == 1) .and. (f .ge. SpecieT(s)%NfT(1)/2d0)) then
-	      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
-	    end if
-	    if ((s == 2) .and. (f .lt. SpecieT(s)%NfT(1)/2d0)) then
-	      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
-	    end if
-	    if ((s == 2) .and. (f .ge. SpecieT(s)%NfT(1)/2d0)) then
-	      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
-	    end if
+    ! Total number of q grid values (Make even number to avoid equatorial
+    ! grid boundary):
+    if ((s == 1) .and. (f .lt. SpecieT(s)%NfT(1)/2d0)) then
+      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
+    end if
+    if ((s == 1) .and. (f .ge. SpecieT(s)%NfT(1)/2d0)) then
+      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
+    end if
+    if ((s == 2) .and. (f .lt. SpecieT(s)%NfT(1)/2d0)) then
+      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
+    end if
+    if ((s == 2) .and. (f .ge. SpecieT(s)%NfT(1)/2d0)) then
+      SpecieT(s)%FluxTubeT(f)%NqGpT(1)= NqGpF
+    end if
 
-			! ---------------------------------------------
-			! ENSURE CORRECT CONFIGURATION-SPACE GRID CELL DIMENSION:
+		! ---------------------------------------------
+		! ENSURE CORRECT CONFIGURATION-SPACE GRID CELL DIMENSION:
 
-			if ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
-				SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 4d0) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-					' (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 4d0)= ', &
-					(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 3d0), &
-					', NqGpT= ', SpecieT(s)%FluxTubeT(f)%NqGpT(1), ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
-			end if
-
+		if ((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- &
+			SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 4d0) /= SpecieT(s)%FluxTubeT(f)%NqGpT(1)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+				' (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 4d0)= ', &
+				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 3d0), &
+				', NqGpT= ', SpecieT(s)%FluxTubeT(f)%NqGpT(1), ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 		end if
 
 		! ---------------------------------------------
@@ -774,12 +766,10 @@ contains
       SpecieT(s)%FluxTubeT(f)%Te0T(Qind)= Te(1)
     end do
 
-		!if (INITIALGRIDflag == 1) then
-	    if (SpecieT(s)%FluxTubeT(f)%NqG0T(1) /= (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3) then
-	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD INITIAL NqG0T VALUE', &
-	        ' IN GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
-	    end if
-		!end if
+    if (SpecieT(s)%FluxTubeT(f)%NqG0T(1) /= (SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3) then
+      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD INITIAL NqG0T VALUE', &
+        ' IN GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
+    end if
 
 		! ---------------------------------------------
 

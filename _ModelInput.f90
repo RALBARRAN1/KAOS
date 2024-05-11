@@ -116,7 +116,7 @@ integer(kind= dp), parameter :: EAPRESSUREflag= 1
 integer(kind= dp), parameter :: EPARflag= 1
 
 ! Set flux-tube convection:
-integer(kind= dp), parameter :: CONVECTIONflag= 0
+integer(kind= dp), parameter :: CONVECTIONflag= 1
 
 ! Set dynamic configuration-space and statistical time-step:
 integer(kind= dp), parameter :: DYNAMICGRIDflag= 0

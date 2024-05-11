@@ -33,7 +33,7 @@ character(10) :: rankstring
 ! Define all running indices
 integer(kind= dp) :: s, f, Qind, FAindIC, Vperp1ind, Vperp2ind, Vperpind, Vparind, Vpind, Vqind, Vphiind, &
 	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2, nnind, INITIALGRIDflag
-character(50) :: Nsstring, Lshellstring, sstring, fstring, Qindstring, Vperp1indstring, &
+character(50) :: Nsstring, Lshellstring, phiLshellstring, ndatfacstring, sstring, fstring, Qindstring, Vperp1indstring, &
 	Vperp2indstring, Vperpindstring, Vparindstring, &
 	Vpindstring, Vqindstring, Vphiindstring, nnstring, jstring, expstring, &
 	paramstring, pdriftmaxstring, pdriftmeanstring, Timestring

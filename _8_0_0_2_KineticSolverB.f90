@@ -1360,6 +1360,8 @@ contains
 						write(Timestring, '(D10.2)') (Time(1))
 						write(KS0string, '(D10.2)')  (KS0End)
 						write(Lshellstring, '(D10.2)')  Lshell(1)
+						write(phiLshellstring, '(D10.2)')  phiLshell(1)
+						write(ndatfacstring, '(i10)')  SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)
 						write(*, *) trim('** COMPLETE: STATISTICAL TIME-STEP= ' &
 							// adjustl(nnstring)) // &
 							trim(', RANK= ' // adjustl(rankstring)) // &
@@ -1368,7 +1370,9 @@ contains
 							trim(', SIM-TIME= ' // adjustl(Timestring)) // &
 							trim(' s., REAL-TIME= ' // adjustl(KS0string)) // &
 							trim(' s., TOTAL PARTICLE NUMBER= ' // adjustl(Nsstring)) // &
-							trim(', Lshell [RE]= ' // adjustl(Lshellstring))
+							trim(', Lshell [RE]= ' // adjustl(Lshellstring)) // &
+							trim(', Lshell longitude [rads]= ' // adjustl(phiLshellstring)) // &
+							trim(', ndatfac = ' // adjustl(ndatfacstring))
 					end if
 				end if
 			end do
