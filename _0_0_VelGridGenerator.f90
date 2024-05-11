@@ -26,9 +26,9 @@ contains
 
 ! What we need for Vel Grid Generator output:
 !NVperp1GT, NVperp2GT, NVparGT, &
-!Vperp1GLT, Vperp1GHT, Vperp1GCT, dVperp1GT, Vperp2GLT, Vperp2GHT, Vperp2GCT, dVperp2GT, VparGLT, VparGHT, VparGCT, dVparGT, d3vCT
-!(VperpGLT, VperpGHT, VperpGCT, dVperpGT, VparGLT, VparGHT, VparGCT, dVparGT, d3vCT), &
-!NVpGT, NVqGT, NVphiGT, VpGLT, VpGHT, VpGCT, hVpCT, dVpCT, VqGLT, VqGHT, VqGCT, hVqCT, dVqCT, VphiGLT, VphiGHT, VphiGCT, hVphiCT, dVphiCT,d33vCT
+!Vperp1GLT, Vperp1GHT, Vperp1GCT, dVperp1GT, Vperp2GLT, Vperp2GHT, Vperp2GCT, dVperp2GT, VparGLT, VparGHT, VparGCGT, dVparGT, d3vCT
+!(VperpGLT, VperpGHT, VperpGCGT, dVperpGT, VparGLT, VparGHT, VparGCGT, dVparGT, d3vCT), &
+!NVpGT, NVqGT, NVphiGT, VpGLT, VpGHT, VpGCGT, hVpCT, dVpCT, VqGLGT, VqGHGT, VqGCGT, hVqCT, dVqCT, VphiGLT, VphiGHT, VphiGCGT, hVphiCT, dVphiCT,d33vCT
 
     ! ---------------------------------------------
 
@@ -370,7 +370,7 @@ contains
               SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(1)= &
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGT(1, 1, (Vparind- 1)*ddVpar+ 1+ ddVpar)
               ! Center Vpar values of Vpar cells
-              SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)= &
+              SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1)= &
                 (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGLT(1)+ &
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGHT(1))/2d0
 
@@ -418,7 +418,7 @@ contains
             SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGHT(1)= &
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%VCellT((Vperpind- 1)*ddVperp+ 1+ ddVperp, 1)%VperpGT(1)
             ! Center Vperp values of Vperp cells
-            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGCT(1)= &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGCGT(1)= &
               (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGLT(1)+ &
               SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGHT(1))/2d0
 
@@ -429,12 +429,12 @@ contains
             SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGHT(1)= &
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(1, (Vparind- 1)*ddVpar+ 1+ ddVpar)%VparGT(1)
             ! Center Vpar values of Vpar cells
-            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1)= &
+            SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCGT(1)= &
               (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGLT(1)+ &
               SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGHT(1))/2d0
 
             SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%hVthetaCT(1)= &
-              abs(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGCT(1))
+              abs(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VperpGCGT(1))
 
             ! dVperp across Vperp cells
             SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%dVperpGT(1)= &
@@ -752,20 +752,20 @@ contains
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGHT(1)= &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%VpGT((Vpind- 1)*ddVp+ 1+ ddVp, 1, 1)
               ! Center Vp values of Vp cells
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1)= &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)= &
                 (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGLT(1)+ &
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGHT(1))/2d0
 
               ! Lower Vq limits of Vq cells
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1)= &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGLGT(1)= &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%VqGT(1, (Vqind- 1)*ddVq+ 1, 1)
               ! Upper Vq limits of Vq cells
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1)= &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGHGT(1)= &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%VqGT(1, (Vqind- 1)*ddVq+ 1+ ddVq, 1)
               ! Center Vq values of Vq cells
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1)= &
-                (SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1)+ &
-                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1))/2d0
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1)= &
+                (SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGLGT(1)+ &
+                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGHGT(1))/2d0
 
               ! Lower Vphi limits of Vphi cells
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(1)= &
@@ -774,60 +774,60 @@ contains
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1)= &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%VphiGT(1, 1, (Vphiind- 1)*ddVphi+ 1+ ddVphi)
               ! Center Vphi values of Vphi cells
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1)= &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1)= &
                 (SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGLT(1)+ &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1))/2d0
 
               ! Spherical velocity components
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCT(1)= &
-                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1)* &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)= &
+                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1)* &
                 cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))+ &
-                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1)* &
+                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)* &
                 sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCT(1)= &
-                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1)* &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)= &
+                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1)* &
                 sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))- &
-                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1)* &
+                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)* &
                 cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
-              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCT(1)= &
+              SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCGT(1)= &
                 (1d0+ 3d0*((cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1)))**2d0))
 
               ! Test dipole velocity components
-              VpGCtest= &
-                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCT(1)* &
+              VpGCGTest= &
+                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
                 sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
                 sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))- &
-                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCT(1)* &
+                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)* &
                 cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
                 sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
-              VqGCtest= &
-                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCT(1)* &
+              VqGCGTest= &
+                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
                 cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
                 sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))+ &
-                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCT(1)* &
+                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)* &
                 sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
                 sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
 
-              if (abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1)- VpGCtest) .gt. 1d-6) then
-                write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD VpGCtest VALUE', &
+              if (abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)- VpGCGTest) .gt. 1d-6) then
+                write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD VpGCGTest VALUE', &
 	                ' IN GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
               end if
 
-              if (abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1)- VqGCtest) .gt. 1d-6) then
-                write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD VqGCtest VALUE', &
+              if (abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1)- VqGCGTest) .gt. 1d-6) then
+                write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD VqGCGTest VALUE', &
 	                ' IN GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
               end if
 
               ! ENA Vel-space metric factors
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%hVpCT(1)= &
-                abs(RE*sin(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCT(1))**3d0/ &
-                (sqrt(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCT(1))))
+                abs(RE*sin(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1))**3d0/ &
+                (sqrt(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCGT(1))))
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%hVqCT(1)= &
-                abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCT(1)**3d0/ &
-                (RE**2d0*sqrt(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCT(1))))
+                abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)**3d0/ &
+                (RE**2d0*sqrt(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCGT(1))))
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)= &
-                abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCT(1)* &
-                sin(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCT(1)))
+                abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
+                sin(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)))
 
               ! dVp across Vpar cells
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%dVpCT(1)= &
@@ -835,8 +835,8 @@ contains
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGLT(1))
               ! dVq across Vpar cells
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%dVqCT(1)= &
-                  abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1)- &
-                  SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1))
+                  abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGHGT(1)- &
+                  SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGLGT(1))
               ! dVphi across Vpar cells
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%dVphiCT(1)= &
                 abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VphiGHT(1)- &
@@ -994,8 +994,8 @@ contains
 
 							! ----------------------------------------------------
 
-							if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1) == 0d0) then
-								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)= 1d-15
+							if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1) == 0d0) then
+								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1)= 1d-15
 							end if
 
 							! ----------------------------------------------------
@@ -1113,10 +1113,10 @@ contains
 							end if
 
 							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(:)) &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(:)) &
 								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))) .eqv. .true.)) then
-								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCT HAS', &
+								V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCGT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, &
 									', Vperp2ind= ', Vperp2ind, ', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
@@ -1162,8 +1162,8 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1) == 0d0) then
-							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCT(1)= 1d-15
+						if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCGT(1) == 0d0) then
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VCellT(Vperpind, Vparind)%VparGCGT(1)= 1d-15
 						end if
 
 						! ----------------------------------------------------
@@ -1215,10 +1215,10 @@ contains
 						end if
 
 						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							VCellT(Vperpind, Vparind)%VperpGCT(:)) &
+							VCellT(Vperpind, Vparind)%VperpGCGT(:)) &
 							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							VCellT(Vperpind, Vparind)%VperpGCT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGCT HAS', &
+							VCellT(Vperpind, Vparind)%VperpGCGT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpGCGT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
 								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
@@ -1248,10 +1248,10 @@ contains
 						end if
 
 						if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							VCellT(Vperpind, Vparind)%VparGCT(:)) &
+							VCellT(Vperpind, Vparind)%VparGCGT(:)) &
 							/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-							VCellT(Vperpind, Vparind)%VparGCT(1))) .eqv. .true.)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCT HAS', &
+							VCellT(Vperpind, Vparind)%VparGCGT(1))) .eqv. .true.)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparGCGT HAS', &
 								' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 								', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', Vperpind, &
 								', AND Vparind= ', Vparind, ' IN VELOCITY-SPACE GRID GENERATOR', &
@@ -1322,10 +1322,10 @@ contains
 							end if
 
 							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VpGCT(:)) &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(:)) &
 								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))) .eqv. .true.)) then
-								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGCT HAS', &
+								V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VpGCGT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
 									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
@@ -1334,10 +1334,10 @@ contains
 							end if
 
 							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VqGLT(:)) &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGLGT(:)) &
 								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VqGLT(1))) .eqv. .true.)) then
-								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGLT HAS', &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGLGT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGLGT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
 									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
@@ -1346,10 +1346,10 @@ contains
 							end if
 
 							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VqGHT(:)) &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGHGT(:)) &
 								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VqGHT(1))) .eqv. .true.)) then
-								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGHT HAS', &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGHGT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGHGT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
 									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
@@ -1358,10 +1358,10 @@ contains
 							end if
 
 							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VqGCT(:)) &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(:)) &
 								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))) .eqv. .true.)) then
-								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGCT HAS', &
+								V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1))) .eqv. .true.)) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VqGCGT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 									', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', Vpind, &
 									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &
@@ -1395,11 +1395,11 @@ contains
 							end if
 
 							if ((size(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(:)) &
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(:)) &
 								/= 1) .or. (isnan(real(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
-								V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))) .eqv. .true.)) then
+								V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1))) .eqv. .true.)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-									' VphiGCT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
+									' VphiGCGT HAS BAD INVERSION, SIZE, OR HAS NaN VALUE', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', &
 									Qind, ', Vpind= ', Vpind, &
 									', Vqind= ', Vqind, ', AND Vphiind= ', Vphiind, &

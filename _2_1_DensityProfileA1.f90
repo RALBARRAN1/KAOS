@@ -332,8 +332,8 @@ contains
 
 		    ! ----------------------------------------------------
 
-				SpecieT(s)%FluxTubeT(f)%nsnormCLBT(1)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)
-				SpecieT(s)%FluxTubeT(f)%nsnormCUBT(1)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)
+				SpecieT(s)%FluxTubeT(f)%nsnormCLBT(1)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(1)
+				SpecieT(s)%FluxTubeT(f)%nsnormCUBT(1)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(1)
 
 		    ! ----------------------------------------------------
 

@@ -52,12 +52,20 @@ contains
 
 					! ----------------------------------------------------
 
+					! GET NEW GRID PARAMETERS, INJECTION DENSITIES, AND TRANSLATED IONS IN EXB ON STATISTICAL TIME-STEPS:
+					! Note: Everything after this section has operations in nn in (nn)
+					! Note: xN in -> xN out
+
+					call ConvectionSub
+
+					! ----------------------------------------------------
+
 					! UPDATE ELECTRON TEMPERATURE IN TIME:
 					! Note: This is needed for KineticSolverA and B, below.
 
 					do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 						if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-							(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+							(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if ((n == 1) .and. (nn == 1)) then
@@ -81,8 +89,8 @@ contains
 					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 						if (n /= 1d0) then
 							do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1), 1
-								if ((nn /= 1d0) .and. (n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
-									(n <= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+								if ((nn /= 1d0) .and. (n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 2))+ 1d0) .and. &
+									(n <= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 
 									! ----------------------------------------------------
 
@@ -188,14 +196,6 @@ contains
 
 					! ----------------------------------------------------
 
-					! GET NEW GRID PARAMETERS, INJECTION DENSITIES, AND TRANSLATED IONS IN EXB ON STATISTICAL TIME-STEPS:
-					! Note: Everything after this section has operations in nn in (nn)
-					! Note: xN in -> xN out
-
-					call ConvectionSub
-					
-					! ----------------------------------------------------
-
 					! RUN KINETIC CODE (3D CARTESIAN RK4) AT INITIAL TIME, ON STATISTICAL TIME-STEPS AND ALL OTHER TIME:
 					! Note: All moments at nn are computed for grid parameters at (nn)
 					! Note: xN in -> x -> xN out by KineticRK4Solver.f90
@@ -208,7 +208,7 @@ contains
 					! END KAOS AT LAST STATISTICAL TIME-STEP:
 					! Note: Last computational time-step may exceed last statistical time.
 
-					if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1- 1))) then
+					if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1- 1))) then
 						exit ComputationalTimeStepLoop
 					end if
 

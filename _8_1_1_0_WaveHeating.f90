@@ -92,7 +92,7 @@ contains
 			! COMPUTE WAVE-PARTICLE INTERACTION TIME FROM (Schulz and Lanzerotti '74):
 
 			! Compute field line arc length of heating region
-			SUMdsICR(1)= sum(SpecieT(s)%FluxTubeT(f)%dsICRT(nnind, :))
+			SUMdsICR(1)= sum(SpecieT(s)%FluxTubeT(f)%dsICRGT(nnind, :))
 
 			! Compute epsilon factor (unitless)
 			epsPerp(1)= abs(sqrt((VxR(1)**(2d0))+ (VyR(1)**(2d0))+ (VzR(1)**(2d0)))/ &
@@ -326,10 +326,10 @@ contains
 			!end if
 
 			!if (VperpN(j)/OmegaGk1(1) >= &
-			!	sum(SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)*SpecieT(s)%FluxTubeT(f)%dqCT(nn, :))) then
+			!	sum(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, :)*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, :))) then
 			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ION LARMOR RADIUS [m]= ', VperpN(j)/OmegaGk1(1), &
 			!		' IS GREATER THAN TOTAL FLUX-TUBE ARC LENGTH [m]= ', &
-			!		sum(SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)*SpecieT(s)%FluxTubeT(f)%dqCT(nn, :)), &
+			!		sum(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, :)*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, :)), &
 			!		' AT LOCAL GYROFREQUENCY FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 			!		', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN WAVE HEATING SUBROUTINE' &
 			!		// achar(27) // '[0m.'

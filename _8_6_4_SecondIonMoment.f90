@@ -32,7 +32,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -85,7 +85,7 @@ contains
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1))**2d0)+ &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)- &
+													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1)- &
 													SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))**2d0))* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn)
@@ -99,7 +99,7 @@ contains
 														((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1))**2d0)+ &
 														((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))**2d0))* &
+														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1))**2d0))* &
 														SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn)
 
@@ -113,7 +113,7 @@ contains
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1))**2d0)+ &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))**2d0))* &
+													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1))**2d0))* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn)
 
@@ -152,7 +152,7 @@ contains
 											(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1) /= 0d0) .and. &
 											(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1) /= 0d0) .and. &
+											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1) /= 0d0) .and. &
 											(ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn) == 0d0)) .or. &
 											((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn) == 0d0) .and. &
@@ -161,7 +161,7 @@ contains
 											(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%Vperp2GCT(1) == 0d0) .and. &
 											(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1) == 0d0) .and. &
+											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1) == 0d0) .and. &
 											(ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn) /= 0d0))) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 												' INCONSISTENT INTEGRAND TEST FOR SPECIE= ', &
@@ -249,7 +249,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -295,15 +295,15 @@ contains
 
 											ggg(Vperpind, Vparind, nn)= &
 												(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 												((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1))**2d0)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1))**2d0)* &
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												VCellT(Vperpind, Vparind)%FphRT(nn))+ &
 												(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 												((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VparGCT(1)- &
+												VCellT(Vperpind, Vparind)%VparGCGT(1)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))**2d0)* &
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												VCellT(Vperpind, Vparind)%FphRT(nn))
@@ -313,15 +313,15 @@ contains
 
 												ggg(Vperpind, Vparind, nn)= &
 													(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+													VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													VCellT(Vperpind, Vparind)%VperpGCT(1))**2d0)* &
+													VCellT(Vperpind, Vparind)%VperpGCGT(1))**2d0)* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													VCellT(Vperpind, Vparind)%FphRT(nn))+ &
 													(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+													VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													VCellT(Vperpind, Vparind)%VparGCT(1))**2d0)* &
+													VCellT(Vperpind, Vparind)%VparGCGT(1))**2d0)* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													VCellT(Vperpind, Vparind)%FphRT(nn))
 
@@ -331,15 +331,15 @@ contains
 
 											ggg(Vperpind, Vparind, nn)= &
 												(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 												((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1))**2d0)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1))**2d0)* &
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												VCellT(Vperpind, Vparind)%FphRT(nn))+ &
 												(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 												((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VparGCT(1))**2d0)* &
+												VCellT(Vperpind, Vparind)%VparGCGT(1))**2d0)* &
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												VCellT(Vperpind, Vparind)%FphRT(nn))
 
@@ -372,24 +372,24 @@ contains
 									if (((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										VCellT(Vperpind, Vparind)%FphRT(nn) /= 0d0) .and. &
 										(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										VCellT(Vperpind, Vparind)%VperpGCT(1) /= 0d0) .and. &
+										VCellT(Vperpind, Vparind)%VperpGCGT(1) /= 0d0) .and. &
 										((SpecieT(s)%FluxTubeT(f)%M1PerpphRT(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										VCellT(Vperpind, Vparind)%VperpGCT(1)) /= 0d0) .and. &
+										VCellT(Vperpind, Vparind)%VperpGCGT(1)) /= 0d0) .and. &
 										((SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										VCellT(Vperpind, Vparind)%VparGCT(1)) /= 0d0) .and. &
+										VCellT(Vperpind, Vparind)%VparGCGT(1)) /= 0d0) .and. &
 										(ggg(Vperpind, Vparind, nn) == 0d0)) .or. &
 										((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										VCellT(Vperpind, Vparind)%FphRT(nn) == 0d0) .and. &
 										(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										VCellT(Vperpind, Vparind)%VperpGCT(1) == 0d0) .and. &
+										VCellT(Vperpind, Vparind)%VperpGCGT(1) == 0d0) .and. &
 										((SpecieT(s)%FluxTubeT(f)%M1PerpphRT(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										VCellT(Vperpind, Vparind)%VperpGCT(1)) == 0d0) .and. &
+										VCellT(Vperpind, Vparind)%VperpGCGT(1)) == 0d0) .and. &
 										((SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										VCellT(Vperpind, Vparind)%VparGCT(1)) == 0d0) .and. &
+										VCellT(Vperpind, Vparind)%VparGCGT(1)) == 0d0) .and. &
 										(ggg(Vperpind, Vparind, nn) /= 0d0))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' INCONSISTENT INTEGRAND TEST FOR SPECIE= ', &

@@ -192,73 +192,73 @@ contains
   			! ----------------------------------------------------
 
         ! Ion population translational (parallel) Cartesian velocity components [m/s]
-        !MionVx(1)= (cos(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))/ &
-        !  (sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))))* &
+        !MionVx(1)= (cos(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))/ &
+        !  (sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))))* &
         !  (3d0*SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)* &
-        !  cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-        !  sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind)))
-        !MionVy(1)= (sin(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))/ &
-        !  (sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))))* &
+        !  cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+        !  sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind)))
+        !MionVy(1)= (sin(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))/ &
+        !  (sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))))* &
         !  (3d0*SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)* &
-        !  cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-        !  sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind)))
+        !  cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+        !  sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind)))
         !MionVz(1)= SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)* &
-        !  ((3d0*((cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind)))**2d0)- 1d0)/ &
-        !  sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind)))
+        !  ((3d0*((cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind)))**2d0)- 1d0)/ &
+        !  sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind)))
 
 				if (SpecieT(s)%FluxTubeT(f)%MOMENTFILTERflagT(1) == 0) then
-					MionVx(1)= cos(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))* &
+					MionVx(1)= cos(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))* &
 						(3d0*SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-						sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))+ &
+						cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))+ &
 						SpecieT(s)%FluxTubeT(f)%M1Perp1phRT(nn, Qind)* &
-						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))**2d0)))/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))- &
+						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))**2d0)))/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))- &
 						SpecieT(s)%FluxTubeT(f)%M1Perp2phRT(nn, Qind)* &
-						sin(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))
-					MionVy(1)= sin(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))
+					MionVy(1)= sin(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))* &
 						(3d0*SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-						sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))+ &
+						cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))+ &
 						SpecieT(s)%FluxTubeT(f)%M1Perp1phRT(nn, Qind)* &
-						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))**2d0)))/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))+ &
+						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))**2d0)))/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))+ &
 						SpecieT(s)%FluxTubeT(f)%M1Perp2phRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))
+						cos(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))
 					MionVz(1)= SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)* &
-						(3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))**2d0)- 1d0)/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))+ &
+						(3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))**2d0)- 1d0)/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))+ &
 						3d0*SpecieT(s)%FluxTubeT(f)%M1Perp1phRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-						sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))
+						cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))
 				end if
 				if (SpecieT(s)%FluxTubeT(f)%MOMENTFILTERflagT(1) == 1) then
-					MionVx(1)= cos(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))* &
+					MionVx(1)= cos(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))* &
 						(3d0*SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-						sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))+ &
+						cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))+ &
 						SpecieT(s)%FluxTubeT(f)%M1Perp1FiltAvrgRT(nn, Qind)* &
-						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))**2d0)))/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))- &
+						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))**2d0)))/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))- &
 						SpecieT(s)%FluxTubeT(f)%M1Perp2FiltAvrgRT(nn, Qind)* &
-						sin(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))
-					MionVy(1)= sin(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))
+					MionVy(1)= sin(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))* &
 						(3d0*SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-						sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))+ &
+						cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))+ &
 						SpecieT(s)%FluxTubeT(f)%M1Perp1FiltAvrgRT(nn, Qind)* &
-						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))**2d0)))/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))+ &
+						(1d0- 3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))**2d0)))/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))+ &
 						SpecieT(s)%FluxTubeT(f)%M1Perp2FiltAvrgRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind))
+						cos(SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind))
 					MionVz(1)= SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)* &
-						(3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))**2d0)- 1d0)/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))+ &
+						(3d0*(cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))**2d0)- 1d0)/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))+ &
 						3d0*SpecieT(s)%FluxTubeT(f)%M1Perp1FiltAvrgRT(nn, Qind)* &
-						cos(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))* &
-						sin(SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind))/ &
-						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind))
+						cos(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))* &
+						sin(SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind))/ &
+						sqrt(SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind))
 				end if
 
   			! Ion-neutral relative translational velocities [m/s]
@@ -275,7 +275,7 @@ contains
   			if (SpecieT(s)%FluxTubeT(f)%sigmaIonNeutRT(nn, Qind) /= 0d0) then
 
   				! Mean number of ion-neutral collisions per time-step interval (unitless)
-					nuIonNeutM(1)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(nn, Qind)* &
+					nuIonNeutM(1)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(nn, Qind)* &
   					SpecieT(s)%FluxTubeT(f)%sigmaIonNeutRT(nn, Qind)*VelIonNeut(1)*SpecieT(s)%FluxTubeT(f)%hT(1)
 
   				! Poisson distributed number of total ion-neutral collisions per time-step interval (unitless)
@@ -288,9 +288,9 @@ contains
 					! Ensure number of collisions does not exceed number of available ions in config-grid cell
 					if (SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind) > &
 						SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-						(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) then
+						(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) then
 							SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-							(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))
+							(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))
 					end if
 
 					! ----------------------------------------------------
@@ -364,12 +364,12 @@ contains
 		if (rank == 0) then
 			if (SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind) > &
 				SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-				(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) then
+				(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NUMBER OF TOTAL ION-NEUTRAL COLLISIONS', &
 					' PER TIME-STEP INTERVAL nuIonNeutRT= ', SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind), &
 					' IS GREATER THAN NUMBER OF PARTICLES= ', &
 					SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-					(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)), &
+					(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
 					', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
 					' SUBROUTINE' // achar(27) // '[0m.'

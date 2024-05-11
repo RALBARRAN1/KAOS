@@ -57,17 +57,17 @@ contains
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 					exit nnloopKS0
 				end if
-				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
 					SpecieT(s)%FluxTubeT(f)%TimeT(nn)= Time(1)
 				end if
 			end do nnloopKS0
 
 			! Set to nnFlag= 1 for injection time-step (0 otherwise)
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+				if (n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
 					nnFlag(1)= 0d0
 				end if
-				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
 					nnFlag(1)= 1d0
 				end if
 			end do
@@ -84,7 +84,7 @@ contains
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 					exit nnloopKS1
 				end if
-				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
 
  					nnFlag(1)= 1d0
 
@@ -149,7 +149,7 @@ contains
 			!if (nnFlag(1) == 1) then
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
 
 					nnind= nn
 
@@ -199,7 +199,7 @@ contains
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 					exit nnloopKS2
 				end if
-				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
+				if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
 
 					! ----------------------------------------------------
 					! Initialize all LB injected particle variables
@@ -220,24 +220,24 @@ contains
 						! ----------------------------------------------------
 
 						! Set initial dipole coordinates
-						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) ! Inject LB on newly convected flux-tube
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
-						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) ! Inject LB on newly convected flux-tube
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 							QloopKSB1: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
-									(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+									(SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) <= qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB1
 
 								else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
-									(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) < qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+									(SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) < qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB1
@@ -245,10 +245,10 @@ contains
 								end if
 							end do QloopKSB1
 
-							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qNp(1)) then
 								! SMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qNp(1)) then
 								! SMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -256,18 +256,18 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 							QloopKSB2: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
-									(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+									(SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) >= qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB2
 
 								else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
-									(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) > qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+									(SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) > qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB2
@@ -275,10 +275,10 @@ contains
 								end if
 							end do QloopKSB2
 
-							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qNp(1)) then
 								! NMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qNp(1)) then
 								! NMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -288,17 +288,17 @@ contains
 
 						! DIAGNOSTIC FLAG FOR PARTICLE POSITIONS WITHIN BOUNDS:
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere)
-							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
-								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere)
+							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
+								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT IS', &
 									' OUTSIDE LOWER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
-							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
-								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
+							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
+								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp IS', &
 									' OUTSIDE LOWER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
@@ -321,7 +321,7 @@ contains
 						thetaMB(1)= thetafinalRK4(1)
 						phiMB(1)= phifinalRK4(1)
 						ellMB(1)= 1d0+ 3d0*(cos(thetaMB(1)))**2d0
-						TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+						TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 						LBflag(1)= 1d0
 
 						! ----------------------------------------------------
@@ -519,22 +519,22 @@ contains
 						! ----------------------------------------------------
 
 						! Set initial dipole coordinates
-						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) ! Inject UB on newly convected flux-tube
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
-						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
+						qNp(1)= SpecieT(s)%FluxTubeT(f)%qGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) ! Inject UB on newly convected flux-tube
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
+						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 							QloopKSB3: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-								if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) <= qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+								if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) <= qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB3
 
-								else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) < qNp(1)) &
-									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+								else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) < qNp(1)) &
+									.and. (qNp(1) <= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB3
@@ -542,10 +542,10 @@ contains
 								end if
 							end do QloopKSB3
 
-							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qNp(1)) then
 								! SMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qNp(1)) then
 								! SMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -553,18 +553,18 @@ contains
 
 						! ----------------------------------------------------
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 							QloopKSB4: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
-									(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) >= qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+									(SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) >= qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB4
 
 								else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. &
-									(SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind) > qNp(1)) &
-									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind))) then
+									(SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind) > qNp(1)) &
+									.and. (qNp(1) >= SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind))) then
 									Qindk1(j)= Qind
 
 									exit QloopKSB4
@@ -572,10 +572,10 @@ contains
 								end if
 							end do QloopKSB4
 
-							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qNp(1)) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qNp(1)) then
 								! NMH Lower boundary escape
 								Qindk1(j)= 0d0
-							else if (SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qNp(1)) then
+							else if (SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qNp(1)) then
 								! NMH Upper boundary escape
 								Qindk1(j)= -1d0
 							end if
@@ -585,17 +585,17 @@ contains
 
 						! DIAGNOSTIC FLAG FOR PARTICLE POSITIONS WITHIN BOUNDS:
 
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then ! S. Magnetic Hemisphere)
-							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
-								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere)
+							if ((qNp(1) < SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
+								(qNp(1) > SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qniICT IS', &
 									' OUTSIDE UPPER BOUNDARY BOUNDS IN SOUTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
-						if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then ! N. Magnetic Hemisphere
-							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
-								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
+						if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
+							if ((qNp(1) > SpecieT(s)%FluxTubeT(f)%qGLGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))) .or. &
+								(qNp(1) < SpecieT(s)%FluxTubeT(f)%qGHGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp IS', &
 									' OUTSIDE UPPER BOUNDARY BOUNDS IN NORTH MAGNETIC HEMISPHERE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 									f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER B SUBROUTINE' // achar(27) // '[0m.'
@@ -618,7 +618,7 @@ contains
 						thetaMB(1)= thetafinalRK4(1)
 						phiMB(1)= phifinalRK4(1)
 						ellMB(1)= 1d0+ 3d0*(cos(thetaMB(1)))**2d0
-						TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
+						TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))
 						LBflag(1)= 0d0
 
 						! ----------------------------------------------------
@@ -804,11 +804,11 @@ contains
 			! Update variables on all other time-steps (without injection)
 			!if (nnFlag(1) == 0) then
 			nnloopKSnonstat: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-				if (n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) then
-					if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
-						(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) .or. &
-						((nn > 2d0) .and. ((n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 2))+ 1d0) .and. &
-						(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))))) then
+				if (n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) then
+					if ((nn /= 1d0) .and. (((nn == 2d0) .and. ((n > sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 2))+ 1d0) .and. &
+						(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) .or. &
+						((nn > 2d0) .and. ((n >= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 2))+ 1d0) .and. &
+						(n < sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))))) then
 
 						nnind= nn- 1
 
@@ -1058,7 +1058,7 @@ contains
 			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
 							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
@@ -1100,7 +1100,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n /= 1) .and. (nn /= 1)) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
 					((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 					(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
@@ -1114,7 +1114,7 @@ contains
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n /= 1) .and. (nn /= 1)) .and. &
-						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
 						((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 						(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
@@ -1226,7 +1226,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n /= 1) .and. (nn /= 1)) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
 					((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 					(nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 					call DataExport2Sub
@@ -1238,7 +1238,7 @@ contains
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 					if (((n /= 1) .and. (nn /= 1)) .and. &
-						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))) .and. &
+						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
 						((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
 						(nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 
@@ -1350,7 +1350,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 					if (rank == 0) then
 						call cpu_time(KS0End)
 						write(Nsstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)
@@ -1361,7 +1361,7 @@ contains
 						write(KS0string, '(D10.2)')  (KS0End)
 						write(Lshellstring, '(D10.2)')  Lshell(1)
 						write(phiLshellstring, '(D10.2)')  phiLshell(1)
-						write(ndatfacstring, '(i10)')  SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)
+						write(ndatfacstring, '(i10)')  SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)
 						write(*, *) trim('** COMPLETE: STATISTICAL TIME-STEP= ' &
 							// adjustl(nnstring)) // &
 							trim(', RANK= ' // adjustl(rankstring)) // &
@@ -1383,7 +1383,7 @@ contains
 
 			!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			!	if ((n /= 1) .and. (nn /= 1) .and. &
-			!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+			!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 			!		if (rank == 0) then
 			!			call cpu_time(KS0End)
 			!			write(Nsstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)

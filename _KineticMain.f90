@@ -51,9 +51,9 @@ if (rank == 0) then
 		do f= 1, SpecieT(s)%NfT(1), 1
 			write(*, *)
 			call cpu_time(TotEnd) ! End Total CPU time
-			write(Totstring, '(i10)')  nint(TotEnd)
+			write(ToTsGTring, '(i10)')  nint(TotEnd)
 			write(*, *) trim('%%%%%% RANK= ' // adjustl(rankstring)) // &
-				trim(', TOTAL CPU TIME= ' // adjustl(Totstring)) // &
+				trim(', TOTAL CPU TIME= ' // adjustl(ToTsGTring)) // &
 				trim(' s. KAOS SIMULATION COMPLETE %%%%%%')
 		end do
 	end do

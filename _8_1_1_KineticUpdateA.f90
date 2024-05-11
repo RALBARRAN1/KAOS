@@ -119,7 +119,7 @@ contains
 
 		if (ENAflag(j) .eqv. .false.) then
 			! Note: Without cross L-shell convection, solar forcing or other azimuthal asymmetries, ion motion is phi-invariant.
-			phik1(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)
+			phik1(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1)
 		else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 			(ENAflag(j) .eqv. .true.)) then
 			call phisub(phik1(1), x(j), y(j))
@@ -130,9 +130,9 @@ contains
 		! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 		if (ENAflag(j) .eqv. .false.) then
-			if (phik1(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1)) then
+			if (phik1(1) /= SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ION phik1= ', phik1(1), &
-					' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
+					' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 					', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
 					// achar(27) // '[0m.'
@@ -142,7 +142,7 @@ contains
 		! ----------------------------------------------------
 
 		call qsub(qk1(1), rk1(1), thetak1(1))
-		pk1(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nnind, 1)
+		pk1(1)= SpecieT(s)%FluxTubeT(f)%pGCGT(nnind, 1)
 		!call psub(pk1(1), rk1(1), thetak1(1))
 		call ellsub(ellk1(1), thetak1(1))
 		call Bmagsub(Bmagk1(1), rk1(1), ellk1(1))
@@ -218,16 +218,16 @@ contains
 
 		! COMPUTE EACH PARTICLE CONFIGURATION-SPACE GRID CELL:
 
-		if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, 1) <= 0) then ! N. Magnetic Hemisphere
+		if (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, 1) <= 0) then ! N. Magnetic Hemisphere
 			QloopKUA1: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) <= qk1(1)) &
-					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
+				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, Qind) <= qk1(1)) &
+					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHGT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA1
 
-				else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) < qk1(1)) &
-					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
+				else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, Qind) < qk1(1)) &
+					.and. (qk1(1) <= SpecieT(s)%FluxTubeT(f)%qGHGT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA1
@@ -235,10 +235,10 @@ contains
 				end if
 			end do QloopKUA1
 
-			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qk1(1)) then
+			if (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) > qk1(1)) then
 				! SMH Lower boundary escape
 				Qindk1(j)= 0d0
-			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qk1(1)) then
+			else if (SpecieT(s)%FluxTubeT(f)%qGHGT(nnind, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) < qk1(1)) then
 				! SMH Upper boundary escape
 				Qindk1(j)= -1d0
 			end if
@@ -246,16 +246,16 @@ contains
 
 		! ----------------------------------------------------
 
-		if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, 1) > 0) then ! S. Magnetic Hemisphere
+		if (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, 1) > 0) then ! S. Magnetic Hemisphere
 			QloopKUA2: do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) >= qk1(1)) &
-					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
+				if ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, Qind) >= qk1(1)) &
+					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHGT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA2
 
-				else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, Qind) > qk1(1)) &
-					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHT(nnind, Qind))) then
+				else if ((Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, Qind) > qk1(1)) &
+					.and. (qk1(1) >= SpecieT(s)%FluxTubeT(f)%qGHGT(nnind, Qind))) then
 					Qindk1(j)= Qind
 
 					exit QloopKUA2
@@ -263,10 +263,10 @@ contains
 				end if
 			end do QloopKUA2
 
-			if (SpecieT(s)%FluxTubeT(f)%qGLT(nnind, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qk1(1)) then
+			if (SpecieT(s)%FluxTubeT(f)%qGLGT(nnind, SpecieT(s)%FluxTubeT(f)%NqLBT(1)) < qk1(1)) then
 				! NMH Lower boundary escape
 				Qindk1(j)= 0d0
-			else if (SpecieT(s)%FluxTubeT(f)%qGHT(nnind, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qk1(1)) then
+			else if (SpecieT(s)%FluxTubeT(f)%qGHGT(nnind, SpecieT(s)%FluxTubeT(f)%NqUBT(1)) > qk1(1)) then
 				! NMH Upper boundary escape
 				Qindk1(j)= -1d0
 			end if
@@ -1204,27 +1204,27 @@ contains
 
 			VqloopKUA: do Vqind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1
 				if ((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-					V3CellT(1, 1, 1)%VqGLT(1) > Vpar(j)) &
+					V3CellT(1, 1, 1)%VqGLGT(1) > Vpar(j)) &
 					.and. (Vpar(j) > SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-						V3CellT(1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1)%VqGHT(1))) then
+						V3CellT(1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), 1)%VqGHGT(1))) then
 					Vqindk1(j)= 0d0
 
 					exit VqloopKUA
 
 				end if
 				if ((Vqind == 1) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-					V3CellT(1, Vqind, 1)%VqGLT(1) <= Vpar(j)) &
+					V3CellT(1, Vqind, 1)%VqGLGT(1) <= Vpar(j)) &
 					.and. (Vpar(j) <= SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-						V3CellT(1, Vqind, 1)%VqGHT(1))) then
+						V3CellT(1, Vqind, 1)%VqGHGT(1))) then
 					Vqindk1(j)= Vqind
 
 					exit VqloopKUA
 
 				end if
 				if ((Vqind /= 1) .and. (SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-					V3CellT(1, Vqind, 1)%VqGLT(1) < Vpar(j)) &
+					V3CellT(1, Vqind, 1)%VqGLGT(1) < Vpar(j)) &
 					.and. (Vpar(j) <= SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-						V3CellT(1, Vqind, 1)%VqGHT(1))) then
+						V3CellT(1, Vqind, 1)%VqGHGT(1))) then
 					Vqindk1(j)= Vqind
 
 					exit VqloopKUA
@@ -1267,19 +1267,19 @@ contains
 			! DIAGNOSTIC FLAG FOR ALL ENA Vp, Vq, Vphi VALUES WITHIN VELOCITY-SPACE GRID:
 
 			!if ((Vpar(j) <= SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-			!	V3CellT(1, 1, 1)%VqGLT(1)) &
+			!	V3CellT(1, 1, 1)%VqGLGT(1)) &
 			!	.or. (Vpar(j) > SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 			!	V3CellT(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
 			!	SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-			!	SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1))%VqGHT(1))) then
+			!	SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1))%VqGHGT(1))) then
 			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 			!		' Vpar= ', Vpar(j), ' ENA VALUE OUT OF GRID WITH VparGL= ', &
 			!		SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-			!		V3CellT(1, 1, 1)%VqGLT(1), &
+			!		V3CellT(1, 1, 1)%VqGLGT(1), &
 			!		' AND VparGH= ', SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
 			!		V3CellT(SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), &
 			!		SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVqGT(1), &
-			!		SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1))%VqGHT(1), &
+			!		SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1))%VqGHGT(1), &
 			!		'FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', TIME-STEP= ', n, &
 			!		', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
 			!		// achar(27) // '[0m.'

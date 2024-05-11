@@ -614,6 +614,28 @@ contains
 					// achar(27) // '[0m.'
 			end if
 
+			if (SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1) /= &
+				SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1), &
+					' DOES NOT EQUAL FLUX-TUBE FOOT PRINT phiCG0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1), ' FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
+			if (SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1) /= &
+				SpecieT(s)%FluxTubeT(f)%QCell0T(1)%pGC0T(1)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGC0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1), &
+					' DOES NOT EQUAL FLUX-TUBE FOOT PRINT phiCG0T= ', &
+					SpecieT(s)%FluxTubeT(f)%QCell0T(1)%pGC0T(1), ' FOR SPECIE= ', s, &
+					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
+					// achar(27) // '[0m.'
+			end if
+
 			if ((isnan(real(SpecieT(s)%FluxTubeT(f)%xGC0T(Qind))) .eqv. .true.) .or. &
 				(size(SpecieT(s)%FluxTubeT(f)%xGC0T(:)) /= SpecieT(s)%FluxTubeT(f)%NqGTp(1))) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xGC0T= ', &
@@ -748,7 +770,7 @@ contains
 
     end do
 
-    SpecieT(s)%Qindns0T(1)= 1d0
+    SpecieT(s)%Qindns0GT(1)= 1d0
 
     ! ---------------------------------------------
 
@@ -775,10 +797,10 @@ contains
 
 		! DIAGNOSTIC FLAGS FOR NAN VALUES:
 
-		if ((isnan(real(SpecieT(s)%Qindns0T(1))) .eqv. .true.) .or. &
-			(size(SpecieT(s)%Qindns0T(:)) /= 1)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0T= ', &
-				SpecieT(s)%Qindns0T(1), &
+		if ((isnan(real(SpecieT(s)%Qindns0GT(1))) .eqv. .true.) .or. &
+			(size(SpecieT(s)%Qindns0GT(:)) /= 1)) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0GT= ', &
+				SpecieT(s)%Qindns0GT(1), &
 				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
 				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' &
 				// achar(27) // '[0m.'
@@ -890,7 +912,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -898,7 +920,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%hqC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hqCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' hqCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -906,7 +928,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dpC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dpCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dpCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -914,7 +936,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dqC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dqCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dqCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -922,7 +944,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%dphiC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dphiCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' dphiCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -930,7 +952,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPerp0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPerpT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsPerpGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -938,7 +960,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%TsPar0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsParT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' TsParGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -946,7 +968,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%rGC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rGCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -954,7 +976,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiGCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -962,7 +984,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%thetaGC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaGCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -970,7 +992,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%ellGC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellGCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -978,7 +1000,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGL0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGLT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGLGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -986,7 +1008,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%qGH0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGHT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qGHGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -994,7 +1016,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pGCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -1002,7 +1024,7 @@ contains
 
 			if ((size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(:)) /= 1) .or. &
 				(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3xCT HAS', &
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' d3xCGT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -1010,7 +1032,7 @@ contains
 
 			if (SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%d3xC0T(1) < 0) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NEGATIVE ', &
-					' d3xCT FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
+					' d3xCGT FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
@@ -1032,12 +1054,12 @@ contains
 
 		if (INITIALGRIDflag == 1) then
 			SpecieT(s)%FluxTubeT(f)%NNtT(1)= SpecieT(s)%FluxTubeT(f)%NtT(1)/Q0ndatfac(1) ! Number of time-steps for injection
-			allocate(SpecieT(s)%FluxTubeT(f)%ndatfacT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%ndatfacGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
 		end if
 
 		if (INITIALGRIDflag == 1) then
 			! Time-step interval for moment computation (must be > 2 and excludes initial time-step)
-			SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)= SpecieT(s)%FluxTubeT(f)%NtT(1)/SpecieT(s)%FluxTubeT(f)%NNtT(1)
+			SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)= SpecieT(s)%FluxTubeT(f)%NtT(1)/SpecieT(s)%FluxTubeT(f)%NNtT(1)
 		end if
 
 		if (INITIALGRIDflag == 0) then
@@ -1045,7 +1067,7 @@ contains
 			NNtp(1)= SpecieT(s)%FluxTubeT(f)%NtT(1)/Q0ndatfac(1)
 
 			! Time-step interval for moment computation (must be > 2 and excludes initial time-step)
-			SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)= SpecieT(s)%FluxTubeT(f)%NtT(1)/NNtp(1)
+			SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)= SpecieT(s)%FluxTubeT(f)%NtT(1)/NNtp(1)
 
 		end if
 
@@ -1053,9 +1075,9 @@ contains
 
 		! DIAGNOSTIC FLAGS FOR STATISTICAL TIME-STEP SIZE:
 
-		if (SpecieT(s)%FluxTubeT(f)%ndatfacT(nn) < 3d0) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ndatfacT= ', &
-				SpecieT(s)%FluxTubeT(f)%ndatfacT(nn), &
+		if (SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn) < 3d0) then
+			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ndatfacGT= ', &
+				SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn), &
 				' IS NOT COMPATIBLE WITH KINETIC SOLVER TIME FORMAT FOR SPECIE= ', s, &
 				' , FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', nn, &
 				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -1086,7 +1108,7 @@ contains
 
 			end do
 
-			IC0bb(1)= sum(ICbbp(1:SpecieT(s)%Qindns0T(1)))
+			IC0bb(1)= sum(ICbbp(1:SpecieT(s)%Qindns0GT(1)))
 
 			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 2, 1
 
@@ -1227,7 +1249,7 @@ contains
 						(size(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCNeut0T(:)) /= 1) .or. &
 						(isnan(real(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCNeut0T(1))) .eqv. &
 						.true.)) then
-						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' nsnormCNeutT HAS', &
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' nsnormCNeutGT HAS', &
 							' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 							', FLUX TUBE= ', f, ', AND Qind= ', Qind, &
 							' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -1248,7 +1270,7 @@ contains
 
 			! DIAGNOSTIC FLAG FOR CONSISTENT LOWER GHOST CELL DENSITIY:
 
-			if (SpecieT(s)%Qindns0T(1) /= 1d0) then
+			if (SpecieT(s)%Qindns0GT(1) /= 1d0) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 					' LOWER GHOST CELL DOES NOT MATCH ALTITUDE OF REFERENCE ', &
 					' DENSITY FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
@@ -1283,70 +1305,70 @@ contains
 		! SET BOUNDARY GHOST CELL DENSITIES:
 
 		if (INITIALGRIDflag == 1) then
-			allocate(SpecieT(s)%FluxTubeT(f)%d3xCLBT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%sigmaLBT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%d3xCUBT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%sigmaUBT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%ns0T(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%d3xCLBGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%sigmaLBGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%d3xCUBGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%sigmaUBGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
+			allocate(SpecieT(s)%FluxTubeT(f)%ns0GT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))
 		end if
 
 		if (SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1) == 0) then
-			SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%d3xCLBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1)
-			SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%sigmaLBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1)/ &
 				(SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%hqC0T(1)* &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%dqC0T(1))
 		end if
 
 		if (SpecieT(s)%FluxTubeT(f)%LBREPLENISHflagT(1) == 1) then
-			SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%d3xCLBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1)
-			SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%sigmaLBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1)/ &
 				(SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%hqC0T(1)* &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%dqC0T(1))
 		end if
 
 		if (SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1) == 0) then
-			SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%d3xCUBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%d3xC0T(1)
-			SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%sigmaUBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%d3xC0T(1)/ &
 				(SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%hqC0T(1)* &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%dqC0T(1))
 		end if
 
 		if (SpecieT(s)%FluxTubeT(f)%UBREPLENISHflagT(1) == 1) then
-			SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%d3xCUBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%d3xC0T(1)
-			SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)= &
+			SpecieT(s)%FluxTubeT(f)%sigmaUBGT(nn)= &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%d3xC0T(1)/ &
 				(SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%hqC0T(1)* &
 				SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 1)%dqC0T(1))
 		end if
 
-		SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)= nsnormCLB(1)
-		SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)= nsnormCUB(1)
-		SpecieT(s)%FluxTubeT(f)%ns0T(nn)= ns0(1)
+		SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn)= nsnormCLB(1)
+		SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn)= nsnormCUB(1)
+		SpecieT(s)%FluxTubeT(f)%ns0GT(nn)= ns0(1)
 
 		! ----------------------------------------------------
 
 		! DIAGNOSTIC FLAGS FOR PROPER GHOST CELL DENSITIES:
 
 		if (SpecieT(1)%FluxTubeT(1)%LBCONDITIONflagT(1) == 1) then
-			if (SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn) == 0d0) then
+			if (SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn) == 0d0) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-					' ZERO LOWER BOUNDARY DENSITY= ', SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn), &
+					' ZERO LOWER BOUNDARY DENSITY= ', SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn), &
 					' FOR SPECIE= ', s, ', AND STATISTICAL TIME-STEP= ', nn, ', FLUX TUBE= ', f, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
-			if (SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn) == 0d0) then
+			if (SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn) == 0d0) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-					' NOMINAL LOWER BOUNDARY DENSITY= ', SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn), &
+					' NOMINAL LOWER BOUNDARY DENSITY= ', SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn), &
 					' FOR SPECIE= ', s, ', AND STATISTICAL TIME-STEP= ', nn, ', FLUX TUBE= ', f, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 			end if
@@ -1358,87 +1380,87 @@ contains
 
 		! ----------------------------------------------------
 		if (INITIALGRIDflag == 1) then
-			allocate(SpecieT(s)%FluxTubeT(f)%qGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%qGCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%hqCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%hqCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%dpCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%dpCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%dqCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%dqCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%dphiCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%dphiCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%rGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%rGCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%phiGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%phiGCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%thetaGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%thetaGCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%ellGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%ellGCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%qGLT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%qGLGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%qGHT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%qGHGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%pGCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%pGCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%d3xCT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%d3xCGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%TsPerpT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%TsPerpGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%TsParT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%TsParGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%TsT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%TsGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				(SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))
-			allocate(SpecieT(s)%FluxTubeT(f)%dsICRT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
+			allocate(SpecieT(s)%FluxTubeT(f)%dsICRGT(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, &
 				((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1)))
 
 			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
-				SpecieT(s)%FluxTubeT(f)%qGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%hqCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%hqC0T(1)
-				SpecieT(s)%FluxTubeT(f)%dpCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dpC0T(1)
-				SpecieT(s)%FluxTubeT(f)%dqCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dqC0T(1)
-				SpecieT(s)%FluxTubeT(f)%dphiCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dphiC0T(1)
-				SpecieT(s)%FluxTubeT(f)%rGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%rGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%phiGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%phiGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%thetaGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%thetaGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%ellGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%ellGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%qGLT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGL0T(1)
-				SpecieT(s)%FluxTubeT(f)%qGHT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGH0T(1)
-				SpecieT(s)%FluxTubeT(f)%pGCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%pGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%d3xCT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)
-				SpecieT(s)%FluxTubeT(f)%TsPerpT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPerp0T(1)
-				SpecieT(s)%FluxTubeT(f)%TsParT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPar0T(1)
-				SpecieT(s)%FluxTubeT(f)%TsT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%Ts0T(1)
+				SpecieT(s)%FluxTubeT(f)%qGCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%hqCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%hqC0T(1)
+				SpecieT(s)%FluxTubeT(f)%dpCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dpC0T(1)
+				SpecieT(s)%FluxTubeT(f)%dqCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dqC0T(1)
+				SpecieT(s)%FluxTubeT(f)%dphiCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dphiC0T(1)
+				SpecieT(s)%FluxTubeT(f)%rGCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%rGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%phiGCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%phiGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%thetaGCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%thetaGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%ellGCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%ellGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%qGLGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGL0T(1)
+				SpecieT(s)%FluxTubeT(f)%qGHGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGH0T(1)
+				SpecieT(s)%FluxTubeT(f)%pGCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%pGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%d3xCGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)
+				SpecieT(s)%FluxTubeT(f)%TsPerpGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPerp0T(1)
+				SpecieT(s)%FluxTubeT(f)%TsParGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPar0T(1)
+				SpecieT(s)%FluxTubeT(f)%TsGT(1, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%Ts0T(1)
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-					SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(1, Qind)= nsnormCNeut0(Qind+ 1)
+					SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(1, Qind)= nsnormCNeut0(Qind+ 1)
 				end if
 
 				! ----------------------------------------------------
 
 				! Compute field line arc length of BBELF wave-heating region
-				SpecieT(s)%FluxTubeT(f)%dsICRT(1, Qind)= &
-					SpecieT(s)%FluxTubeT(f)%hqCT(1, Qind)*SpecieT(s)%FluxTubeT(f)%dqCT(1, Qind)
+				SpecieT(s)%FluxTubeT(f)%dsICRGT(1, Qind)= &
+					SpecieT(s)%FluxTubeT(f)%hqCGT(1, Qind)*SpecieT(s)%FluxTubeT(f)%dqCGT(1, Qind)
 
 				! ----------------------------------------------------
 
 				! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
-				if (SpecieT(s)%FluxTubeT(f)%phiGCT(1, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL phiGCT VALUE= ', &
-						SpecieT(s)%FluxTubeT(f)%phiGCT(1, Qind), ' AND phiGC0T VALUE= ', &
+				if (SpecieT(s)%FluxTubeT(f)%phiGCGT(1, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL phiGCGT VALUE= ', &
+						SpecieT(s)%FluxTubeT(f)%phiGCGT(1, Qind), ' AND phiGC0T VALUE= ', &
 						SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1), &
 						' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Q CELL= ', Qind, &
 						' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 				end if
 
-				if (SpecieT(s)%FluxTubeT(f)%pGCT(1, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%pGC0T(1)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL pGCT VALUE= ', &
-						SpecieT(s)%FluxTubeT(f)%pGCT(1, Qind), ' AND phiGC0T VALUE= ', &
+				if (SpecieT(s)%FluxTubeT(f)%pGCGT(1, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%pGC0T(1)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL pGCGT VALUE= ', &
+						SpecieT(s)%FluxTubeT(f)%pGCGT(1, Qind), ' AND phiGC0T VALUE= ', &
 						SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1), &
 						' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Q CELL= ', Qind, &
 						' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
@@ -1453,48 +1475,48 @@ contains
 		if (INITIALGRIDflag == 0) then
 			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
-				SpecieT(s)%FluxTubeT(f)%qGCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%hqC0T(1)
-				SpecieT(s)%FluxTubeT(f)%dpCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dpC0T(1)
-				SpecieT(s)%FluxTubeT(f)%dqCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dqC0T(1)
-				SpecieT(s)%FluxTubeT(f)%dphiCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dphiC0T(1)
-				SpecieT(s)%FluxTubeT(f)%rGCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%rGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%phiGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%thetaGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%ellGCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%ellGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%qGLT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGL0T(1)
-				SpecieT(s)%FluxTubeT(f)%qGHT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGH0T(1)
-				SpecieT(s)%FluxTubeT(f)%pGCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%pGC0T(1)
-				SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)
-				SpecieT(s)%FluxTubeT(f)%TsPerpT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPerp0T(1)
-				SpecieT(s)%FluxTubeT(f)%TsParT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPar0T(1)
-				SpecieT(s)%FluxTubeT(f)%TsT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%Ts0T(1)
+				SpecieT(s)%FluxTubeT(f)%qGCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%hqC0T(1)
+				SpecieT(s)%FluxTubeT(f)%dpCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dpC0T(1)
+				SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dqC0T(1)
+				SpecieT(s)%FluxTubeT(f)%dphiCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%dphiC0T(1)
+				SpecieT(s)%FluxTubeT(f)%rGCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%rGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%phiGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%thetaGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%ellGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGL0T(1)
+				SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%qGH0T(1)
+				SpecieT(s)%FluxTubeT(f)%pGCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%pGC0T(1)
+				SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)
+				SpecieT(s)%FluxTubeT(f)%TsPerpGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPerp0T(1)
+				SpecieT(s)%FluxTubeT(f)%TsParGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%TsPar0T(1)
+				SpecieT(s)%FluxTubeT(f)%TsGT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%Ts0T(1)
 
 				if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-					SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(nn, Qind)= nsnormCNeut0(Qind+ 1)
+					SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(nn, Qind)= nsnormCNeut0(Qind+ 1)
 				end if
 
 				! ----------------------------------------------------
 
 				! Compute field line arc length of BBELF wave-heating region
-				SpecieT(s)%FluxTubeT(f)%dsICRT(nn, Qind)= &
-					SpecieT(s)%FluxTubeT(f)%hqCT(nn, Qind)*SpecieT(s)%FluxTubeT(f)%dqCT(nn, Qind)
+				SpecieT(s)%FluxTubeT(f)%dsICRGT(nn, Qind)= &
+					SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)
 
 				! ----------------------------------------------------
 
 				! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
-				if (SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL phiGCT VALUE= ', &
-						SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind), ' AND phiGC0T VALUE= ', &
+				if (SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%phiGC0T(1)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL phiGCGT VALUE= ', &
+						SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind), ' AND phiGC0T VALUE= ', &
 						SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%phiGC0T(1), &
 						' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Q CELL= ', Qind, &
 						' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 				end if
 
-				if (SpecieT(s)%FluxTubeT(f)%pGCT(nn, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%pGC0T(1)) then
-					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL pGCT VALUE= ', &
-						SpecieT(s)%FluxTubeT(f)%pGCT(nn, Qind), ' AND phiGC0T VALUE= ', &
+				if (SpecieT(s)%FluxTubeT(f)%pGCGT(nn, Qind) /= SpecieT(s)%FluxTubeT(f)%QCell0T(1)%pGC0T(1)) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT INITIAL pGCGT VALUE= ', &
+						SpecieT(s)%FluxTubeT(f)%pGCGT(nn, Qind), ' AND phiGC0T VALUE= ', &
 						SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%pGC0T(1), &
 						' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND Q CELL= ', Qind, &
 						' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'

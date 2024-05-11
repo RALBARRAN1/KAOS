@@ -36,40 +36,40 @@ contains
 
   			! ----------------------------------------------------
 
-  			SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)= SpecieT(s)%FluxTubeT(f)%ndatfacT(1)
+  			SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)= SpecieT(s)%FluxTubeT(f)%ndatfacGT(1)
 
-  			SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCLBT(1)
-  			SpecieT(s)%FluxTubeT(f)%sigmaLBT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaLBT(1)
-  			SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCUBT(1)
-  			SpecieT(s)%FluxTubeT(f)%sigmaUBT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaUBT(1)
-  			SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(1)
-  			SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(1)
-  			SpecieT(s)%FluxTubeT(f)%ns0T(nn)= SpecieT(s)%FluxTubeT(f)%ns0T(1)
+  			SpecieT(s)%FluxTubeT(f)%d3xCLBGT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCLBGT(1)
+  			SpecieT(s)%FluxTubeT(f)%sigmaLBGT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaLBGT(1)
+  			SpecieT(s)%FluxTubeT(f)%d3xCUBGT(nn)= SpecieT(s)%FluxTubeT(f)%d3xCUBGT(1)
+  			SpecieT(s)%FluxTubeT(f)%sigmaUBGT(nn)= SpecieT(s)%FluxTubeT(f)%sigmaUBGT(1)
+  			SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(1)
+  			SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(1)
+  			SpecieT(s)%FluxTubeT(f)%ns0GT(nn)= SpecieT(s)%FluxTubeT(f)%ns0GT(1)
 
   			! ----------------------------------------------------
 
-  			SpecieT(s)%FluxTubeT(f)%qGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%hqCT(nn, :)= SpecieT(s)%FluxTubeT(f)%hqCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%dpCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dpCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%dqCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dqCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%dphiCT(nn, :)= SpecieT(s)%FluxTubeT(f)%dphiCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%rGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%rGCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%phiGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%phiGCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%thetaGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%thetaGCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%ellGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%ellGCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%qGLT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGLT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%qGHT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGHT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%pGCT(nn, :)= SpecieT(s)%FluxTubeT(f)%pGCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%d3xCT(nn, :)= SpecieT(s)%FluxTubeT(f)%d3xCT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%TsPerpT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsPerpT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%TsParT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsParT(1, :)
-  			SpecieT(s)%FluxTubeT(f)%TsT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%qGCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%hqCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%hqCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dpCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%dpCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dqCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%dqCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dphiCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%dphiCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%rGCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%rGCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%phiGCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%thetaGCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%ellGCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%ellGCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%qGLGT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGLGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%qGHGT(nn, :)= SpecieT(s)%FluxTubeT(f)%qGHGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%pGCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%pGCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, :)= SpecieT(s)%FluxTubeT(f)%d3xCGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%TsPerpGT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsPerpGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%TsParGT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsParGT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%TsGT(nn, :)= SpecieT(s)%FluxTubeT(f)%TsGT(1, :)
 
   			if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
-  				SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(nn, :)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutT(1, :)
+  				SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(nn, :)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(1, :)
   			end if
 
-  			SpecieT(s)%FluxTubeT(f)%dsICRT(nn, :)= SpecieT(s)%FluxTubeT(f)%dsICRT(1, :)
+  			SpecieT(s)%FluxTubeT(f)%dsICRGT(nn, :)= SpecieT(s)%FluxTubeT(f)%dsICRGT(1, :)
 
   			! ----------------------------------------------------
 
@@ -85,7 +85,7 @@ contains
   	if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 1) then
   		convnloop: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 
   				! ----------------------------------------------------
 
@@ -108,8 +108,8 @@ contains
   					qGA(1)= qGAIC ! Lower boundary q value
   					qGB(1)= qGBIC ! Upper boundary q value
 
-  					Lshell(1)= Lshell(1)+ 1 ! L-shell [RE]
-  					phiLshell(1)= phiLshell(1)+ 1 ! invariant longitude [rads]
+  					Lshell(1)= Lshell(1)+ 1e-3 ! L-shell [RE]
+  					phiLshell(1)= phiLshell(1)+ 1e-3 ! invariant longitude [rads]
 
   				end if
 
@@ -159,9 +159,9 @@ contains
   	if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 1) then
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 
-					do j= 1, (NsTK(1)- dNsTK2(1)- dNsTK3(1)), 1
+					do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 						! ----------------------------------------------------
 
@@ -177,8 +177,8 @@ contains
 
 						call musub(muConv(1), SpecieT(s)%msT(1), BmagConv(1), VperpN(j))
 
-						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCT(nn, 1) ! Update L-shell and longitude
-						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, 1)
+						pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, 1) ! Update L-shell and longitude
+						phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)
 
 						! ----------------------------------------------------
 
@@ -356,7 +356,7 @@ contains
 						call thetasub(thetaConv(1), zN(j), rConv(1))
 
 						if (ENAflag(j) .eqv. .false.) then
-							phiConv(1)= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, 1)
+							phiConv(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)
 						else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
 							(ENAflag(j) .eqv. .true.)) then
 							call phisub(phiConv(1), xN(j), yN(j))
@@ -367,26 +367,26 @@ contains
 						! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 						if (ENAflag(j) .eqv. .false.) then
-							if (phiConv(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, 1)) then
+							if (phiConv(1) /= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT ION phiConv= ', phiConv(1), &
-									' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
+									' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 									', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
 									' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
 							end if
-							if (phiNp(1) /= SpecieT(s)%FluxTubeT(f)%phiGCT(nn, 1)) then
+							if (phiNp(1) /= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT ION phiNp= ', phiNp(1), &
-									' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
+									' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 									', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
 									' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
 							end if
-							if (pNp(1) /= SpecieT(s)%FluxTubeT(f)%pGCT(nn, 1)) then
+							if (pNp(1) /= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, 1)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT ION pNp= ', pNp(1), &
-									' AND phiGCT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCT(nnind, 1), &
+									' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 									', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
 									' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
@@ -472,14 +472,14 @@ contains
 		! ----------------------------------------------------
 
   	!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-  	!	if ((n /= 1) .and. (nn /= 1) .and. (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+  	!	if ((n /= 1) .and. (nn /= 1) .and. (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
   	! update grid with conservation of f and particle number,
-  	! update LBNominalDensityT and UBNominalDensityT
+  	! update LBNominalDensityGT and UBNominalDensityGT
   	! update all current particle positions and velocities with convection and with betatron acceleration
   	!do j= 1, (NsTK(1)- dNsTK2(1)- dNsTK3(1)), 1
   	! xN(j), yN(j), zN(j), Vperp1N(j), Vperp2N(j), VperpN(j), VxN(j), VyN(j), VzN(j) for ions and ENAs.
   	! Note: all new LB and UB injected particles are reset on correct Lshell in KineticSolverB given
-  	! SpecieT(s)%FluxTubeT(f)%pGCT(nn, Qind) and SpecieT(s)%FluxTubeT(f)%phiGCT(nn, Qind)
+  	! SpecieT(s)%FluxTubeT(f)%pGCGT(nn, Qind) and SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, Qind)
   	!1- Conserve f and Update GRID
   	!2- Update LB and UB densities and ensure robust statistics
   	!3- Translate all particle positions in (p, q, phi)

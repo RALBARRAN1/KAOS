@@ -32,7 +32,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 				! ----------------------------------------------------
 
@@ -61,7 +61,7 @@ contains
 					end do
 				end if
 				if ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 						jcount= 0d0
 						SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)= jcount
@@ -118,7 +118,7 @@ contains
 					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqT(nn)= &
 						SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)* &
 						(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-						SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
+						SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind))
 					SpecieT(s)%FluxTubeT(f)%NqTp(nn, Qind)= &
 						SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqT(nn)
 
@@ -159,52 +159,52 @@ contains
 						end if
 						if (nn == 1) then
 							!if (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
-							!	if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+							!	if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 							!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))- &
-							!		nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)*(SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)/ &
+							!		nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn)*(SpecieT(s)%FluxTubeT(f)%d3xCLBGT(nn)/ &
 							!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))) > 1d0) then
 							!		write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 							!			' CONFIG-SPACE GRID COUNTS= ', &
 							!			nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-							!			(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+							!			(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 							!			SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 							!			' ARE UNEQUAL TO LB NOMINAL DENSITY= ', &
-							!			nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityT(nn)* &
-							!			(SpecieT(s)%FluxTubeT(f)%d3xCLBT(nn)/ &
+							!			nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn)* &
+							!			(SpecieT(s)%FluxTubeT(f)%d3xCLBGT(nn)/ &
 							!			SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 							!			' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
 							!			' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
 							!	end if
 							!end if
 						!	if (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) then
-						!		if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+						!		if (abs(nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)*(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 						!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))- &
-						!		nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)*(SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)/ &
+						!		nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn)*(SpecieT(s)%FluxTubeT(f)%d3xCUBGT(nn)/ &
 						!		SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)))) > 1d0) then
 						!			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 						!				' CONFIG-SPACE GRID COUNTS= ', &
 						!				nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-						!				(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+						!				(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 						!				SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 						!				' ARE UNEQUAL TO UB NOMINAL DENSITY= ', &
-						!				nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityT(nn)* &
-						!				(SpecieT(s)%FluxTubeT(f)%d3xCUBT(nn)/ &
+						!				nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn)* &
+						!				(SpecieT(s)%FluxTubeT(f)%d3xCUBGT(nn)/ &
 						!				SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 						!				' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
 						!				' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
 						!		end if
 						!	end if
-							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) <= 0) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then
 								if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-										(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+										(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 										SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) /= &
 										SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
 										SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%NsFARRT(1)) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' TEST CONFIG-SPACE GRID COUNTS= ', &
 											nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-											(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+											(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 											SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 											' AT INITIAL TIME ARE UNEQUAL', &
 											' TO INITIAL Q CELL POPULATION= ', &
@@ -216,17 +216,17 @@ contains
 									end if
 								end if
 							end if
-							if (SpecieT(s)%FluxTubeT(f)%qGLT(nn, 1) > 0) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then
 								if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-										(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+										(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 										SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))) /= &
 										SpecieT(s)%FluxTubeT(f)%QCellICT(Qind- &
 										SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%NsFARRT(1)) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' TEST CONFIG-SPACE GRID COUNTS= ', &
 											nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
-											(SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind)/ &
+											(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
 											SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))), &
 											' AT INITIAL TIME ARE UNEQUAL', &
 											' TO INITIAL Q CELL POPULATION= ', &
@@ -289,7 +289,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -334,7 +334,7 @@ contains
 								end do
 							end if
 							if ((n /= 1) .and. (nn /= 1) .and. &
-								(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+								(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 								do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1
 									do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1
 										do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
@@ -448,7 +448,7 @@ contains
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												N2PerpphReNormRT(nn, Vperp1ind, Vperp2ind, Vparind)* &
 												(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-												SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
+												SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind))
 										end if
 
 										SpecieT(s)%FluxTubeT(f)% &
@@ -567,7 +567,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -610,7 +610,7 @@ contains
 								end do
 							end if
 							if ((n /= 1) .and. (nn /= 1) .and. &
-								(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1)))) then
+								(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 								do Vperpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperpGT(1), 1
 									do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1), 1
 										jcount= 0d0
@@ -721,7 +721,7 @@ contains
 											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											NphReNormRT(nn, Vperpind, Vparind)* &
 											(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
-											SpecieT(s)%FluxTubeT(f)%d3xCT(nn, Qind))
+											SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind))
 									end if
 
 									SpecieT(s)%FluxTubeT(f)% &
@@ -806,7 +806,7 @@ contains
 		!if (rank == 0) then
 		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!		if (((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+		!			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 		!			do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 		!				if (sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &

@@ -43,7 +43,7 @@ real(kind= dp) :: TotEnd, S1End, S2End, S3End, S4End, S5End, S6End, S7End, S811E
 	S812End, S813End, S81End, S83End, S84End, S861End, S862End, S863End, &
 	S864End, S865End, S866End, S87End, S88End, S8End, SDE2End, SDE3End, KS0End
 
-character(50) :: Totstring, S1string, S2string, S3string, S4string, S5string, &
+character(50) :: ToTsGTring, S1string, S2string, S3string, S4string, S5string, &
 	S6string, S7string, S811string, S812string, S813string, S81string, S82string, &
 	S83string, S84string, S861string, S862string, S863string, S864string, S865string, &
 	S866string, S87string, S88string, S8string, SDE2string, SDE3string, KS0string
@@ -72,7 +72,7 @@ real(kind= dp), dimension(:), allocatable :: pGp, qGp, phiGp, rGridOutp, thetaGr
 
 ! ----------------- 0_0 VELOCITY-SPACE GRID GENERATOR -----------------
 
-real(kind= dp) :: VpGCtest, VqGCtest
+real(kind= dp) :: VpGCGTest, VqGCGTest
 
 ! ----------------- 1 SIMULATION PARAMETERIZATION -----------------
 
@@ -356,15 +356,15 @@ character(50) :: RNtest1file, RNtest2file, NsnTfile, NsnRRTfile, NqLBoutfluxIonR
 	M0FiltAvrgRTfile, M1Perp1FiltAvrgRTfile, M1Perp2FiltAvrgRTfile, M1ParFiltAvrgRTfile, M2ParFiltAvrgRTfile, &
 	nsnormCLBTfile, nsnormCUBTfile, DensityOutputRTfile, TemperatureOutputRTfile, &
 	EAInertialOutputRTfile, EAPressureOutputRTfile, EAmagOutputRTfile, &
-	LBREPLENISHflagTfile, UBREPLENISHflagTfile, ndatfacTfile, ns0Tfile, qGCTfile, pGCTfile, &
-	rGCTfile, phiGCTfile, thetaGCTfile, TsTfile, NqLBTfile, NqUBTfile
+	LBREPLENISHflagTfile, UBREPLENISHflagTfile, ndatfacGTfile, ns0GTfile, qGCGTfile, pGCGTfile, &
+	rGCGTfile, phiGCGTfile, thetaGCGTfile, TsGTfile, NqLBTfile, NqUBTfile
 
 ! ----------------- ALL DERIVED DATA TYPES -----------------
 
 type V3Celltype ! Vel-space grid cell derived data type: rank 3, indices [s, f, Qind, (Vpind, Vqind, Vphiind)]
 	! Simulation Parameterization:
-	real(kind= dp), dimension(1) :: VpGLT, VpGHT, VpGCT, VqGLT, VqGHT, VqGCT, VrGCT, VthetaGCT, VellGCT, &
-		VphiGLT, VphiGHT, VphiGCT, hVpCT, hVqCT, hVphiCT, dVpCT, dVqCT, dVphiCT, d33vCT
+	real(kind= dp), dimension(1) :: VpGLT, VpGHT, VpGCGT, VqGLGT, VqGHGT, VqGCGT, VrGCGT, VthetaGCGT, VellGCGT, &
+		VphiGLT, VphiGHT, VphiGCGT, hVpCT, hVqCT, hVphiCT, dVpCT, dVqCT, dVphiCT, d33vCT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NphENART
 	! ENA Distribution Functions:
@@ -377,7 +377,7 @@ end type V3Celltype
 type V2PerpCelltype ! Vel-space grid cell derived data type: rank 3, indices [s, f, Qind, (Vperp1ind, Vperp2ind, Vparind)]
 	! Simulation Parameterization:
 	real(kind= dp), dimension(1) :: Vperp1GLT, Vperp1GHT, Vperp1GCT, dVperp1GT, &
-		Vperp2GLT, Vperp2GHT, Vperp2GCT, dVperp2GT, VparGLT, VparGHT, VparGCT, dVparGT, d3vCT
+		Vperp2GLT, Vperp2GHT, Vperp2GCT, dVperp2GT, VparGLT, VparGHT, VparGCGT, dVparGT, d3vCT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: N2PerpphRT
 	! Ion Distribution Functions:
@@ -389,8 +389,8 @@ end type V2PerpCelltype
 
 type VCelltype ! Vel-space grid cell derived data type: rank 2, indices [s, f, Qind, (Vperpind, Vparind)]
   ! Simulation Parameterization:
-	real(kind= dp), dimension(1) :: dVperpGT, dVparGT, dVthetaGT, VperpGLT, VperpGHT, VperpGCT, &
-		VparGLT, VparGHT, VparGCT, d3vCT, hVthetaCT
+	real(kind= dp), dimension(1) :: dVperpGT, dVparGT, dVthetaGT, VperpGLT, VperpGHT, VperpGCGT, &
+		VparGLT, VparGHT, VparGCGT, d3vCT, hVthetaCT
 	real(kind= dp), dimension(1) :: VperpGT, VparGT
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NphRT
@@ -465,12 +465,12 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 		Te0T, rGL0T, rGH0T, thetaGL0T, thetaGH0T, ellGL0T, ellGH0T, &
 		xGC0T, xGL0T, xGH0T, yGC0T, yGL0T, yGH0T, zGC0T, zGL0T, zGH0T
 	integer(kind= dp), dimension(1) :: nsnormCLBInputT, nsnormCUBInputT
-	real(kind= dp), dimension(:, :), allocatable :: dsICRT
-	real(kind= dp), dimension(:), allocatable :: LBNominalDensityT, UBNominalDensityT, ns0T, &
-		d3xCLBT, d3xCUBT, sigmaLBT, sigmaUBT
+	real(kind= dp), dimension(:, :), allocatable :: dsICRGT
+	real(kind= dp), dimension(:), allocatable :: LBNominalDensityGT, UBNominalDensityGT, ns0GT, &
+		d3xCLBGT, d3xCUBGT, sigmaLBGT, sigmaUBGT
 	real(kind= dp), dimension(1) :: AT, BT, hT
 	integer(kind= dp), dimension(1) :: NtT, NNtT
-	integer(kind= dp), dimension(:), allocatable :: ndatfacT
+	integer(kind= dp), dimension(:), allocatable :: ndatfacGT
 	real(kind= dp), dimension(1) :: IonNoiseLimitT, ENANoiseLimitT
 	integer(kind= dp), dimension(1) :: IONNOISEflagT, FLUIDIONEXPORTflagT, FLUIDENAEXPORTflagT, &
 		LBCONDITIONflagT, UBCONDITIONflagT, LBREPLENISHflagT, UBREPLENISHflagT, &
@@ -489,8 +489,8 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 	real(kind= dp), dimension(:, :), allocatable :: lambdaPerppT, EtaLHpT, XiPerp1pT, XiPerp2pT, S0pT, &
 		OmegaG0pT, ChiPerp1pT, ChiPerp2pT
 	! Density Profile A:
-	real(kind= dp), dimension(:, :), allocatable :: qGCT, hqCT, dpCT, dqCT, dphiCT, rGCT, phiGCT, thetaGCT, ellGCT, &
-		qGLT, qGHT, pGCT, d3xCT, TsPerpT, TsParT, TsT, nsnormCNeutT
+	real(kind= dp), dimension(:, :), allocatable :: qGCGT, hqCGT, dpCGT, dqCGT, dphiCGT, rGCGT, phiGCGT, thetaGCGT, ellGCGT, &
+		qGLGT, qGHGT, pGCGT, d3xCGT, TsPerpGT, TsParGT, TsGT, nsnormCNeutGT
 	integer(kind= dp), dimension(1) :: nsnormCLBT, nsnormCUBT
 	integer(kind= dp), dimension(:), allocatable :: NsFARRpT, NsFApT, NsFARpT
 	integer(kind= dp), dimension(1) :: NsRRT, NsRT, NsT
@@ -551,7 +551,7 @@ type Specietype ! Particle species number derived data type: rank 1, index [s]
  	! Simulation Parameterization:
   integer(kind= dp), dimension(1) :: NfT
   real(kind= dp), dimension(1) :: msT, qsT
-	integer(kind= dp), dimension(1) :: Qindns0T
+	integer(kind= dp), dimension(1) :: Qindns0GT
 	! Density Profile A:
 	integer(kind= dp), dimension(1) :: NsRRTotpST
 	integer(kind= dp), dimension(:), allocatable :: NsRRTotpT

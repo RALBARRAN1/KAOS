@@ -65,7 +65,7 @@ contains
 							ellfinalICT(FAindIC)
 
 						if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 1) then
-							TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)
+							TsMB(1)= SpecieT(s)%FluxTubeT(f)%TsGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1)
 						end if
 						if (SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) then
 							TsMB(1)= SpecieT(s)%FluxTubeT(f)%QCellT(SpecieT(s)% &

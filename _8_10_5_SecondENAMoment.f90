@@ -29,7 +29,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 				! ----------------------------------------------------
 
@@ -81,13 +81,13 @@ contains
 											V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)))* &
 											(abs((SpecieT(s)%FluxTubeT(f)%M1PphENART(nn, Qind)- &
 											SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))**2d0)+ &
+											V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1))**2d0)+ &
 											abs((SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind)- &
 											SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))**2d0)+ &
+											V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1))**2d0)+ &
 											abs((SpecieT(s)%FluxTubeT(f)%M1PHIphENART(nn, Qind)- &
 											SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))**2d0))* &
+											V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1))**2d0))* &
 											SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											V3CellT(Vpind, Vqind, Vphiind)%FphENART(nn)
 
@@ -126,13 +126,13 @@ contains
 										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)) /= 0) .and. &
 										((abs((SpecieT(s)%FluxTubeT(f)%M1PphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1PHIphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))**2d0)) /= 0) .and. &
+										V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1))**2d0)) /= 0) .and. &
 										(gggENA(Vpind, Vqind, Vphiind, nn) == 0)) .or. &
 										((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%FphENART(nn) == 0) .and. &
@@ -144,13 +144,13 @@ contains
 										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)) == 0) .and. &
 										((abs((SpecieT(s)%FluxTubeT(f)%M1PphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1PHIphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))**2d0)) == 0) .and. &
+										V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1))**2d0)) == 0) .and. &
 										(gggENA(Vpind, Vqind, Vphiind, nn) /= 0))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' INCONSISTENT INTEGRAND VALUE FOR SPECIE= ', &
@@ -169,13 +169,13 @@ contains
 										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)) /= 0) .and. &
 										((abs((SpecieT(s)%FluxTubeT(f)%M1PphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1PHIphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))**2d0)) /= 0) .and. &
+										V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1))**2d0)) /= 0) .and. &
 										(gggENA(Vpind, Vqind, Vphiind, nn) /= 0) .and. &
 										(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%g0phENART(nn) == 0)) .or. &
@@ -187,13 +187,13 @@ contains
 										V3CellT(Vpind, Vqind, Vphiind)%hVphiCT(1)) /= 0) .and. &
 										((abs((SpecieT(s)%FluxTubeT(f)%M1PphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VpGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VqGCT(1))**2d0)+ &
+										V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1))**2d0)+ &
 										abs((SpecieT(s)%FluxTubeT(f)%M1PHIphENART(nn, Qind)- &
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-										V3CellT(Vpind, Vqind, Vphiind)%VphiGCT(1))**2d0)) /= 0) .and. &
+										V3CellT(Vpind, Vqind, Vphiind)%VphiGCGT(1))**2d0)) /= 0) .and. &
 										(gggENA(Vpind, Vqind, Vphiind, nn) == 0) .and. &
 										(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 										V3CellT(Vpind, Vqind, Vphiind)%g0phENART(nn) /= 0))) then

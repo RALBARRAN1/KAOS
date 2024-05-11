@@ -120,9 +120,9 @@ contains
 ! 					get max limits to compare here
 
 					! if ((SpecieT(s)%FluxTubeT(f)%q0T(j) <= &
-! 						SpecieT(s)%FluxTubeT(f)%qGLT(1, 1)) .or. &
+! 						SpecieT(s)%FluxTubeT(f)%qGLGT(1, 1)) .or. &
 ! 						(SpecieT(s)%FluxTubeT(f)%q0T(j) > SpecieT(s)%FluxTubeT(f)%QCellT( &
-! 						((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))%qGHT(1))) then
+! 						((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))%qGHGT(1))) then
 ! 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 ! 							' q0T= ', SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF CONFIG-SPACE', &
 ! 							' GRID FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND PARTICLE= ', j, &

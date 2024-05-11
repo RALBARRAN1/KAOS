@@ -722,9 +722,9 @@ contains
 
 			! DIAGNOSTIC FLAGS FOR PROPER ARRAY INVERSIONS, SIZES, AND FINITE VALUES:
 
-			if ((size(SpecieT(s)%Qindns0T(:)) /= 1) .or. &
-				(isnan(real(SpecieT(s)%Qindns0T(1))) .eqv. .true.)) then
-				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0T HAS', &
+			if ((size(SpecieT(s)%Qindns0GT(:)) /= 1) .or. &
+				(isnan(real(SpecieT(s)%Qindns0GT(1))) .eqv. .true.)) then
+				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindns0GT HAS', &
 					' BAD INVERSION, SIZE, OR HAS NaN VALUE FOR SPECIE= ', s, &
 					' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 			end if
@@ -1678,9 +1678,9 @@ contains
 					write(*, *) trim('Base Time-Step Duration [s]= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NNtT(1)
 					write(*, *) trim('Total Number of Statistical Time-Steps= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)
+					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)
 					write(*, *) trim('Number of Base Time-Steps per Statistical Time-Step= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ndatfacT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1)
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1)
 					write(*, *) trim('Statistical Time-Step Duration [s]= ' // adjustl(paramstring))
 
 					write(*, *)
@@ -1815,7 +1815,7 @@ contains
 					write(*, *) trim('Additive Increment of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
 					write(paramstring, '(D10.2)') dNTeEND
 					write(*, *) trim('Additive Increment Cap of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') SpecieT(s)%Qindns0T(1)
+					write(paramstring, '(i10)') SpecieT(s)%Qindns0GT(1)
 					write(*, *) trim('Reference Density Grid Cell= ' // adjustl(paramstring))
 
 					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then

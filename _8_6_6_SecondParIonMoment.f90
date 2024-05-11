@@ -34,7 +34,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -82,14 +82,14 @@ contains
 											if (SpecieT(s)%FluxTubeT(f)%PHASEENERGYPARIONMOMENTCENTERflagT(1) == 0) then
 												ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn)= &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))**2d0)* &
+													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1))**2d0)* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn)
 											end if
 											if (SpecieT(s)%FluxTubeT(f)%PHASEENERGYPARIONMOMENTCENTERflagT(1) == 1) then
 												ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn)= &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)- &
+													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1)- &
 													SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))**2d0)* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn)
@@ -98,7 +98,7 @@ contains
 													.eqv. .true.)) .or. (ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn) == 0d0)) then
 													ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn)= &
 														((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1))**2d0)* &
+														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1))**2d0)* &
 														SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 														V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn)
 												end if
@@ -133,13 +133,13 @@ contains
 										if (((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn) /= 0d0) .and. &
 											((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)- &
+											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1)- &
 											SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)) /= 0d0) .and. &
 											(ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn) == 0d0)) .or. &
 											((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%F2PerpphRT(nn) == 0d0) .and. &
 											((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCT(1)- &
+											V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%VparGCGT(1)- &
 											SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)) == 0d0) .and. &
 											(ggg2Perp(Vperp1ind, Vperp2ind, Vparind, nn) /= 0d0))) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
@@ -227,7 +227,7 @@ contains
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					! ----------------------------------------------------
 
@@ -272,18 +272,18 @@ contains
 										if (SpecieT(s)%FluxTubeT(f)%PHASEENERGYPARIONMOMENTCENTERflagT(1) == 0) then
 											ggg(Vperpind, Vparind, nn)= &
 												(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 												((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VparGCT(1))**2d0)* &
+												VCellT(Vperpind, Vparind)%VparGCGT(1))**2d0)* &
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												VCellT(Vperpind, Vparind)%FphRT(nn))
 										end if
 										if (SpecieT(s)%FluxTubeT(f)%PHASEENERGYPARIONMOMENTCENTERflagT(1) == 1) then
 											ggg(Vperpind, Vparind, nn)= &
 												(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+												VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 												((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-												VCellT(Vperpind, Vparind)%VparGCT(1)- &
+												VCellT(Vperpind, Vparind)%VparGCGT(1)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))**2d0)* &
 												SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 												VCellT(Vperpind, Vparind)%FphRT(nn))
@@ -292,9 +292,9 @@ contains
 												.eqv. .true.)) .or. (ggg(Vperpind, Vparind, nn) == 0d0)) then
 												ggg(Vperpind, Vparind, nn)= &
 													(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													VCellT(Vperpind, Vparind)%VperpGCT(1)* &
+													VCellT(Vperpind, Vparind)%VperpGCGT(1)* &
 													((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-													VCellT(Vperpind, Vparind)%VparGCT(1))**2d0)* &
+													VCellT(Vperpind, Vparind)%VparGCGT(1))**2d0)* &
 													SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 													VCellT(Vperpind, Vparind)%FphRT(nn))
 											end if
@@ -327,24 +327,24 @@ contains
 									!if (((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									!	VCellT(Vperpind, Vparind)%FphRT(nn) /= 0d0) .and. &
 									!	(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-									!	VCellT(Vperpind, Vparind)%VperpGCT(1) /= 0d0) .and. &
+									!	VCellT(Vperpind, Vparind)%VperpGCGT(1) /= 0d0) .and. &
 									!	((SpecieT(s)%FluxTubeT(f)%M1PerpphRT(nn, Qind)- &
 									!	SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-									!	VCellT(Vperpind, Vparind)%VperpGCT(1)) /= 0d0) .and. &
+									!	VCellT(Vperpind, Vparind)%VperpGCGT(1)) /= 0d0) .and. &
 									!	((SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 									!	SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-									!	VCellT(Vperpind, Vparind)%VparGCT(1)) /= 0d0) .and. &
+									!	VCellT(Vperpind, Vparind)%VparGCGT(1)) /= 0d0) .and. &
 									!	(ggg(Vperpind, Vparind, nn) == 0d0)) .or. &
 									!	((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									!	VCellT(Vperpind, Vparind)%FphRT(nn) == 0d0) .and. &
 									!	(SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-									!	VCellT(Vperpind, Vparind)%VperpGCT(1) == 0d0) .and. &
+									!	VCellT(Vperpind, Vparind)%VperpGCGT(1) == 0d0) .and. &
 									!	((SpecieT(s)%FluxTubeT(f)%M1PerpphRT(nn, Qind)- &
 									!	SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-									!	VCellT(Vperpind, Vparind)%VperpGCT(1)) == 0d0) .and. &
+									!	VCellT(Vperpind, Vparind)%VperpGCGT(1)) == 0d0) .and. &
 									!	((SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 									!	SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
-									!	VCellT(Vperpind, Vparind)%VparGCT(1)) == 0d0) .and. &
+									!	VCellT(Vperpind, Vparind)%VparGCGT(1)) == 0d0) .and. &
 									!	(ggg(Vperpind, Vparind, nn) /= 0d0))) then
 									!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									!		' INCONSISTENT INTEGRAND TEST FOR SPECIE= ', &
@@ -434,7 +434,7 @@ contains
 		if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		      (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+		      (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 					call IonNeutralCollisionFrequencyASub
 
@@ -451,7 +451,7 @@ contains
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 				! ----------------------------------------------------
 
@@ -660,7 +660,7 @@ contains
 		if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+					(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
 						SpecieT(s)%FluxTubeT(f)%DensityOutputRT(Qind)= SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)
@@ -680,7 +680,7 @@ contains
 
 		!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-		!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+		!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 		!		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!			if ((SpecieT(s)%FluxTubeT(f)%PHASEDENSITYIONMOMENTflagT(1) == 1) .and. &
 		!				(rank == 0)) then
@@ -701,7 +701,7 @@ contains
 
 	  !do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
  		!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
- 		!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacT(1:nn- 1))))) then
+ 		!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
  		!		do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
  		!				if ((SpecieT(s)%FluxTubeT(f)% &
  		!				PHASEDENSITYIONMOMENTflagT(1) == 1) .and. &
