@@ -1,4 +1,4 @@
-objects= _ModelInput.o _KineticMainParams.o _0_1_GridDipolePolynomialSolver.o _0_ConfigGridGenerator.o _0_0_VelGridGenerator.o _1_SimParameterization.o _2_1_DensityProfileA1.o _2_2_DensityProfileA2.o _2_DensityProfileA.o _3_1_GaussianRNG.o _3_2_PoissonRNG.o _4_DensityProfileB.o _5_DipolePolynomialSolver.o _6_VelocityDistribution.o _6_1_MBVelocityDistribution.o _7_InitialConditions.o _8_1_1_1_IonNeutralCollisions.o _8_1_1_0_WaveHeating.o _8_1_1_KineticUpdateA.o _8_1_2_KineticUpdateB.o _8_1_3_KineticUpdateC.o _8_1_4_RK4DipolePolynomialSolver.o _8_1_KineticRK4Update.o _8_3_ParticleCounts.o _8_3_1_IonParticleCounts.o _8_3_2_ENAParticleCounts.o _8_4_1_IonDistributionFunctions.o _8_4_2_ENADistributionFunctions.o _8_4_DistributionFunctions.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_1_ZerothIonMoment.o _8_6_2_FirstPerpIonMoment.o _8_6_3_FirstParIonMoment.o _8_6_4_SecondIonMoment.o _8_6_5_SecondPerpIonMoment.o _8_6_6_SecondParIonMoment.o _8_6_6_1_IonNeutralCollisionFrequencyA.o _8_6_6_2_IonNeutralCollisionFrequencyB.o _8_7_AmbipolarEfield.o _8_7_1_MomentFilter.o _8_7_2_Gravfield.o _8_8_PotentialStructure.o _8_9_NonUniform3DIntegrator.o _8_10_1_ZerothENAMoment.o _8_10_2_FirstPENAMoment.o _8_10_3_FirstQENAMoment.o _8_10_4_FirstPHIENAMoment.o _8_10_5_SecondENAMoment.o _8_10_6_SecondPENAMoment.o _8_10_7_SecondQENAMoment.o _8_10_8_SecondPHIENAMoment.o _8_0_1_DataExport1.o _8_0_2_DataExport2.o _8_0_4_DataTypeAllocA.o _8_0_5_DataTypeAllocB.o _8_0_6_DataTypeReAllocA.o _8_0_7_1_BCReIndex.o _8_0_7_BoundaryConditions.o _8_11_Convection.o _8_0_0_1_KineticSolverA.o _8_0_0_2_KineticSolverB.o _8_KineticSolver.o _9_MPIReduceSum.o _KineticMain.o
+objects= _ModelInput.o _KineticMainParams.o _0_1_GridDipolePolynomialSolver.o _0_ConfigGridGenerator.o _0_1_1_ConfigGridGeneratorB.o _0_0_VelGridGenerator.o _1_SimParameterization.o _2_1_DensityProfileA1.o _2_DensityProfileA.o _3_1_GaussianRNG.o _3_2_PoissonRNG.o _4_DensityProfileB.o _5_DipolePolynomialSolver.o _6_VelocityDistribution.o _6_1_MBVelocityDistribution.o _7_InitialConditions.o _8_1_1_1_IonNeutralCollisions.o _8_1_1_0_WaveHeating.o _8_1_1_KineticUpdateA.o _8_1_2_KineticUpdateB.o _8_1_3_KineticUpdateC.o _8_1_4_RK4DipolePolynomialSolver.o _8_1_KineticRK4Update.o _8_3_ParticleCounts.o _8_3_1_IonParticleCounts.o _8_3_2_ENAParticleCounts.o _8_4_1_IonDistributionFunctions.o _8_4_2_ENADistributionFunctions.o _8_4_DistributionFunctions.o _8_5_NonUniform2DIntegrator.o _8_5_1_NonUniform3DIonIntegrator.o _8_6_1_ZerothIonMoment.o _8_6_2_FirstPerpIonMoment.o _8_6_3_FirstParIonMoment.o _8_6_4_SecondIonMoment.o _8_6_5_SecondPerpIonMoment.o _8_6_6_SecondParIonMoment.o _8_6_6_1_IonNeutralCollisionFrequencyA.o _8_6_6_2_IonNeutralCollisionFrequencyB.o _8_7_AmbipolarEfield.o _8_7_1_MomentFilter.o _8_7_2_Gravfield.o _8_8_PotentialStructure.o _8_9_NonUniform3DIntegrator.o _8_10_1_ZerothENAMoment.o _8_10_2_FirstPENAMoment.o _8_10_3_FirstQENAMoment.o _8_10_4_FirstPHIENAMoment.o _8_10_5_SecondENAMoment.o _8_10_6_SecondPENAMoment.o _8_10_7_SecondQENAMoment.o _8_10_8_SecondPHIENAMoment.o _8_0_1_DataExport1.o _8_0_2_DataExport2.o _8_0_4_DataTypeAllocA.o _8_0_5_DataTypeAllocB.o _8_0_6_DataTypeReAllocA.o _8_0_7_1_BCReIndex.o _8_0_7_BoundaryConditions.o _8_11_Convection.o _8_0_0_1_KineticSolverA.o _8_0_0_2_KineticSolverB.o _8_KineticSolver.o _9_MPIReduceSum.o _KineticMain.o
 
 comp= mpif90
 switch= -Ofast
@@ -18,19 +18,19 @@ _0_1_GridDipolePolynomialSolver.o: _KineticMainParams.o _0_1_GridDipolePolynomia
 _0_ConfigGridGenerator.o: _KineticMainParams.o _0_1_GridDipolePolynomialSolver.o _0_ConfigGridGenerator.f90
 	$(comp) $(switch) -c _0_ConfigGridGenerator.f90 -o _0_ConfigGridGenerator.o
 
+_0_1_1_ConfigGridGeneratorB.o: _KineticMainParams.o _0_1_1_ConfigGridGeneratorB.f90
+	$(comp) $(switch) -c _0_1_1_ConfigGridGeneratorB.f90 -o _0_1_1_ConfigGridGeneratorB.o
+
 _0_0_VelGridGenerator.o: _KineticMainParams.o _0_0_VelGridGenerator.f90
 	$(comp) $(switch) -c _0_0_VelGridGenerator.f90 -o _0_0_VelGridGenerator.o
 
-_1_SimParameterization.o: _KineticMainParams.o _0_ConfigGridGenerator.o _0_0_VelGridGenerator.o _1_SimParameterization.f90
+_1_SimParameterization.o: _KineticMainParams.o _0_ConfigGridGenerator.o _0_1_1_ConfigGridGeneratorB.o _0_0_VelGridGenerator.o _1_SimParameterization.f90
 	$(comp) $(switch) -c _1_SimParameterization.f90 -o _1_SimParameterization.o
 
 _2_1_DensityProfileA1.o: _KineticMainParams.o _9_MPIReduceSum.o _2_1_DensityProfileA1.f90
 	$(comp) $(switch) -c _2_1_DensityProfileA1.f90 -o _2_1_DensityProfileA1.o
 
-_2_2_DensityProfileA2.o: _KineticMainParams.o _9_MPIReduceSum.o _2_2_DensityProfileA2.f90
-	$(comp) $(switch) -c _2_2_DensityProfileA2.f90 -o _2_2_DensityProfileA2.o
-
-_2_DensityProfileA.o: _KineticMainParams.o _2_1_DensityProfileA1.o _2_2_DensityProfileA2.o _2_DensityProfileA.f90
+_2_DensityProfileA.o: _KineticMainParams.o _2_1_DensityProfileA1.o _2_DensityProfileA.f90
 	$(comp) $(switch) -c _2_DensityProfileA.f90 -o _2_DensityProfileA.o
 
 _3_1_GaussianRNG.o: _KineticMainParams.o _3_1_GaussianRNG.f90
@@ -183,7 +183,7 @@ _8_0_7_1_BCReIndex.o: _KineticMainParams.o _8_0_7_1_BCReIndex.f90
 _8_0_7_BoundaryConditions.o: _KineticMainParams.o _8_0_7_1_BCReIndex.o _8_0_4_DataTypeAllocA.o _8_0_6_DataTypeReAllocA.o _9_MPIReduceSum.o _8_0_7_BoundaryConditions.f90
 	$(comp) $(switch) -c _8_0_7_BoundaryConditions.f90 -o _8_0_7_BoundaryConditions.o
 
-_8_11_Convection.o: _KineticMainParams.o _0_ConfigGridGenerator.o _8_1_4_RK4DipolePolynomialSolver.o _0_0_VelGridGenerator.o _8_11_Convection.f90
+_8_11_Convection.o: _KineticMainParams.o _0_ConfigGridGenerator.o _8_1_4_RK4DipolePolynomialSolver.o _0_1_1_ConfigGridGeneratorB.o _0_0_VelGridGenerator.o _8_11_Convection.f90
 	$(comp) $(switch) -c _8_11_Convection.f90 -o _8_11_Convection.o 
 
 _9_MPIReduceSum.o: _KineticMainParams.o _9_MPIReduceSum.f90

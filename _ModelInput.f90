@@ -18,16 +18,16 @@ complex(kind= dp) :: i ! Square-root of -1
 ! ----------------- I/O PATHS -----------------
 
 ! Set (=1) for spin-up simulations (output initial conditions, i.e. spin up simulation (=1))
-integer(kind= dp), parameter :: SPINUPflag= 0
+integer(kind= dp), parameter :: SPINUPflag= 1
 
 ! Define I/O paths:
 character(*), parameter :: Densitydatadir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDensityInput/'
 
 !if (SPINUPflag == 1) then
-  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
+  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataSpinUp/'
 !end if
 !if (SPINUPflag == 0) then
-  character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
+  !character(*), parameter :: dataexportdir= '/Users/robertalbarran/Desktop/KAOS_M1/KAOSDataOutput/'
 !end if
 
 ! ----------------- PHYSICAL CONSTANTS -----------------
@@ -44,10 +44,9 @@ real(kind= dp), parameter :: melec= 9.109d-31 ! Electron mass [kg]
 
 ! ----------------- TIME PARAMETERS -----------------
 
-!HERE00
 real(kind= dp), parameter :: A= 0d0 ! Start time [s]
-real(kind= dp), parameter :: B= 18000d0 ! 25200d0 ! 14400d0 ! (25200 for W0F, 18000d0 for W0 sims, 14400d0 for VV0, VV0F sims) End time [s]
-integer(kind= dp), parameter :: Nt= 3d4 ! 2d4 ! 0.2d4 ! Total number of time-steps
+real(kind= dp), parameter :: B= (25d0)*3600d0 ! 25200d0 ! 14400d0 ! (25200 for W0F, 18000d0 for W0 sims, 14400d0 for VV0, VV0F sims) End time [s]
+integer(kind= dp), parameter :: Nt= 5d5 ! 2d4 ! 0.2d4 ! Total number of time-steps
 
 ! ----------------- ION SIMULATION FLAGS -----------------
 
@@ -77,22 +76,19 @@ integer(kind= dp), parameter :: UBCONDITIONflag= 0
 ! Replenish uppwer boundary ion density on statistical time-steps (leave =0)
 integer(kind= dp), parameter :: UBREPLENISHflag= 0
 
-! Set intial density to altitude profile (=1) or only on lower boundary (=0) (leave =1)
-integer(kind= dp), parameter :: DENSITYPROFILEflag= 1
-
 ! Set initial velocities of injected ions equal to zero (leave =0)
 integer(kind= dp), parameter :: STATICINJECTIONflag= 0
 
 ! ----------------- ION FORCE FLAGS -----------------
 
 ! Set wave-particle interactions
-integer(kind= dp), parameter :: ICRflag= 1
+integer(kind= dp), parameter :: ICRflag= 0
 
 ! Set coherent wave-particle interactions
 integer(kind= dp), parameter :: ICRCOHERENCEflag= 0
 
 ! Set mirror-force
-integer(kind= dp), parameter :: MIRRORflag= 1
+integer(kind= dp), parameter :: MIRRORflag= 0
 
 ! Set gravitational force
 integer(kind= dp), parameter :: GRAVflag= 1
@@ -113,10 +109,10 @@ integer(kind= dp), parameter :: EAINERTIALflag= 0
 integer(kind= dp), parameter :: EAPRESSUREflag= 1
 
 ! Set parallel electric field
-integer(kind= dp), parameter :: EPARflag= 1
+integer(kind= dp), parameter :: EPARflag= 0
 
 ! Set flux-tube convection:
-integer(kind= dp), parameter :: CONVECTIONflag= 0
+integer(kind= dp), parameter :: CONVECTIONflag= 1
 
 ! Set dynamic configuration-space and statistical time-step:
 integer(kind= dp), parameter :: DYNAMICGRIDflag= 0
@@ -169,12 +165,11 @@ integer(kind= dp), parameter :: ENANOISEflag= 0
 ! Define number of particle species and flux tubes
 integer(kind= dp), parameter :: Stot= 1d0 ! Number of particle species
 integer(kind= dp), parameter :: Nf= 1d0 ! Number of flux tubes per species
-real(kind= dp), parameter :: LshellIC= 10d0 ! Initial L-shell
-real(kind= dp), parameter :: phiLshellIC= pi/2d0 ! Initial L-shell longitude
+real(kind= dp), parameter :: LshellIC= 10d0 ! Initial L-shell [RE]
+real(kind= dp), parameter :: phiLshellIC= pi/2d0 ! Initial L-shell longitude [rads]
 real(kind= dp), parameter :: qGAIC= 0.6d0 ! Set lower boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
 real(kind= dp), parameter :: qGBIC= 0.1d0 ! Set upper boundary q value (< for South Magnetic Hemisphere and > for North Magnetic Hemisphere)
 
-integer(kind= dp) :: SMagHemFlag
 real(kind= dp), parameter :: mO= (16d0)*(1.66054d-27) ! O+ mass [kg]
 real(kind= dp), parameter :: qO= 1.602d-19 ! O+ Charge [C]
 
@@ -186,8 +181,6 @@ integer(kind= dp), parameter :: ddVpar= 1d0 ! dVpar length of config cells
 integer(kind= dp), parameter :: ddVp= 1d0 ! dVp length of config cells
 integer(kind= dp), parameter :: ddVq= 1d0 ! dVq length of config cells
 integer(kind= dp), parameter :: ddVphi= 1d0 ! dVphi length of config cells
-
-integer(kind= dp) :: NqGpF ! Preliminary number of Q Grid Cells (including lower and upper boundary ghost cells i.e. +3)
 
 real(kind= dp), parameter :: NVparGpF= 30d0 ! Preliminary number of Vpar Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)
 real(kind= dp), parameter :: NVperpGpF= 30d0 ! Preliminary number of Vperp Grid Cells (even (div by 2 odd) for +/- log10 Vpar grid) (+ 3)

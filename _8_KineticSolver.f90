@@ -63,13 +63,13 @@ contains
 					! UPDATE ELECTRON TEMPERATURE IN TIME:
 					! Note: This is needed for KineticSolverA and B, below.
 
-					do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+					KSTeloop: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 						if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
 							(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 
 							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 								if ((n == 1) .and. (nn == 1)) then
-									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%Te0T(Qind)
+									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%TeGT(nn, Qind)
 								else
 									if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn) < dNTeEND) then
 										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn- 1)+ dNTe
@@ -79,8 +79,11 @@ contains
 									end if
 								end if
 							end do
+
+							exit KSTeloop
+
 						end if
-					end do
+					end do KSTeloop
 
 					! ----------------------------------------------------
 
@@ -170,12 +173,12 @@ contains
 					! UPDATE TIME PARAMETER AT INITIAL AND ALL OTHER TIME:
 
 					if (n == 1) then
-						Time(1)= (n- 1d0)*SpecieT(s)%FluxTubeT(f)%hT(1)
+						Time(1)= (n- 1d0)*SpecieT(s)%hT
 					else if (n /= 1) then
 						Time(1)= TimeN(1)
 					end if
 
-					TimeN(1)= (n+ dt)*SpecieT(s)%FluxTubeT(f)%hT(1)
+					TimeN(1)= (n+ dt)*SpecieT(s)%hT
 
 					! ----------------------------------------------------
 
@@ -188,7 +191,7 @@ contains
 					end if
 
 					if ((n == SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
-						(abs(Time(1)- SpecieT(s)%FluxTubeT(f)%BT(1)) > 1d-6)) then
+						(abs(Time(1)- SpecieT(s)%BT) > 1d-6)) then
 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' FINAL TIME DOES', &
 							' NOT EQUAL B FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND TIME-STEP= ', &
 							n, ' IN KINETIC SOLVER SUBROUTINE' // achar(27) // '[0m.'

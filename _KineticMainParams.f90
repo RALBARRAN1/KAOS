@@ -33,7 +33,8 @@ character(10) :: rankstring
 ! Define all running indices
 integer(kind= dp) :: s, f, Qind, FAindIC, Vperp1ind, Vperp2ind, Vperpind, Vparind, Vpind, Vqind, Vphiind, &
 	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2, nnind, INITIALGRIDflag
-character(50) :: Nsstring, Lshellstring, phiLshellstring, ndatfacstring, sstring, fstring, Qindstring, Vperp1indstring, &
+character(50) :: Nsstring, rLBstring, rUBstring, Lshellstring, phiLshellstring, ndatfacstring, &
+	sstring, fstring, Qindstring, Vperp1indstring, &
 	Vperp2indstring, Vperpindstring, Vparindstring, &
 	Vpindstring, Vqindstring, Vphiindstring, nnstring, jstring, expstring, &
 	paramstring, pdriftmaxstring, pdriftmeanstring, Timestring
@@ -52,12 +53,17 @@ character(50) :: ToTsGTring, S1string, S2string, S3string, S4string, S5string, &
 
 real(kind= dp) :: NVperp1GpF, NVperp2GpF
 integer(kind= dp) :: VperpNlinRange, Vperp12NlinRange, VparNlinRange, VpphiNlinRange, VqNlinRange
-real(kind= dp), dimension(1) :: ns0, zns0Neut, ns0Neut
+real(kind= dp), dimension(1) :: nsnormfac, ns0, zns0Neut, ns0Neut
 real(kind= dp), dimension(1) :: VperpsigmaFac, VparsigmaFac, Ti, Te, TNeut, Lshell, phiLshell, qGA, qGB
 real(kind= dp) :: NVpGpF, NVqGpF, NVphiGpF
 real(kind= dp) :: VpphisigmaFac, VqsigmaFac
 real(kind= dp) :: TsPerp, TsPar, Vperp12sigma, Vperpsigma, Vparsigma
 real(kind= dp) :: mNeut, Vpphisigma, Vqsigma
+real(kind= dp), dimension(:), allocatable :: qGC0, hqC0, dpC0, dqC0, dphiC0, rGC0, phiGC0, thetaGC0, ellGC0, &
+	qGL0, qGH0, pGC0, d3xC0, TsPerp0, TsPar0, Ts0, hpC0, hphiC0, Te0
+integer(kind= dp), dimension(:), allocatable :: nsnormC0, nsnormCNeut0
+
+real(kind= dp), dimension(1) :: ndatfacG, nsnormCLBG, nsnormCUBG
 
 ! ----------------- 0_1 GRID DIPOLE POLYNOMIAL SOLVER -----------------
 
@@ -83,7 +89,7 @@ real(kind= dp), parameter :: hVperp= 1d0
 real(kind= dp), parameter :: hVpar= 1d0
 
 ! Define imported reference density parameters
-integer(kind= dp) :: nsnormCLBInput, nsnormCUBInput
+real(kind= dp) :: nsnormCLBInput, nsnormCUBInput
 integer(kind= dp) :: LBREPLENISHflagInput, UBREPLENISHflagInput
 real(kind= dp), dimension(:), allocatable :: DensityInput, TemperatureInput, &
 	EAInertialInput, EAPressureInput, EAmagInput
@@ -91,15 +97,9 @@ integer(kind= dp) :: NqLBp, NqUBp
 
 ! Define all simulation time parameters
 real(kind= dp), dimension(1) :: h
-integer(kind= dp), dimension(1) :: NNtp, Q0ndatfac
+integer(kind= dp), dimension(1) :: NNtp
 real(kind= dp), dimension(1) :: IonNoiseLimit, ENANoiseLimit
 integer(kind= dp), parameter :: dt= 1d0
-
-! Define range of configuration-space field-aligned grid cells
-integer(kind= dp), dimension(1) :: NqIC
-
-! Define drift limits over each time-step and on entire simulation duration
-real(kind= dp), dimension(1) :: pdriftLim, rdriftLim, thetadriftLim, phidriftLim
 
 ! Define reference parallel potential drop parameters
 real(kind= dp), dimension(1) :: EPar0p
@@ -114,14 +114,13 @@ integer(4) :: ranksizep
 
 ! Define ion density normalization constant and ion scale-height density profile variables
 real(kind= dp), dimension(:), allocatable :: ICbbp
-real(kind= dp), dimension(1) :: ICbb, IC0bb, gC, argC, nsC, nsnormC
+real(kind= dp), dimension(1) :: ICbb, IC0bb, gC, argC, nsC
 real(kind= dp), dimension(1) :: gCNeut, argCNeut, nsCNeut, nsnormCNeut
 integer(kind= dp), dimension(1) :: NsFARR, NsFARRpTSum
 integer(kind= dp), dimension(:), allocatable :: NsFARRp, NsFARRpTMP
 integer(kind= dp), dimension(1) :: NsRR
 real(kind= dp), dimension(1) :: Ns, NsR
-integer(kind= dp), dimension(1) :: NsRRTot, nsnormCLB, nsnormCUB
-integer(kind= dp), dimension(:), allocatable :: nsnormCNeut0
+real(kind= dp), dimension(1) :: NsRRTot
 integer(kind= dp), dimension(:), allocatable :: NsRRTotpp
 integer(kind= dp), dimension(1) :: NsTqind, NsTFAind
 real(kind= dp), dimension(1) :: NsFAp, NsFARp
@@ -354,7 +353,7 @@ character(50) :: RNtest1file, RNtest2file, NsnTfile, NsnRRTfile, NqLBoutfluxIonR
 	M1QphENARTfile, M1PHIphENARTfile, M2phENARTfile, M2PphENARTfile, M2QphENARTfile, M2PHIphENARTfile, &
 	PhiParRTfile, EAInertialRTfile, EAPressureRTfile, EAmagRTfile, EGmagRTfile, EPmagRTfile, &
 	M0FiltAvrgRTfile, M1Perp1FiltAvrgRTfile, M1Perp2FiltAvrgRTfile, M1ParFiltAvrgRTfile, M2ParFiltAvrgRTfile, &
-	nsnormCLBTfile, nsnormCUBTfile, DensityOutputRTfile, TemperatureOutputRTfile, &
+	nsnormCLBGTfile, nsnormCUBGTfile, DensityOutputRTfile, TemperatureOutputRTfile, &
 	EAInertialOutputRTfile, EAPressureOutputRTfile, EAmagOutputRTfile, &
 	LBREPLENISHflagTfile, UBREPLENISHflagTfile, ndatfacGTfile, ns0GTfile, qGCGTfile, pGCGTfile, &
 	rGCGTfile, phiGCGTfile, thetaGCGTfile, TsGTfile, NqLBTfile, NqUBTfile
@@ -415,15 +414,10 @@ type QCellICtype ! Config-space initialization grid cell derived data type: rank
 
 end type QCellICtype
 
-type QCell0type ! Config-space initialization grid cell derived data type: rank 1, indices [s, f, Qind0]
-	! Simulation Parameterization:
-	real(kind= dp), dimension(1) :: qGC0T, hqC0T, dpC0T, dqC0T, dphiC0T, rGC0T, phiGC0T, thetaGC0T, ellGC0T, &
-		qGL0T, qGH0T, pGC0T, d3xC0T, TsPerp0T, TsPar0T, Ts0T
-	! Density Profile A:
-	real(kind= dp), dimension(1) :: nsnormCT
-	real(kind= dp), dimension(1) :: nsnormCNeut0T
+!type QCell0type ! Config-space initialization grid cell derived data type: rank 1, indices [s, f, Qind0]
 
-end type QCell0type
+
+!end type QCell0type
 
 type QCelltype ! Config-space grid cell derived data type: rank 1, indices [s, f, Qind]
   ! Simulation Parameterization:
@@ -461,20 +455,15 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
   ! Simulation Parameterization:
 	real(kind= dp), dimension(1) :: nsnormfacT
 	integer(kind= dp), dimension(1) :: NqGpT, NqGT, NqGTp, NqG0T
-	real(kind= dp), dimension(:), allocatable :: hpC0T, hphiC0T, &
-		Te0T, rGL0T, rGH0T, thetaGL0T, thetaGH0T, ellGL0T, ellGH0T, &
-		xGC0T, xGL0T, xGH0T, yGC0T, yGL0T, yGH0T, zGC0T, zGL0T, zGH0T
-	integer(kind= dp), dimension(1) :: nsnormCLBInputT, nsnormCUBInputT
-	real(kind= dp), dimension(:, :), allocatable :: dsICRGT
-	real(kind= dp), dimension(:), allocatable :: LBNominalDensityGT, UBNominalDensityGT, ns0GT, &
-		d3xCLBGT, d3xCUBGT, sigmaLBGT, sigmaUBGT
-	real(kind= dp), dimension(1) :: AT, BT, hT
-	integer(kind= dp), dimension(1) :: NtT, NNtT
+	real(kind= dp), dimension(:), allocatable :: nsnormCGT
+	real(kind= dp), dimension(:), allocatable :: nsnormCLBGT, nsnormCUBGT
+	real(kind= dp), dimension(1) :: nsnormCLBInputT, nsnormCUBInputT
+	integer(kind= dp), dimension(1) :: NtT, NNtT, Q0ndatfacT
 	integer(kind= dp), dimension(:), allocatable :: ndatfacGT
 	real(kind= dp), dimension(1) :: IonNoiseLimitT, ENANoiseLimitT
 	integer(kind= dp), dimension(1) :: IONNOISEflagT, FLUIDIONEXPORTflagT, FLUIDENAEXPORTflagT, &
 		LBCONDITIONflagT, UBCONDITIONflagT, LBREPLENISHflagT, UBREPLENISHflagT, &
-		DENSITYPROFILEflagT, STATICINJECTIONflagT, SPINUPflagT, &
+		STATICINJECTIONflagT, SPINUPflagT, &
 		ICRflagT, ICRCOHERENCEflagT, MIRRORflagT, GRAVflagT, EAMBSELFCONSISTflagT, EAMBSIGNflagT, EAMBflagT, &
 		EAINERTIALflagT, EAPRESSUREflagT, MOMENTFILTERflagT, EPARflagT, CONVECTIONflagT, DYNAMICGRIDflagT, &
 		SYMVPARflagT, ION2VPERPflagT, PHASEIONDISTRIBflagT, PHASEDENSITYIONMOMENTflagT, &
@@ -483,15 +472,13 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 		PHASEENERGYPARIONMOMENTCENTERflagT, FLUIDIONREFflagT, &
 		ENANOISEflagT, QEXCHANGEflagT
 	integer(kind= dp), dimension(1) :: NqLBT, NqUBT, NqICT
-	real(kind= dp), dimension(1) :: pdriftLimT, rdriftLimT, thetadriftLimT, &
-		phidriftLimT
 	real(kind= dp), dimension(1) :: PhiPar0BT
 	real(kind= dp), dimension(:, :), allocatable :: lambdaPerppT, EtaLHpT, XiPerp1pT, XiPerp2pT, S0pT, &
 		OmegaG0pT, ChiPerp1pT, ChiPerp2pT
 	! Density Profile A:
 	real(kind= dp), dimension(:, :), allocatable :: qGCGT, hqCGT, dpCGT, dqCGT, dphiCGT, rGCGT, phiGCGT, thetaGCGT, ellGCGT, &
-		qGLGT, qGHGT, pGCGT, d3xCGT, TsPerpGT, TsParGT, TsGT, nsnormCNeutGT
-	integer(kind= dp), dimension(1) :: nsnormCLBT, nsnormCUBT
+		qGLGT, qGHGT, pGCGT, d3xCGT, TsPerpGT, TsParGT, TsGT, TeGT, nsnormCNeutGT
+	real(kind= dp), dimension(:, :), allocatable :: dsICRGT
 	integer(kind= dp), dimension(:), allocatable :: NsFARRpT, NsFApT, NsFARpT
 	integer(kind= dp), dimension(1) :: NsRRT, NsRT, NsT
 	integer(kind= dp), dimension(:), allocatable :: NsnT, NsnRRT
@@ -544,11 +531,12 @@ type FluxTubetype ! Flux tube number derived data type: rank 1, indices [s, f]
 
 	type(QCellICtype), dimension(:), allocatable :: QCellICT
 	type(QCelltype), dimension(:), allocatable :: QCellT
-	type(QCell0type), dimension(:), allocatable :: QCell0T
+	!type(QCell0type), dimension(:), allocatable :: QCell0T
 end type FluxTubetype
 
 type Specietype ! Particle species number derived data type: rank 1, index [s]
  	! Simulation Parameterization:
+	real(kind= dp) :: AT, BT, hT
   integer(kind= dp), dimension(1) :: NfT
   real(kind= dp), dimension(1) :: msT, qsT
 	integer(kind= dp), dimension(1) :: Qindns0GT

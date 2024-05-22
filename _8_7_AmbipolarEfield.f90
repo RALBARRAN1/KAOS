@@ -192,7 +192,7 @@ contains
 
 									EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
 										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
-										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 										(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -216,7 +216,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -234,7 +234,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -254,7 +254,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -272,7 +272,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -302,7 +302,7 @@ contains
 
 									!EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
 									!	abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
-									!	(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+									!	(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									!EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 									!	abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 									!	(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -328,7 +328,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -346,7 +346,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -366,7 +366,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -384,7 +384,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -416,7 +416,7 @@ contains
 
 									EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
 										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
-										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 										(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -437,7 +437,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -452,7 +452,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -469,7 +469,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -484,7 +484,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -512,7 +512,7 @@ contains
 
 									EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
 										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
-										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 										(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -535,7 +535,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -552,7 +552,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -571,7 +571,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn- 1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(nn, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -588,7 +588,7 @@ contains
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(2, Qind)- &
 												SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))/ &
-												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%FluxTubeT(f)%hT(1))
+												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
 												abs(SpecieT(s)%FluxTubeT(f)%M1ParFiltAvrgRT(1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
@@ -2730,27 +2730,27 @@ contains
 
 		! ----------------------------------------------------
 
-		if (SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 1) then
-		 do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			 if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-				 (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
-				 do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-					 if (rank == 0) then
-						 if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0) then
-							 write(*, *) 'EAmagRT s, f, nn, Qind= ', s, f, nn, Qind, &
-								 SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, Qind)
-						 end if
-					 end if
-				 end do
-			 end if
-		 end do
+		!if (SpecieT(s)%FluxTubeT(f)%EAMBflagT(1) == 1) then
+		! do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+		!	 if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
+		!		 (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
+		!		 do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+		!			 if (rank == 0) then
+		!				 if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0) then
+		!					 write(*, *) 'EAmagRT s, f, nn, Qind= ', s, f, nn, Qind, &
+		!						 SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, Qind)
+		!				 end if
+		!			 end if
+		!		 end do
+		!	 end if
+		! end do
 			!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			!	if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
 			!		 (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 					 !write(*, *) 'AEAmagN s, f= ', s, f, AEAmagN(:)
 			!	end if
 			!end do
-		end if
+		!end if
 
 		! ----------------------------------------------------
 
