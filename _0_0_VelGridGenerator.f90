@@ -224,11 +224,11 @@ contains
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGpT(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGpT(1)- 1d0
         SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)- 1d0
 
-        if (SMagHemFlag == 0) then
+        if (qGA(1) > 0d0) then ! Northern Magnetic Hemisphere
           SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGpT(:)= &
             SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGp1T(:)
         end if
-        if (SMagHemFlag == 1) then
+        if (qGA(1) <= 0d0) then ! Southern Magnetic Hemisphere
           do Vparind= 1, VparNlinRange, 1
             if (Vparind == 1) then
               SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VparGpT(Vparind)= &
@@ -683,11 +683,11 @@ contains
           SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGpT(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGpT(1)- 1d0
           SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1)= SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVqGT(1)- 1d0
 
-          if (SMagHemFlag == 0) then
+          if (qGA(1) > 0d0) then ! Northern Magnetic Hemisphere
             SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VqGpT(:)= &
               SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VqGp1T(:)
           end if
-          if (SMagHemFlag == 1) then
+          if (qGA(1) <= 0d0) then ! Southern Magnetic Hemisphere
             do Vqind= 1, VqNlinRange, 1
               if (Vqind == 1) then
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%VqGpT(Vqind)= &
@@ -781,32 +781,26 @@ contains
               ! Spherical velocity components
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)= &
                 2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1)* &
-                cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))+ &
+                cos(thetaGC0(Qind))/sqrt(ellGC0(Qind))+ &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)* &
-                sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
+                sin(thetaGC0(Qind))/sqrt(ellGC0(Qind))
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)= &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VqGCGT(1)* &
-                sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))- &
+                sin(thetaGC0(Qind))/sqrt(ellGC0(Qind))- &
                 2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)* &
-                cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
+                cos(thetaGC0(Qind))/sqrt(ellGC0(Qind))
               SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VellGCGT(1)= &
-                (1d0+ 3d0*((cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1)))**2d0))
+                (1d0+ 3d0*((cos(thetaGC0(Qind)))**2d0))
 
               ! Test dipole velocity components
-              VpGCGTest= &
-                SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
-                sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
-                sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))- &
+              VpGCGTest= SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
+                sin(thetaGC0(Qind))/sqrt(ellGC0(Qind))- &
                 2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)* &
-                cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
-                sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
-              VqGCGTest= &
-                2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
-                cos(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
-                sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))+ &
+                cos(thetaGC0(Qind))/sqrt(ellGC0(Qind))
+              VqGCGTest= 2d0*SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VrGCGT(1)* &
+                cos(thetaGC0(Qind))/sqrt(ellGC0(Qind))+ &
                 SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VthetaGCGT(1)* &
-                sin(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%thetaGC0T(1))/ &
-                sqrt(SpecieT(s)%FluxtubeT(f)%QCell0T(Qind)%ellGC0T(1))
+                sin(thetaGC0(Qind))/sqrt(ellGC0(Qind))
 
               if (abs(SpecieT(s)%FluxtubeT(f)%QCellT(Qind)%V3CellT(Vpind, Vqind, Vphiind)%VpGCGT(1)- VpGCGTest) .gt. 1d-6) then
                 write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BAD VpGCGTest VALUE', &

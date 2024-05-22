@@ -1357,9 +1357,11 @@ contains
 						write(nnstring, '(I5)') nn
 						write(sstring, '(I5)') s
 						write(fstring, '(I5)') f
-						write(Timestring, '(D10.2)') (Time(1))
-						write(KS0string, '(D10.2)')  (KS0End)
+						write(Timestring, '(D10.2)') (Time(1)/3600d0)
+						write(KS0string, '(D10.2)')  (KS0End/3600d0)
 						write(Lshellstring, '(D10.2)')  Lshell(1)
+						write(rLBstring, '(D10.2)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+						write(rUBstring, '(D10.2)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1e-3
 						write(phiLshellstring, '(D10.2)')  phiLshell(1)
 						write(ndatfacstring, '(i10)')  SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)
 						write(*, *) trim('** COMPLETE: STATISTICAL TIME-STEP= ' &
@@ -1368,10 +1370,12 @@ contains
 							trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
 							trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
 							trim(', SIM-TIME= ' // adjustl(Timestring)) // &
-							trim(' s., REAL-TIME= ' // adjustl(KS0string)) // &
-							trim(' s., TOTAL PARTICLE NUMBER= ' // adjustl(Nsstring)) // &
-							trim(', Lshell [RE]= ' // adjustl(Lshellstring)) // &
-							trim(', Lshell longitude [rads]= ' // adjustl(phiLshellstring)) // &
+							trim(' hrs., REAL-TIME= ' // adjustl(KS0string)) // &
+							trim(' hrs., TOTAL PARTICLE NUMBER= ' // adjustl(Nsstring)) // &
+							trim(', LB altitude [km]= ' // adjustl(rLBstring)) // &
+							trim(', UB altitude [km]= ' // adjustl(rUBstring)) // &
+							trim(', L-shell [RE]= ' // adjustl(Lshellstring)) // &
+							trim(', Invariant Longitude [rads]= ' // adjustl(phiLshellstring)) // &
 							trim(', ndatfac = ' // adjustl(ndatfacstring))
 					end if
 				end if

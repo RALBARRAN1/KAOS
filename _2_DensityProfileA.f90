@@ -10,7 +10,6 @@ module DensityProfileA
 
 use KineticMainParams
 use DensityProfileA1
-use DensityProfileA2
 
 ! ----------------------------------------------------
 
@@ -28,12 +27,7 @@ contains
 
 		! ----------------------------------------------------
 
-		if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 1) then
-			call DensityProfileA1Sub
-		end if
-		if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 0) then
-			call DensityProfileA2Sub
-		end if
+		call DensityProfileA1Sub
 
 		! ----------------------------------------------------
 
@@ -51,15 +45,13 @@ contains
 						' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
 				end if
 
-				if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 0) then
-					if (rank == 0) then
-						if (sum(SpecieT(s)%FluxTubeT(f)%NsFARpT(:)) /= SpecieT(s)%FluxTubeT(f)%NsRRT(1)) then
-							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-								' INCONSISTENT CONFIG-SPACE PARTICLE NUMBER SUMMATION= ', sum(SpecieT(s)%FluxTubeT(f)%NsFARpT(:)), &
-								' AND TOTAL PARTICLE NUMBER= ', SpecieT(s)%FluxTubeT(f)%NsRRT(1), &
-								' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
-								' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
-						end if
+				if (rank == 0) then
+					if (sum(SpecieT(s)%FluxTubeT(f)%NsFARpT(:)) /= SpecieT(s)%FluxTubeT(f)%NsRRT(1)) then
+						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+							' INCONSISTENT CONFIG-SPACE PARTICLE NUMBER SUMMATION= ', sum(SpecieT(s)%FluxTubeT(f)%NsFARpT(:)), &
+							' AND TOTAL PARTICLE NUMBER= ', SpecieT(s)%FluxTubeT(f)%NsRRT(1), &
+							' FOR SPECIE= ', s, ', AND FLUX TUBE= ', f, &
+							' IN DENSITY PROFILE A SUBROUTINE' // achar(27) // '[0m.'
 					end if
 				end if
 			end do
@@ -78,17 +70,15 @@ contains
 					write(*, *)
 					write(paramstring, '(i10)') sum(SpecieT(s)%FluxTubeT(f)%NsFARpT(:))
 					write(*, *) trim('Cluster Total Initial Ion Macro-particle Number= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') nsnormCLB(1)
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(1)
 					write(*, *) trim('Cluster LB Nominal Injection Macro-particle Number= ' // adjustl(paramstring))
-					write(paramstring, '(i10)') nsnormCUB(1)
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(1)
 					write(*, *) trim('Cluster UB Nominal Injection Macro-particle Number= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsT(1)
 					write(*, *) trim('Root Rank Total Initial Ion Macro-particle Number= ' // adjustl(paramstring))
 
-					if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 1) then
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)
-						write(*, *) trim('Macro-particle Normalization Constant= ' // adjustl(paramstring))
-					end if
+					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)
+					write(*, *) trim('Macro-particle Normalization Constant= ' // adjustl(paramstring))
 				end if
 			end do
 		end do

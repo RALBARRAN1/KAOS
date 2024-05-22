@@ -276,7 +276,7 @@ contains
 
   				! Mean number of ion-neutral collisions per time-step interval (unitless)
 					nuIonNeutM(1)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(nn, Qind)* &
-  					SpecieT(s)%FluxTubeT(f)%sigmaIonNeutRT(nn, Qind)*VelIonNeut(1)*SpecieT(s)%FluxTubeT(f)%hT(1)
+  					SpecieT(s)%FluxTubeT(f)%sigmaIonNeutRT(nn, Qind)*VelIonNeut(1)*SpecieT(s)%hT
 
   				! Poisson distributed number of total ion-neutral collisions per time-step interval (unitless)
 					MeanPoisson(1)= nuIonNeutM(1)
@@ -307,7 +307,7 @@ contains
   			! ENSURE COMPUTATIONAL TIME-STEP RESOLVES ION-NEUTRAL COLLISION FREQUENCIES:
 
   			!if ((1d0/(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)) > 1d-10) .and. &
-        !  (SpecieT(s)%FluxTubeT(f)%hT(1) >= 1d0/(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)))) then
+        !  (SpecieT(s)%hT >= 1d0/(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)))) then
   			!	write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' COMPUTATIONAL ', &
   			!		' TIME-STEP IS GREATER OR EQUAL TO 1/nuIonNeutRT= ', &
   			!		1d0/(SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind)), ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &

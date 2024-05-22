@@ -56,7 +56,7 @@ contains
 			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
 				adjustl(adjustr(ns0GTfile))), &
 				status= 'replace', form= 'unformatted', access= 'stream')
-			write(expint) SpecieT(s)%FluxTubeT(f)%ns0GT(nn)
+			write(expint) ns0(1)
 			close(expint)
 
 			qGCGTfile= adjustl(adjustr(expstring) // adjustl(adjustr('qGCGTfort.bin')))
@@ -770,20 +770,20 @@ contains
 			write(expint) SpecieT(s)%FluxTubeT(f)%EAmagOutputRT(:)
 			close(expint)
 
-			nsnormCLBTfile= adjustl(adjustr(expstring) // &
+			nsnormCLBGTfile= adjustl(adjustr(expstring) // &
 				adjustl(adjustr('nsnormCLBOutputfort.bin')))
 			open(unit= expint, file= adjustl(adjustr(Densitydatadir) // &
-				adjustl(adjustr(nsnormCLBTfile))), status= 'replace', &
+				adjustl(adjustr(nsnormCLBGTfile))), status= 'replace', &
 				form= 'unformatted', access= 'stream')
-			write(expint) SpecieT(s)%FluxTubeT(f)%nsnormCLBT(1)
+			write(expint) SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(1)
 			close(expint)
 
-			nsnormCUBTfile= adjustl(adjustr(expstring) // &
+			nsnormCUBGTfile= adjustl(adjustr(expstring) // &
 				adjustl(adjustr('nsnormCUBOutputfort.bin')))
 			open(unit= expint, file= adjustl(adjustr(Densitydatadir) // &
-				adjustl(adjustr(nsnormCUBTfile))), status= 'replace', &
+				adjustl(adjustr(nsnormCUBGTfile))), status= 'replace', &
 				form= 'unformatted', access= 'stream')
-			write(expint) SpecieT(s)%FluxTubeT(f)%nsnormCUBT(1)
+			write(expint) SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(1)
 			close(expint)
 
 			LBREPLENISHflagTfile= adjustl(adjustr(expstring) // &

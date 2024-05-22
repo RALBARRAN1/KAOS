@@ -42,9 +42,9 @@ contains
 
 		! Compute x, y, z half time-step forward
 
-		xk2(1)= x(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/2d0)*VxR(1)
-		yk2(1)= y(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/2d0)*VyR(1)
-		zk2(1)= z(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/2d0)*VzR(1)
+		xk2(1)= x(j)+ (SpecieT(s)%hT/2d0)*VxR(1)
+		yk2(1)= y(j)+ (SpecieT(s)%hT/2d0)*VyR(1)
+		zk2(1)= z(j)+ (SpecieT(s)%hT/2d0)*VzR(1)
 
 		! ----------------------------------------------------
 
@@ -63,12 +63,12 @@ contains
 
 		! Compute x, y, z full time-step forward
 
-		xk4(1)= x(j)+ SpecieT(s)%FluxTubeT(f)%hT(1)*VxR(1)+ &
-			((SpecieT(s)%FluxTubeT(f)%hT(1)**2d0)/2d0)*Axk1(1)
-		yk4(1)= y(j)+ SpecieT(s)%FluxTubeT(f)%hT(1)*VyR(1)+ &
-			((SpecieT(s)%FluxTubeT(f)%hT(1)**2d0)/2d0)*Ayk1(1)
-		zk4(1)= z(j)+ SpecieT(s)%FluxTubeT(f)%hT(1)*VzR(1)+ &
-			((SpecieT(s)%FluxTubeT(f)%hT(1)**2d0)/2d0)*Azk1(1)
+		xk4(1)= x(j)+ SpecieT(s)%hT*VxR(1)+ &
+			((SpecieT(s)%hT**2d0)/2d0)*Axk1(1)
+		yk4(1)= y(j)+ SpecieT(s)%hT*VyR(1)+ &
+			((SpecieT(s)%hT**2d0)/2d0)*Ayk1(1)
+		zk4(1)= z(j)+ SpecieT(s)%hT*VzR(1)+ &
+			((SpecieT(s)%hT**2d0)/2d0)*Azk1(1)
 
 		! ----------------------------------------------------
 
@@ -82,11 +82,11 @@ contains
 		k4Vy(1)= Ayk4(1)
 		k4Vz(1)= Azk4(1)
 
-		VxNp(1)= VxR(1)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1Vx(1)+ 2d0*k2Vx(1)+ &
+		VxNp(1)= VxR(1)+ (SpecieT(s)%hT/6d0)*(k1Vx(1)+ 2d0*k2Vx(1)+ &
 			2d0*k3Vx(1)+ k4Vx(1)) ! Compute VxN values
-		VyNp(1)= VyR(1)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1Vy(1)+ 2d0*k2Vy(1)+ &
+		VyNp(1)= VyR(1)+ (SpecieT(s)%hT/6d0)*(k1Vy(1)+ 2d0*k2Vy(1)+ &
 			2d0*k3Vy(1)+ k4Vy(1)) ! Compute VyN values
-		VzNp(1)= VzR(1)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1Vz(1)+ 2d0*k2Vz(1)+ &
+		VzNp(1)= VzR(1)+ (SpecieT(s)%hT/6d0)*(k1Vz(1)+ 2d0*k2Vz(1)+ &
 			2d0*k3Vz(1)+ k4Vz(1)) ! Compute VzN values
 
 		! ----------------------------------------------------
@@ -125,9 +125,9 @@ contains
 		k1y(1)= VyR(1)
 		k1z(1)= VzR(1)
 
-		Vxk2(1)= VxR(1)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/2d0)*Axk1(1) ! Compute Vx, Vy, Vz half-step forward
-		Vyk2(1)= VyR(1)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/2d0)*Ayk1(1)
-		Vzk2(1)= VzR(1)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/2d0)*Azk1(1)
+		Vxk2(1)= VxR(1)+ (SpecieT(s)%hT/2d0)*Axk1(1) ! Compute Vx, Vy, Vz half-step forward
+		Vyk2(1)= VyR(1)+ (SpecieT(s)%hT/2d0)*Ayk1(1)
+		Vzk2(1)= VzR(1)+ (SpecieT(s)%hT/2d0)*Azk1(1)
 
 		k2x(1)= Vxk2(1) ! Compute k2 values
 		k2y(1)= Vyk2(1)
@@ -136,9 +136,9 @@ contains
 		k3y(1)= Vyk2(1)
 		k3z(1)= Vzk2(1)
 
-		Vxk4(1)= VxR(1)+ SpecieT(s)%FluxTubeT(f)%hT(1)*Axk2(1)
-		Vyk4(1)= VyR(1)+ SpecieT(s)%FluxTubeT(f)%hT(1)*Ayk2(1)
-		Vzk4(1)= VzR(1)+ SpecieT(s)%FluxTubeT(f)%hT(1)*Azk2(1)
+		Vxk4(1)= VxR(1)+ SpecieT(s)%hT*Axk2(1)
+		Vyk4(1)= VyR(1)+ SpecieT(s)%hT*Ayk2(1)
+		Vzk4(1)= VzR(1)+ SpecieT(s)%hT*Azk2(1)
 
 		k4x(1)= Vxk4(1) ! Compute k4 values
 		k4y(1)= Vyk4(1)
@@ -149,11 +149,11 @@ contains
 		! UPDATE NEW ION POSITIONS ON CORRECT L-SHELL:
 
 		if (ENAflag(j) .eqv. .false.) then
-			xNp(1)= x(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1x(1)+ 2d0*k2x(1)+ 2d0*k3x(1)+ k4x(1))
+			xNp(1)= x(j)+ (SpecieT(s)%hT/6d0)*(k1x(1)+ 2d0*k2x(1)+ 2d0*k3x(1)+ k4x(1))
 				! Compute xNp values
-			yNp(1)= y(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1y(1)+ 2d0*k2y(1)+ 2d0*k3y(1)+ k4y(1))
+			yNp(1)= y(j)+ (SpecieT(s)%hT/6d0)*(k1y(1)+ 2d0*k2y(1)+ 2d0*k3y(1)+ k4y(1))
 				! Compute yNp values
-			zNp(1)= z(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1z(1)+ 2d0*k2z(1)+ 2d0*k3z(1)+ k4z(1))
+			zNp(1)= z(j)+ (SpecieT(s)%hT/6d0)*(k1z(1)+ 2d0*k2z(1)+ 2d0*k3z(1)+ k4z(1))
 				! Compute zNp values
 
 			! Set displacement dr= ds and update new q position accordingly with reset p (and xN, yN, zN)
@@ -184,11 +184,11 @@ contains
 		! UPDATE NEW ENA POSITIONS:
 
 		if (ENAflag(j) .eqv. .true.) then
-			xN(j)= x(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1x(1)+ 2d0*k2x(1)+ 2d0*k3x(1)+ k4x(1))
+			xN(j)= x(j)+ (SpecieT(s)%hT/6d0)*(k1x(1)+ 2d0*k2x(1)+ 2d0*k3x(1)+ k4x(1))
 				! Compute xN values
-			yN(j)= y(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1y(1)+ 2d0*k2y(1)+ 2d0*k3y(1)+ k4y(1))
+			yN(j)= y(j)+ (SpecieT(s)%hT/6d0)*(k1y(1)+ 2d0*k2y(1)+ 2d0*k3y(1)+ k4y(1))
 				! Compute yN values
-			zN(j)= z(j)+ (SpecieT(s)%FluxTubeT(f)%hT(1)/6d0)*(k1z(1)+ 2d0*k2z(1)+ 2d0*k3z(1)+ k4z(1))
+			zN(j)= z(j)+ (SpecieT(s)%hT/6d0)*(k1z(1)+ 2d0*k2z(1)+ 2d0*k3z(1)+ k4z(1))
 				! Compute zN values
 		end if
 

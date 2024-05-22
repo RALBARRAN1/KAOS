@@ -202,8 +202,10 @@ contains
 					 	SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of LB escaped ions (unitless)
 					SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn)= & ! LB ion escape flux [m^-2 s-1]
 						SpecieT(s)%FluxTubeT(f)%NqLBoutfluxIonRT(nn)/ &
-						(SpecieT(s)%FluxTubeT(f)%sigmaLBGT(nn)* &
-						SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+						((SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))/ &
+						(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))* &
+						SpecieT(s)%FluxTubeT(f)%dqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))* &
+						SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%hT)
 
 					if (isnan(real(SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn))) .eqv. .true.) then
 						SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn)= 0d0
@@ -277,8 +279,10 @@ contains
 						NqUBoutfluxIonR(1)*SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of UB escaped ions (unitless)
 					SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn)= & ! UB ion escape flux [m^-2 s-1]
 						SpecieT(s)%FluxTubeT(f)%NqUBoutfluxIonRT(nn)/ &
-						(SpecieT(s)%FluxTubeT(f)%sigmaUBGT(nn)* &
-						SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+						((SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))/ &
+						(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))* &
+						SpecieT(s)%FluxTubeT(f)%dqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))* &
+						SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%hT)
 
 					if (isnan(real(SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn))) .eqv. .true.) then
 						SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn)= 0d0
@@ -356,8 +360,10 @@ contains
 						 	SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of LB escaped ENAs (unitless)
 						SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn)= & ! LB ENA escape flux [m^-2 s-1]
 							SpecieT(s)%FluxTubeT(f)%NqLBoutfluxENART(nn)/ &
-							(SpecieT(s)%FluxTubeT(f)%sigmaLBGT(nn)* &
-							SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+							((SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))/ &
+							(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))* &
+							SpecieT(s)%FluxTubeT(f)%dqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))* &
+							SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%hT)
 
 						if (isnan(real(SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn))) .eqv. .true.) then
 							SpecieT(s)%FluxTubeT(f)%LBoutfluxENART(nn)= 0d0
@@ -436,8 +442,10 @@ contains
 							NqUBoutfluxENAR(1)*SpecieT(s)%FluxTubeT(f)%nsnormfacT(1) ! Number of UB escaped ENAs (unitless)
 						SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn)= & ! UB ENA escape flux [m^-2 s-1]
 							SpecieT(s)%FluxTubeT(f)%NqUBoutfluxENART(nn)/ &
-							(SpecieT(s)%FluxTubeT(f)%sigmaUBGT(nn)* &
-							SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%FluxTubeT(f)%hT(1))
+							((SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))/ &
+							(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))* &
+							SpecieT(s)%FluxTubeT(f)%dqCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))* &
+							SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn- 1)*SpecieT(s)%hT)
 
 						if (isnan(real(SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn))) .eqv. .true.) then
 							SpecieT(s)%FluxTubeT(f)%UBoutfluxENART(nn)= 0d0
@@ -736,12 +744,8 @@ contains
 
 					! ----------------------------------------------------
 
-					if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 1) then
-						SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn)/ranksize(1))
-					end if
-					if (SpecieT(1)%FluxTubeT(1)%DENSITYPROFILEflagT(1) == 0) then
-						SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn)/ranksize(1))
-					end if
+					SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)= &
+						nint(SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn)/ranksize(1))
 
           dNsTK2(1)= SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn)
 
@@ -756,11 +760,12 @@ contains
 					end if
 
 					if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 0) then
-						if ((SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn) > SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn- 1)) &
+						if ((SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn) > &
+							SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn)) &
 							.and. (SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn) == 0d0)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT NET LB ION INJECTION DENSITY= ', &
 								SpecieT(s)%FluxTubeT(f)%LBNetDensityT(nn), ', NORMALIZED DENSITY= ', &
-								SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(nn- 1), &
+								SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn), &
 								' AND LB OUTFLUX= ', SpecieT(s)%FluxTubeT(f)%LBoutfluxIonRT(nn), &
 								' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND INJECTION TIME-STEP= ', &
 								nn, ' IN BOUNDARY CONDITIONS SUBROUTINE' // achar(27) // '[0m.'
@@ -798,7 +803,8 @@ contains
 
 					! ----------------------------------------------------
 
-					SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn)= nint(SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn)/ranksize(1))
+					SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn)= &
+						nint(SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(nn)/ranksize(1))
 
 					dNsTK3(1)= SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn)
 
@@ -807,11 +813,12 @@ contains
 					! DIAGNOSTICS FOR CONSISTENT UB ION INJECTION DENSITY:
 
 					if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 0) then
-						if ((SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn) > SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn- 1)) &
+						if ((SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn) > &
+							SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(nn)) &
 							.and. (SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn) == 0d0)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT NET UB ION INJECTION DENSITY= ', &
 								SpecieT(s)%FluxTubeT(f)%UBNetDensityT(nn), ', NORMALIZED DENSITY= ', &
-								SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(nn- 1), &
+								SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(nn), &
 								' AND UB OUTFLUX= ', SpecieT(s)%FluxTubeT(f)%UBoutfluxIonRT(nn), &
 								' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND INJECTION TIME-STEP= ', &
 								nn, ' IN BOUNDARY CONDITIONS SUBROUTINE' // achar(27) // '[0m.'

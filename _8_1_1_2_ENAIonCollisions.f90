@@ -122,7 +122,7 @@ contains
 !
 ! 			! ENSURE COMPUTATIONAL TIME-STEP RESOLVES ENA-ION COLLISION FREQUENCIES:
 !
-! 			! if (SpecieT(s)%FluxTubeT(f)%hT(1) >= tauENAIon(j)) then
+! 			! if (SpecieT(s)%hT >= tauENAIon(j)) then
 ! ! 						write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' COMPUTATIONAL ', &
 ! ! 							' TIME-STEP IS GREATER OR EQUAL TO tauIonNeut= ', &
 ! ! 							tauENAIon(j), ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
@@ -136,7 +136,7 @@ contains
 !
 ! 			! ----------------------------------------------------
 !
-! 			if (abs(n- ENAflagN1ind(j))*SpecieT(s)%FluxTubeT(f)%hT(1) &
+! 			if (abs(n- ENAflagN1ind(j))*SpecieT(s)%hT &
 ! 				>= tauENAIon(j)) then
 !
 ! 				ENAflag(j)= 0
@@ -178,7 +178,7 @@ contains
 !
 ! 				write(*, *) 'Secondary Ion produced'
 ! 				write(*, *) '(n-ENAflagN1ind)*h test= ', &
-! 					abs(n- ENAflagN1ind(j))*SpecieT(s)%FluxTubeT(f)%hT(1)
+! 					abs(n- ENAflagN1ind(j))*SpecieT(s)%hT
 ! 				write(*, *) 'tauENAIon test= ', &
 ! 					tauENAIon(j)
 !

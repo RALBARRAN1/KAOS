@@ -42,8 +42,7 @@ contains
 						! ----------------------------------------------------
 
 						! Number of particles in each FA cell
-						NsFARRp(Qind)= nint(SpecieT(s)%FluxTubeT(f)%QCell0T( &
-							SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1+ 1)%nsnormCT(1))
+						NsFARRp(Qind)= nint(SpecieT(s)%FluxTubeT(f)%nsnormCGT(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ Qind- 1))
 
 						NsFARR(1)= NsFARRp(Qind)
 
@@ -54,12 +53,12 @@ contains
 						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 							if (NsFARRp(Qind) /= nint((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%DensityInputT(1)/ &
 								SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))* &
-								(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1)))) then
+								(SpecieT(s)%FluxTubeT(f)%d3xCGT(1, Qind)))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NsFARRp= ', NsFARRp(Qind), &
 								  ' DOES NOT EQUAL DensityInputT= ', &
 									nint((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%DensityInputT(1)/ &
 									SpecieT(s)%FluxTubeT(f)%nsnormfacT(1))* &
-									(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%d3xC0T(1))), &
+									(SpecieT(s)%FluxTubeT(f)%d3xCGT(1, Qind))), &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 									' AND Qind= ', Qind, ' IN DENSITY PROFILE A1 SUBROUTINE' &
 									// achar(27) // '[0m.'
@@ -332,18 +331,13 @@ contains
 
 		    ! ----------------------------------------------------
 
-				SpecieT(s)%FluxTubeT(f)%nsnormCLBT(1)= SpecieT(s)%FluxTubeT(f)%LBNominalDensityGT(1)
-				SpecieT(s)%FluxTubeT(f)%nsnormCUBT(1)= SpecieT(s)%FluxTubeT(f)%UBNominalDensityGT(1)
-
-		    ! ----------------------------------------------------
-
 		    ! Broadcast neutral densities to all ranks
 		    if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
 
 		      allocate(nsnormCNeut0(((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 3)))
 
 		      do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1)+ 2, 1
-		        nsnormCNeut0(Qind)= SpecieT(s)%FluxTubeT(f)%QCell0T(Qind)%nsnormCNeut0T(1)
+		        nsnormCNeut0(Qind)= SpecieT(s)%FluxTubeT(f)%nsnormCNeutGT(1, Qind)
 		      end do
 
 		      call mpi_barrier(MPI_COMM_WORLD, ierr)
@@ -698,18 +692,18 @@ contains
 
 						if (SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 0) then
 							if (SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFARRT(1) &
-								/= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%nsnormCT(1))) then
+								/= nint(SpecieT(s)%FluxTubeT(f)%nsnormCGT(Qind))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ROOT RANK NsFARRT=  ', &
 									SpecieT(s)%FluxTubeT(f)%QCellICT(Qind)%NsFARRT(1), &
-									', AND nsnormCT= ', nint(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%nsnormCT(1)), ' VALUES FOR SPECIE= ', &
+									', AND nsnormCGT= ', nint(SpecieT(s)%FluxTubeT(f)%nsnormCGT(Qind)), ' VALUES FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ' AND Q CELL= ', Qind, &
 									' IN DENSITY PROFILE A1', ' SUBROUTINE' // achar(27) // '[0m.'
 							end if
 							if (SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind) &
-								/= nint(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%nsnormCT(1))) then
+								/= nint(SpecieT(s)%FluxTubeT(f)%nsnormCGT(Qind))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' INCONSISTENT ROOT RANK NsFARpT=  ', &
 									SpecieT(s)%FluxTubeT(f)%NsFARpT(Qind), &
-									', AND nsnormCT= ', nint(SpecieT(s)%FluxTubeT(f)%QCell0T(Qind+ 1)%nsnormCT(1)), ' VALUES FOR SPECIE= ', &
+									', AND nsnormCGT= ', nint(SpecieT(s)%FluxTubeT(f)%nsnormCGT(Qind)), ' VALUES FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ' AND Q CELL= ', Qind, &
 									' IN DENSITY PROFILE A1', ' SUBROUTINE' // achar(27) // '[0m.'
 							end if
