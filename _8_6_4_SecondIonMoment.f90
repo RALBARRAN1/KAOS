@@ -136,7 +136,7 @@ contains
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', &
 												Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN SECOND', &
+												' MASTER TIME-STEP= ', nn, ' IN SECOND', &
 												' ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -168,7 +168,7 @@ contains
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', &
 												Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN SECOND', &
+												' MASTER TIME-STEP= ', nn, ' IN SECOND', &
 												' ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -202,7 +202,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M2phRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M2phRT and NqRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN SECOND ION MOMENT SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -211,7 +211,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M2phRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M2phRT and F2PerpphRTp SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN SECOND ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -222,7 +222,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M2phRT(nn, Qind) /= 0d0))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M2phRT and INTEGRAND SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN SECOND ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -360,7 +360,7 @@ contains
 											' INTEGRAND HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN SECOND', &
+											' MASTER TIME-STEP= ', nn, ' IN SECOND', &
 											' ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -395,7 +395,7 @@ contains
 											' INCONSISTENT INTEGRAND TEST FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN SECOND', &
+											' MASTER TIME-STEP= ', nn, ' IN SECOND', &
 											' ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -428,7 +428,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M2phRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M2phRT and NqRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN SECOND ION MOMENT SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -437,7 +437,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M2phRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M2phRT and FphRTp SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN SECOND ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -448,7 +448,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M2phRT(nn, Qind) /= 0d0))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M2phRT and INTEGRAND SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN SECOND ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -477,9 +477,8 @@ contains
 		if (rank == 0) then
 			if (n == 1) then
 				call cpu_time(S864End)
-				write(S864string, '(i10)')  nint(S864End)
-				write(*, *) trim('%% 8.6- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S864string)) // &
+				write(S864string, '(F10.4)')  S864End
+				write(*, *) trim('%% 8.6- REAL-TIME= ' // adjustl(S864string)) // &
 					trim(' s. INITIAL SECOND ION MOMENT COMPLETE %%')
 			end if
 		end if

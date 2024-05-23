@@ -135,7 +135,7 @@ contains
         write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
           ' sigmaIonNeut HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
           s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-          ', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+          ', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
           ' SUBROUTINE' // achar(27) // '[0m.'
       end if
 
@@ -151,7 +151,7 @@ contains
           '	M0phRT= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind), &
           ' AND sigmaIonNeut= ', SpecieT(s)%FluxTubeT(f)%sigmaIonNeutRT(nn, Qind), &
           ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-          ', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+          ', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
           ' SUBROUTINE' // achar(27) // '[0m.'
       end if
 
@@ -335,7 +335,7 @@ contains
           '	sigmaIonNeut= ', SpecieT(s)%FluxTubeT(f)%sigmaIonNeutRT(nn, Qind), &
           ' AND nuIonNeutRT= ', SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind), &
           ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-          ', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+          ', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
           ' SUBROUTINE' // achar(27) // '[0m.'
       end if
 
@@ -347,7 +347,7 @@ contains
           '	M0phRT= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind), &
           ' AND nuIonNeutRT= ', SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind), &
           ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-          ', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+          ', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
           ' SUBROUTINE' // achar(27) // '[0m.'
       end if
 
@@ -371,7 +371,7 @@ contains
 					SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
 					(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)), &
 					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-					', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+					', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
 					' SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
@@ -380,7 +380,7 @@ contains
   				' PER TIME-STEP INTERVAL nuIonNeutRT= ', SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind), &
   				' IS GREATER THAN TOTAL PARTICLE NUMBER OVER ALL RANKS= ', SpecieT(s)%FluxTubeT(f)%NsnRRT(nn), &
   				' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-  				', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+  				', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
   				' SUBROUTINE' // achar(27) // '[0m.'
   		end if
     end if
@@ -407,7 +407,7 @@ contains
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
         ' nuIonNeutRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
         s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-        ', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
+        ', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY A', &
         ' SUBROUTINE' // achar(27) // '[0m.'
     end if
   end do

@@ -73,7 +73,7 @@ contains
 											' FphENART HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', Vphiind= ', Vphiind, &
-											', AND STATISTICAL TIME-STEP= ', nn, &
+											', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA DISTRIBUTION', &
 											' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 									end if
@@ -96,7 +96,7 @@ contains
 											' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 											', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', Vphiind= ', Vphiind, &
-											', AND STATISTICAL TIME-STEP= ', nn, &
+											', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA DISTRIBUTION', &
 											' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 									end if
@@ -107,7 +107,7 @@ contains
 											' NEGATIVE FphENART ELEMENT FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', Vphiind= ', Vphiind, &
-											', AND STATISTICAL TIME-STEP= ', nn, &
+											', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA DISTRIBUTION', &
 											' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 									end if

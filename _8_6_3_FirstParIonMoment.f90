@@ -100,7 +100,7 @@ contains
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', &
 												Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+												' MASTER TIME-STEP= ', nn, ' IN FIRST', &
 												' PARALLEL ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -124,7 +124,7 @@ contains
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', &
 												Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+												' MASTER TIME-STEP= ', nn, ' IN FIRST', &
 												' PARALLEL ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -157,7 +157,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M1ParphRT and NqRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN FIRST PARALLEL ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -166,7 +166,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M1ParphRT and F2PerpphRTp SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN FIRST PARALLEL ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -179,7 +179,7 @@ contains
 	! 								' INCONSISTENT M1ParphRT= ', SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind), &
 	! 								' and INTEGRAND SUMMATION= ', sum(ggg2Perp(:, :, :, nn)), &
 	! 								' FOR SPECIE= ', s, &
-	! 								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+	! 								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 	! 								' TIME-STEP= ', nn, ' IN FIRST PARALLEL ION MOMENT', &
 	! 								' SUBROUTINE' // achar(27) // '[0m.'
 	! 						end if
@@ -271,7 +271,7 @@ contains
 											' INTEGRAND HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											' MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' PARALLEL ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -298,7 +298,7 @@ contains
 											' INCONSISTENT INTEGRAND VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											' MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' PARALLEL ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -317,7 +317,7 @@ contains
 											' INCONSISTENT INTEGRAND AND FphRT VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											' MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' PARALLEL ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -340,7 +340,7 @@ contains
 											' INCONSISTENT INTEGRAND AND g0phRT VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											' MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' PARALLEL ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -372,7 +372,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M1ParphRT and NqRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN FIRST PARALLEL ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -381,7 +381,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind) /= 0d0)) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M1ParphRT and FphRTp SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN FIRST PARALLEL ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -394,7 +394,7 @@ contains
 	! 								' INCONSISTENT M1ParphRT= ', SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind), &
 	! 								' and INTEGRAND SUMMATION= ', sum(ggg(:, :, nn)), &
 	! 								' FOR SPECIE= ', s, &
-	! 								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+	! 								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 	! 								' TIME-STEP= ', nn, ' IN FIRST PARALLEL ION MOMENT', &
 	! 								' SUBROUTINE' // achar(27) // '[0m.'
 	! 						end if
@@ -454,9 +454,8 @@ contains
 		if (rank == 0) then
 			if (n == 1) then
 				call cpu_time(S863End)
-				write(S863string, '(i10)')  nint(S863End)
-				write(*, *) trim('%% 8.5- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S863string)) // &
+				write(S863string, '(F10.4)')  S863End
+				write(*, *) trim('%% 8.5- REAL-TIME= ' // adjustl(S863string)) // &
 					trim(' s. INITIAL FIRST PARALLEL ION MOMENT COMPLETE %%')
 			end if
 		end if

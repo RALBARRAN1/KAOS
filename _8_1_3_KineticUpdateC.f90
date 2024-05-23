@@ -842,9 +842,8 @@ contains
 		if (rank == 0) then
 			if ((n == 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S813End)
-				write(S813string, '(i10)')  nint(S813End)
-				write(*, *) trim('%% 8.11.3- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S813string)) // &
+				write(S813string, '(F10.4)')  S813End
+				write(*, *) trim('%% 8.11.3- REAL-TIME= ' // adjustl(S813string)) // &
 					trim(' s. INITIAL KINETIC UPDATE C COMPLETE %%')
 			end if
 		end if
@@ -852,9 +851,8 @@ contains
 		if (rank == 0) then
 			if ((n == 2) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S813End)
-				write(S813string, '(i10)')  nint(S813End)
-				write(*, *) trim('%% 8.11.3- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S813string)) // &
+				write(S813string, '(F10.4)')  S813End
+				write(*, *) trim('%% 8.11.3- REAL-TIME= ' // adjustl(S813string)) // &
 					trim(' s. SECOND KINETIC UPDATE C COMPLETE %%')
 			end if
 		end if

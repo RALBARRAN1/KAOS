@@ -78,7 +78,7 @@ contains
 													' F2PerpphRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 													s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 													Vperp1ind, ', Vperp2ind= ', Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-													' STATISTICAL TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
+													' MASTER TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
 													' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 											end if
 
@@ -98,7 +98,7 @@ contains
 													' ZERO AND NON-ZERO N2PerpphRT AND F2PerpphRT ELEMENTS FOR SPECIE= ', &
 													s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 													Vperp1ind, ', Vperp2ind= ', Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-													' STATISTICAL TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
+													' MASTER TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
 													' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 											end if
 
@@ -108,7 +108,7 @@ contains
 													' NEGATIVE F2PerpphRT ELEMENT FOR SPECIE= ', s, &
 													', FLUX TUBE= ', f, ', Qind= ', Qind, &
 													', Vperp1ind= ', Vperp1ind, ', Vperp2ind= ', Vperp2ind, ', Vparind= ', &
-													Vparind, ', AND STATISTICAL TIME-STEP= ', nn, &
+													Vparind, ', AND MASTER TIME-STEP= ', nn, &
 													' IN ION DISTRIBUTION FUNCTIONS SUBROUTINE' &
 													// achar(27) // '[0m.'
 											end if
@@ -128,7 +128,7 @@ contains
 													V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%N2PerpphRT(nn), ' FOR SPECIE= ', &
 													s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 													Vperp1ind, ', Vperp2ind= ', Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-													' STATISTICAL TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
+													' MASTER TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
 													' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 											end if
 
@@ -176,7 +176,7 @@ contains
 												' FphRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 												Vperpind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
+												' MASTER TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
 												' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 										end if
 
@@ -196,7 +196,7 @@ contains
 												' ZERO AND NON-ZERO NphRT AND FphRT ELEMENTS FOR SPECIE= ', &
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 												Vperpind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
+												' MASTER TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
 												' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 										end if
 
@@ -206,7 +206,7 @@ contains
 												' NEGATIVE FphRT ELEMENT FOR SPECIE= ', s, &
 												', FLUX TUBE= ', f, ', Qind= ', Qind, &
 												', Vperpind= ', Vperpind, ', Vparind= ', &
-												Vparind, ', AND STATISTICAL TIME-STEP= ', nn, &
+												Vparind, ', AND MASTER TIME-STEP= ', nn, &
 												' IN ION DISTRIBUTION FUNCTIONS SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -226,7 +226,7 @@ contains
 													VCellT(Vperpind, Vparind)%NphRT(nn), ' FOR SPECIE= ', &
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 												Vperpind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
+												' MASTER TIME-STEP= ', nn, ' IN ION DISTRIBUTION', &
 												' FUNCTIONS SUBROUTINE' // achar(27) // '[0m.'
 										end if
 

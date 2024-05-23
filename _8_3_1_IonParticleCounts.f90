@@ -21,14 +21,14 @@ contains
 
 ! ----------------------------------------------------
 
-! COMPUTE STATISTICAL GRID COUNTS FOR ALL GRIDS:
+! COMPUTE MASTER GRID COUNTS FOR ALL GRIDS:
 
 	subroutine IonParticleCountsSub
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 
-		! COMPUTE STATISTICAL GRID COUNTS FOR ION CONFIG-SPACE GRIDS:
+		! COMPUTE MASTER GRID COUNTS FOR ION CONFIG-SPACE GRIDS:
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
@@ -36,7 +36,7 @@ contains
 
 				! ----------------------------------------------------
 
-				! COMPUTE LOGICAL FLAGS FOR CONFIG-SPACE STATISTICAL BINNING:
+				! COMPUTE LOGICAL FLAGS FOR CONFIG-SPACE MASTER BINNING:
 
 				! ----------------------------------------------------
 
@@ -99,7 +99,7 @@ contains
 					!		', dNsTK1= ', dNsTK1(1), &
 					!		', dNsTK2= ', dNsTK2(1), ', dNsTK3= ', dNsTK3(1), &
 					!		' NOT CONSERVED IN CONFIG-SPACE GRID FOR SPECIE= ', s, &
-					!		', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', nn, &
+					!		', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', nn, &
 					!		' IN CONFIG PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 					!end if
 
@@ -109,7 +109,7 @@ contains
 
 				! ----------------------------------------------------
 
-				! REDUCE ALL STATISTICAL PARTICLE COUNTS IN CONFIG-SPACE TO MPI ROOT RANK (0):
+				! REDUCE ALL MASTER PARTICLE COUNTS IN CONFIG-SPACE TO MPI ROOT RANK (0):
 
 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
@@ -153,7 +153,7 @@ contains
 									' ZERO LOWER BOUNDARY ION COUNT NqRT= ', &
 									SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn), &
 									' SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', Qind= ', Qind, ', AND STATISTICAL TIME-STEP= ', nn, &
+									', Qind= ', Qind, ', AND MASTER TIME-STEP= ', nn, &
 									' IN ION PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 							end if
 						end if
@@ -194,7 +194,7 @@ contains
 						!				' IN ION PARTICLE COUNTS SUBROUTINE'	// achar(27) // '[0m.'
 						!		end if
 						!	end if
-							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! SMH
 								if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
 										(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
@@ -216,7 +216,7 @@ contains
 									end if
 								end if
 							end if
-							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then
+							if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! NMH
 								if (SpecieT(s)%FluxTubeT(f)%NqLBT(1) == Qind) then
 									if (nint(SpecieT(s)%FluxTubeT(f)%NqRTp(nn, Qind)* &
 										(SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, Qind)/ &
@@ -246,7 +246,7 @@ contains
 							(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqRT HAS', &
 								' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-								', Qind= ', Qind, ', AND STATISTICAL TIME-STEP= ', nn, &
+								', Qind= ', Qind, ', AND MASTER TIME-STEP= ', nn, &
 								' IN ION PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
@@ -255,14 +255,14 @@ contains
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' ZERO AND NON-ZERO NqT AND NqRT ELEMENTS DO NOT MATCH', &
 								' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-								', AND STATISTICAL TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS', &
+								', AND MASTER TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS', &
 								' SUBROUTINE' // achar(27) // '[0m.'
 						end if
 
 						if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn) < 0) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' NEGATIVE NqRT ELEMENTS FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS SUBROUTINE' &
 								// achar(27) // '[0m.'
 						end if
@@ -280,7 +280,7 @@ contains
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 
-		! COMPUTE STATISTICAL GRID COUNTS FOR 3D AND 2D ION VEL-SPACE GRIDS:
+		! COMPUTE MASTER GRID COUNTS FOR 3D AND 2D ION VEL-SPACE GRIDS:
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------
@@ -293,7 +293,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! COMPUTE LOGICAL FLAGS FOR PHASE-SPACE STATISTICAL BINNING:
+					! COMPUTE LOGICAL FLAGS FOR PHASE-SPACE MASTER BINNING:
 
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
@@ -384,7 +384,7 @@ contains
 						!		' AND N2PerpphReNormT SUM= ', sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 						!			N2PerpphReNormT(nn, :, :, :)), &
 						!		' FOR SPECIE= ', s, &
-						!		', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+						!		', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 						!		' TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS SUBROUTINE' &
 						!		// achar(27) // '[0m.'
 						!end if
@@ -424,7 +424,7 @@ contains
 
 										! ----------------------------------------------------
 
-										! FILTER STATISTICAL NOISE FOR UN-NORMALIZED ION COUNTS:
+										! FILTER MASTER NOISE FOR UN-NORMALIZED ION COUNTS:
 
 										if (SpecieT(s)%FluxTubeT(f)%IONNOISEflagT(1) == 1) then
 											if (((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
@@ -472,7 +472,7 @@ contains
 												' ZERO AND NON-ZERO N2PerpphRT AND N2PerpphReNormRT ELEMENTS DO NOT MATCH', &
 												' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
 												', Vperp1ind= ', Vperp1ind, ', Vperp2ind= ', Vperp2ind, ', Vparind= ', Vparind, &
-												', AND STATISTICAL TIME-STEP= ', nn, &
+												', AND MASTER TIME-STEP= ', nn, &
 												' IN ION PARTICLE COUNTS', &
 												' SUBROUTINE' // achar(27) // '[0m.'
 										end if
@@ -486,7 +486,7 @@ contains
 											SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1))) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 												' N2PerpphReNormRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 												' TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -499,7 +499,7 @@ contains
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' N2PerpphRT HAS', &
 												' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 												', Qind= ', Qind, ', Vperp1ind= ', Vperp1ind, ', Vperp2ind= ', Vperp2ind, &
-												', Vparind= ', Vparind, ', AND STATISTICAL TIME-STEP= ', nn, &
+												', Vparind= ', Vparind, ', AND MASTER TIME-STEP= ', nn, &
 												' IN ION PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 										end if
 
@@ -509,7 +509,7 @@ contains
 												' NEGATIVE N2PerpphRT ELEMENTS FOR SPECIE= ', s, &
 												', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', Vperp2ind, ', Vparind= ', Vparind, &
-												', AND STATISTICAL TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS SUBROUTINE' &
+												', AND MASTER TIME-STEP= ', nn, ' IN ION PARTICLE COUNTS SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
 
@@ -540,7 +540,7 @@ contains
 										sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp(:, :, :, nn)), &
 										SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn), &
 										' SPECIE= ', s, ', FLUX TUBE= ', f, &
-										', Qind= ', Qind, ', AND STATISTICAL TIME-STEP= ', nn, &
+										', Qind= ', Qind, ', AND MASTER TIME-STEP= ', nn, &
 										' IN ION PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 								end if
 							end if
@@ -558,7 +558,7 @@ contains
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 
-		! COMPUTE STATISTICAL GRID COUNTS FOR 2D ION VEL-SPACE GRIDS:
+		! COMPUTE MASTER GRID COUNTS FOR 2D ION VEL-SPACE GRIDS:
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------
@@ -571,7 +571,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! COMPUTE LOGICAL FLAGS FOR PHASE-SPACE STATISTICAL BINNING:
+					! COMPUTE LOGICAL FLAGS FOR PHASE-SPACE MASTER BINNING:
 
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
@@ -658,7 +658,7 @@ contains
 								' AND NphReNormT SUM= ', sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 									NphReNormT(nn, :, :)), &
 								' FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN ION VEL PARTICLE COUNTS SUBROUTINE' &
 								// achar(27) // '[0m.'
 						end if
@@ -697,7 +697,7 @@ contains
 
 									! ----------------------------------------------------
 
-									! FILTER STATISTICAL NOISE FOR UN-NORMALIZED ION COUNTS:
+									! FILTER MASTER NOISE FOR UN-NORMALIZED ION COUNTS:
 
 									if (SpecieT(s)%FluxTubeT(f)%IONNOISEflagT(1) == 1) then
 										if (((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
@@ -745,7 +745,7 @@ contains
 											' ZERO AND NON-ZERO NphRT AND NphReNormRT ELEMENTS DO NOT MATCH', &
 											' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
 											', Vperpind= ', Vperpind, ', Vparind= ', Vparind, &
-											', AND STATISTICAL TIME-STEP= ', nn, &
+											', AND MASTER TIME-STEP= ', nn, &
 											' IN ION VEL PARTICLE COUNTS', &
 											' SUBROUTINE' // achar(27) // '[0m.'
 									end if
@@ -758,7 +758,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' NphReNormRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN ION VEL PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -771,7 +771,7 @@ contains
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NphRT HAS', &
 											' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 											', Qind= ', Qind, ', Vperpind= ', Vperpind, ', Vparind= ', &
-											Vparind, ', AND STATISTICAL TIME-STEP= ', nn, &
+											Vparind, ', AND MASTER TIME-STEP= ', nn, &
 											' IN ION VEL PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 									end if
 
@@ -780,7 +780,7 @@ contains
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' NEGATIVE NphRT ELEMENTS FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
-											Vperpind, ', Vparind= ', Vparind, ', AND STATISTICAL', &
+											Vperpind, ', Vparind= ', Vparind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN ION VEL PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if

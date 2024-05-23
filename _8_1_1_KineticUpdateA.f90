@@ -973,17 +973,6 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE SPHERICAL VELOCITY COMPONENTS:
-
-		Vr(1)= Vx(j)*sin(thetak1(1))*cos(phik1(1))+ &
-			Vy(j)*sin(thetak1(1))*sin(phik1(1))+ &
-			Vz(j)*cos(thetak1(1))
-		Vtheta(1)= Vx(j)*cos(thetak1(1))*cos(phik1(1))+ &
-			Vy(j)*cos(thetak1(1))*sin(phik1(1))- &
-			Vz(j)*sin(thetak1(1))
-
-		! ----------------------------------------------------
-
 		! RE-ALIGN VELOCITY VECTOR INTO LOCAL DIPOLE COORDINATES:
 
 		Vpar(j)= 3d0*cos(thetak1(1))*sin(thetak1(1))*(Vx(j)* &
@@ -992,13 +981,13 @@ contains
 
 		! ----------------------------------------------------
 
-		EpsilonPar(1)= (6.242d18)*(SpecieT(s)%msT(1)/2d0)*Vpar(j)**2d0 ! Parallel kinetic energy [eV]
-
+		! FIXME put this particle counter before ion particle counts
+		! FIXME employ following order in KineticSolver.f90:
+		! 1- Convection, 2- particle counter and EA calculation, 3- RK4update, 4- Boundary Conditions
+		 
 		if (ENAflag(j) .eqv. .false.) then
 			Vp(j)= 0d0
 			Vphi(j)= 0d0
-			EpsilonPerp(1)= (6.242d18)*(SpecieT(s)%msT(1)/2d0)*Vperp(j)**2d0 ! Perp kinetic energy [eV]
-			alpha(1)= atan2(Vperp(j), Vpar(j)) ! Velocity pitch angle [rads]
 
 			if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
 
@@ -1169,8 +1158,6 @@ contains
 				cos(phik1(1))+ Vy(j)*sin(phik1(1)))/sqrt(ellk1(1))+ 3d0*Vz(j)* &
 				cos(thetak1(1))*sin(thetak1(1))/sqrt(ellk1(1)))
 			Vphi(j)= -Vx(j)*sin(phik1(1))+ Vy(j)*cos(phik1(1))
-			EpsilonPerp(1)= 0d0 ! Perp kinetic energy [eV]
-			alpha(1)= 0d0 ! Velocity pitch angle [rads]
 
 			VploopKUA: do Vpind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVpGT(1), 1
 				if ((SpecieT(s)%FluxTubeT(f)%QCellT(1)% &
@@ -1350,22 +1337,6 @@ contains
 
 		! DIAGNOSTIC FLAGS FOR PROPER ARRAY SIZES AND FINITE VALUES:
 
-		if ((isnan(real(Vr(1))) .eqv. .true.) .or. &
-			(size(Vr(:)) /= 1)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vr= ', Vr(1), &
-				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-				', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
-				// achar(27) // '[0m.'
-		end if
-
-		if ((isnan(real(Vtheta(1))) .eqv. .true.) .or. &
-			(size(Vtheta(:)) /= 1)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vtheta= ', Vtheta(1), &
-				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-				', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
-				// achar(27) // '[0m.'
-		end if
-
 		if ((isnan(real(Vphi(j))) .eqv. .true.) .or. &
 			(size(Vphi(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vphi= ', Vphi(j), &
@@ -1385,30 +1356,6 @@ contains
 		if ((isnan(real(Vp(j))) .eqv. .true.) .or. &
 			(size(Vp(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vp= ', Vp(j), &
-				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-				', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
-				// achar(27) // '[0m.'
-		end if
-
-		if ((isnan(real(EpsilonPar(1))) .eqv. .true.) .or. &
-			(size(EpsilonPar(:)) /= 1)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EpsilonPar= ', EpsilonPar(1), &
-				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-				', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
-				// achar(27) // '[0m.'
-		end if
-
-		if ((isnan(real(EpsilonPerp(1))) .eqv. .true.) .or. &
-			(size(EpsilonPerp(:)) /= 1)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EpsilonPerp= ', EpsilonPerp(1), &
-				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-				', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
-				// achar(27) // '[0m.'
-		end if
-
-		if ((isnan(real(alpha(1))) .eqv. .true.) .or. &
-			(size(alpha(:)) /= 1)) then
-			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' alpha= ', alpha(1), &
 				' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
 				', TIME-STEP= ', n, ', AND PARTICLE= ', j, ' IN KINETIC UPDATE A SUBROUTINE' &
 				// achar(27) // '[0m.'
@@ -1450,9 +1397,8 @@ contains
 		if (rank == 0) then
 			if ((n == 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S811End)
-				write(S811string, '(i10)')  nint(S811End)
-				write(*, *) trim('%% 8.11.1- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S811string)) // &
+				write(S811string, '(F10.4)')  S811End
+				write(*, *) trim('%% 8.11.1- REAL-TIME= ' // adjustl(S811string)) // &
 					trim(' s. INITIAL KINETIC UPDATE A COMPLETE %%')
 			end if
 		end if
@@ -1460,9 +1406,8 @@ contains
 		if (rank == 0) then
 			if ((n == 2) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S811End)
-				write(S811string, '(i10)')  nint(S811End)
-				write(*, *) trim('%% 8.11.1- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S811string)) // &
+				write(S811string, '(F10.4)')  S811End
+				write(*, *) trim('%% 8.11.1- REAL-TIME= ' // adjustl(S811string)) // &
 					trim(' s. SECOND KINETIC UPDATE A COMPLETE %%')
 			end if
 		end if

@@ -340,9 +340,8 @@ contains
 		if (rank == 0) then
 			if ((n == 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S81End)
-				write(S81string, '(i10)')  nint(S81End)
-				write(*, *) trim('%% 8.11- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S81string)) // &
+				write(S81string, '(F10.4)')  S81End
+				write(*, *) trim('%% 8.11- REAL-TIME= ' // adjustl(S81string)) // &
 					trim(' s. INITIAL KINETIC RK4 COMPLETE %%')
 			end if
 		end if
@@ -350,9 +349,8 @@ contains
 		if (rank == 0) then
 			if ((n == 2) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S81End)
-				write(S81string, '(i10)')  nint(S81End)
-				write(*, *) trim('%% 8.11- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S81string)) // &
+				write(S81string, '(F10.4)')  S81End
+				write(*, *) trim('%% 8.11- REAL-TIME= ' // adjustl(S81string)) // &
 					trim(' s. SECOND KINETIC RK4 COMPLETE %%')
 			end if
 		end if
@@ -360,10 +358,9 @@ contains
 		if (rank == 0) then
 			if ((n == SpecieT(s)%FluxTubeT(f)%ndatfacGT(1)- 1) .and. (j == SpecieT(s)%FluxTubeT(f)%NsT(1))) then
 				call cpu_time(S81End)
-				write(S81string, '(i10)')  nint(S81End)
-				write(*, *) trim('%% 8.11- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S81string)) // &
-					trim(' s. PENULTIMATE TO SECOND STATISTICAL TIME-STEP KINETIC RK4 COMPLETE %%')
+				write(S81string, '(F10.4)')  S81End
+				write(*, *) trim('%% 8.11- REAL-TIME= ' // adjustl(S81string)) // &
+					trim(' s. PENULTIMATE TO SECOND MASTER TIME-STEP KINETIC RK4 COMPLETE %%')
 			end if
 		end if
 

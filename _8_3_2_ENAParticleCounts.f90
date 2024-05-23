@@ -21,14 +21,14 @@ contains
 
 ! ----------------------------------------------------
 
-! COMPUTE STATISTICAL GRID COUNTS FOR ALL GRIDS:
+! COMPUTE MASTER GRID COUNTS FOR ALL GRIDS:
 
 	subroutine ENAParticleCountsSub
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 
-		! COMPUTE STATISTICAL GRID COUNTS FOR ENA CONFIG-SPACE GRIDS:
+		! COMPUTE MASTER GRID COUNTS FOR ENA CONFIG-SPACE GRIDS:
 
 		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
@@ -36,7 +36,7 @@ contains
 
 				! ----------------------------------------------------
 
-				! COMPUTE LOGICAL FLAGS FOR CONFIG-SPACE STATISTICAL BINNING:
+				! COMPUTE LOGICAL FLAGS FOR CONFIG-SPACE MASTER BINNING:
 
 				if (SpecieT(s)%FluxTubeT(f)%PHASEIONDISTRIBflagT(1) == 1) then
 
@@ -88,7 +88,7 @@ contains
 						!		sum(SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, :)), &
 						!		', NsT= ', SpecieT(s)%FluxTubeT(f)%NsnT(nn), &
 						!		' NOT CONSERVED IN CONFIG-SPACE GRID FOR SPECIE= ', s, &
-						!		', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', nn, &
+						!		', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', nn, &
 						!		' IN CONFIG PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 						!end if
 
@@ -98,7 +98,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! REDUCE ALL STATISTICAL PARTICLE COUNTS IN CONFIG-SPACE TO MPI ROOT RANK (0):
+					! REDUCE ALL MASTER PARTICLE COUNTS IN CONFIG-SPACE TO MPI ROOT RANK (0):
 
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
@@ -160,7 +160,7 @@ contains
 									(SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' NqENART HAS', &
 										' BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-										', Qind= ', Qind, ', AND STATISTICAL TIME-STEP= ', nn, &
+										', Qind= ', Qind, ', AND MASTER TIME-STEP= ', nn, &
 										' IN CONFIG PARTICLE COUNTS SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
@@ -169,14 +169,14 @@ contains
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' ZERO AND NON-ZERO NqENAT AND NqENART ELEMENTS DO NOT MATCH', &
 										' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-										', AND STATISTICAL TIME-STEP= ', nn, ' IN CONFIG PARTICLE COUNTS', &
+										', AND MASTER TIME-STEP= ', nn, ' IN CONFIG PARTICLE COUNTS', &
 										' SUBROUTINE' // achar(27) // '[0m.'
 								end if
 
 								if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqENART(nn) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' NEGATIVE NqENART ELEMENTS FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN CONFIG PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -202,7 +202,7 @@ contains
 		! ----------------------------------------------------
 		! ----------------------------------------------------
 
-		! COMPUTE STATISTICAL GRID COUNTS FOR ENA VEL-SPACE GRIDS:
+		! COMPUTE MASTER GRID COUNTS FOR ENA VEL-SPACE GRIDS:
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------
@@ -213,7 +213,7 @@ contains
 
 				! ----------------------------------------------------
 
-				! COMPUTE LOGICAL FLAGS FOR ENA PHASE-SPACE STATISTICAL BINNING:
+				! COMPUTE LOGICAL FLAGS FOR ENA PHASE-SPACE MASTER BINNING:
 
 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
@@ -278,7 +278,7 @@ contains
 					!		' AND NphReNormENAT SUM= ', sum(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
 					!			NphReNormENAT(nn, :, :, :)), &
 					!		' FOR SPECIE= ', s, &
-					!		', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+					!		', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 					!		' TIME-STEP= ', nn, ' IN ENA VEL PARTICLE COUNTS SUBROUTINE' &
 					!		// achar(27) // '[0m.'
 					!end if
@@ -319,7 +319,7 @@ contains
 
 									! ----------------------------------------------------
 
-									! FILTER STATISTICAL NOISE FOR UN-NORMALIZED ENA COUNTS:
+									! FILTER MASTER NOISE FOR UN-NORMALIZED ENA COUNTS:
 
 									if (SpecieT(1)%FluxTubeT(1)%ENANOISEflagT(1) == 1) then
 										if (((SpecieT(s)%FluxTubeT(f)%QCellT(Qind)% &
@@ -368,7 +368,7 @@ contains
 											' ELEMENTS DO NOT MATCH FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ', AND STATISTICAL TIME-STEP= ', nn, &
+											Vphiind, ', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA VEL PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -379,7 +379,7 @@ contains
 											' NEGATIVE NphENART ELEMENTS FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ', AND STATISTICAL TIME-STEP= ', nn, &
+											Vphiind, ', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA VEL PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -396,7 +396,7 @@ contains
 											' NphReNormENART HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ', AND STATISTICAL TIME-STEP= ', nn, &
+											Vphiind, ', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA VEL PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -410,7 +410,7 @@ contains
 											' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
 											', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', AND Vphiind= ', &
-											Vphiind, ', AND STATISTICAL TIME-STEP= ', nn, &
+											Vphiind, ', AND MASTER TIME-STEP= ', nn, &
 											' IN ENA VEL PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if

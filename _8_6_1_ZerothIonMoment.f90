@@ -99,7 +99,7 @@ contains
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', &
 												Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+												' MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 												' ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -121,7 +121,7 @@ contains
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperp1ind= ', &
 												Vperp1ind, ', Vperp2ind= ', &
 												Vperp2ind, ', Vparind= ', Vparind, ', AND', &
-												' STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+												' MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 												' ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -143,7 +143,7 @@ contains
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 												' ggg2Perp VALUE DOES NOT PROPERLY CONVERT FOR SPECIE= ', &
 												s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-												', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+												', AND MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 												' ION MOMENT SUBROUTINE' &
 												// achar(27) // '[0m.'
 										end if
@@ -175,7 +175,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
 									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-									', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+									', AND MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 									' ION MOMENT SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -190,7 +190,7 @@ contains
 							!		(SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)/ &
 							!		SpecieT(s)%FluxTubeT(f)%QCell0T(SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1)%d3xC0T(1))), &
 							!		' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-							!		', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+							!		', AND MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 							!		' ION MOMENT SUBROUTINE' &
 							!		// achar(27) // '[0m.'
 							!end if
@@ -201,7 +201,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M0phRT and F2PerpphRTp SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN ZEROTH ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -212,7 +212,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M0phRT and INTEGRAND SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN ZEROTH ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -304,7 +304,7 @@ contains
 											' g0phRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+											' MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 											' ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -329,7 +329,7 @@ contains
 											' INCONSISTENT g0phRT VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+											' MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 											' ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -350,7 +350,7 @@ contains
 											' INCONSISTENT g0phRT AND FphRT VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vperpind= ', &
 											Vperpind, ', Vparind= ', Vparind, ', AND', &
-											' STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+											' MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 											' ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -372,7 +372,7 @@ contains
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' ggg VALUE DOES NOT PROPERLY CONVERT FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-											', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+											', AND MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 											' ION MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -400,7 +400,7 @@ contains
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' ZERO DENSITY AT LOWER BOUNDARY FOR SPECIE= ', &
 										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-										', AND STATISTICAL TIME-STEP= ', nn, ' IN ZEROTH', &
+										', AND MASTER TIME-STEP= ', nn, ' IN ZEROTH', &
 										' ION MOMENT SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -424,7 +424,7 @@ contains
 										' INCONSISTENT M0phRT= ', SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind), &
 										', and NqRT= ', SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NqRT(nn), &
 										' VALUE FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN ZEROTH ION MOMENT SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -436,7 +436,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M0phRT and FphRTp SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN ZEROTH ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -447,7 +447,7 @@ contains
 								(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' INCONSISTENT M0phRT and INTEGRAND SUMMATION FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN ZEROTH ION MOMENT', &
 									' SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -510,9 +510,8 @@ contains
 		if (rank == 0) then
 			if (n == 1) then
 				call cpu_time(S861End)
-				write(S861string, '(i10)')  nint(S861End)
-				write(*, *) trim('%% 8.3- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S861string)) // &
+				write(S861string, '(F10.4)')  S861End
+				write(*, *) trim('%% 8.3- REAL-TIME= ' // adjustl(S861string)) // &
 					trim(' s. INITIAL ZEROTH ION MOMENT COMPLETE %%')
 			end if
 		end if

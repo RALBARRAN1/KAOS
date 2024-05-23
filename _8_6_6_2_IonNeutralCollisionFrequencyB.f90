@@ -89,7 +89,7 @@ contains
     							' NUMBER OF AVAILABLE PARTICLES= ', &
     							SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind), ' FOR SPECIE= ', &
     							s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-    							', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY B', &
+    							', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY B', &
     							' SUBROUTINE' // achar(27) // '[0m.'
     					end if
             end if
@@ -209,7 +209,7 @@ contains
     							' TOTAL NUMBER OF ION-NEUTRAL COLLISIONS= ', &
     							SpecieT(s)%FluxTubeT(f)%nuIonNeutRT(nn, Qind), ' FOR SPECIE= ', &
     							s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-    							', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY B', &
+    							', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY B', &
     							' SUBROUTINE' // achar(27) // '[0m.'
     					end if
 							if (SpecieT(s)%FluxTubeT(f)%nuIonNeutPoiT(nn, Qind) > SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind)) then
@@ -219,7 +219,7 @@ contains
     							' NUMBER OF AVAILABLE PARTICLES= ', &
     							SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind), ' FOR SPECIE= ', &
     							s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-    							', AND STATISTICAL TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY B', &
+    							', AND MASTER TIME-STEP= ', nn, ' IN ION NEUTRAL COLLISION FREQUENCY B', &
     							' SUBROUTINE' // achar(27) // '[0m.'
     					end if
             end if

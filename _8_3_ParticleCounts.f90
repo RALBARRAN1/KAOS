@@ -23,7 +23,7 @@ contains
 
 ! ----------------------------------------------------
 
-! COMPUTE STATISTICAL GRID COUNTS FOR ALL GRIDS:
+! COMPUTE MASTER GRID COUNTS FOR ALL GRIDS:
 
 	subroutine ParticleCountsSub
 
@@ -202,7 +202,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' Vperp1REF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -211,7 +211,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' Vperp2REF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -220,7 +220,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' VparREF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -387,7 +387,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' VperpREF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -396,7 +396,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' VparREF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -518,7 +518,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VpENAREF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -527,7 +527,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VqENAREF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -536,7 +536,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VphiENAREF HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -640,7 +640,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp1REFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -650,7 +650,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp2REFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -660,7 +660,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -668,7 +668,7 @@ contains
 								if (SpecieT(s)%FluxTubeT(f)%Vperp1REFRT(nn, Qind) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp1REFRT HAS NEGATIVE VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -676,7 +676,7 @@ contains
 								if (SpecieT(s)%FluxTubeT(f)%Vperp2REFRT(nn, Qind) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp2REFRT HAS NEGATIVE VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -730,7 +730,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VperpREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -740,7 +740,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -748,7 +748,7 @@ contains
 								if (SpecieT(s)%FluxTubeT(f)%VperpREFRT(nn, Qind) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VperpREFRT HAS NEGATIVE VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -826,7 +826,7 @@ contains
 								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VpENAREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -836,7 +836,7 @@ contains
 								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VqENAREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -846,7 +846,7 @@ contains
 								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VphiENAREFRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1114,7 +1114,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' Vperp1REFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -1123,7 +1123,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' Vperp2REFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -1132,7 +1132,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' VparREFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -1315,7 +1315,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' VperpREFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -1324,7 +1324,7 @@ contains
 										SpecieT(s)%FluxTubeT(f)%NqReNormT(nn, Qind))) then
 										write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 											' VparREFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 											' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -1458,7 +1458,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VpENAREFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1467,7 +1467,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VqENAREFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1476,7 +1476,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%NqReNormENAT(nn, Qind))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VphiENAREFsig HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1581,7 +1581,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp1REFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1592,7 +1592,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp2REFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1603,7 +1603,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1611,7 +1611,7 @@ contains
 								if (SpecieT(s)%FluxTubeT(f)%Vperp1REFsigRT(nn, Qind) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp1REFsigRT HAS NEGATIVE VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1619,7 +1619,7 @@ contains
 								if (SpecieT(s)%FluxTubeT(f)%Vperp2REFsigRT(nn, Qind) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' Vperp2REFsigRT HAS NEGATIVE VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1674,7 +1674,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VperpREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1685,7 +1685,7 @@ contains
 									((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VparREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1693,7 +1693,7 @@ contains
 								if (SpecieT(s)%FluxTubeT(f)%VperpREFsigRT(nn, Qind) < 0) then
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' VperpREFsigRT HAS NEGATIVE VALUE FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1771,7 +1771,7 @@ contains
 								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VpENAREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1782,7 +1782,7 @@ contains
 								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VqENAREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1793,7 +1793,7 @@ contains
 								((SpecieT(s)%FluxTubeT(f)%NqUBT(1)- SpecieT(s)%FluxTubeT(f)%NqLBT(1))+ 1))) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' VphiENAREFsigRT HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
-									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARTICLE COUNTS SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1872,7 +1872,7 @@ contains
 
 				! ----------------------------------------------------
 
-				! REDUCE ALL STATISTICAL ION DRIFTS TO MPI ROOT RANK (0):
+				! REDUCE ALL MASTER ION DRIFTS TO MPI ROOT RANK (0):
 
 				call mpi_barrier(MPI_COMM_WORLD, ierr)
 				call mpi_reduce(qdriftionMax(1), qdriftionMaxR(1), 1, &
@@ -1983,7 +1983,7 @@ contains
 
 				! ----------------------------------------------------
 
-				! REDUCE ALL STATISTICAL ION DRIFTS TO MPI ROOT RANK (0):
+				! REDUCE ALL MASTER ION DRIFTS TO MPI ROOT RANK (0):
 
 				call mpi_barrier(MPI_COMM_WORLD, ierr)
 				call mpi_reduce(qdriftionMax(1), qdriftionMaxR(1), 1, &
@@ -2084,7 +2084,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! REDUCE ALL STATISTICAL ENA DRIFTS STATISTICS TO MPI ROOT RANK (0):
+			! REDUCE ALL MASTER ENA DRIFTS STATISTICS TO MPI ROOT RANK (0):
 
 		!	call mpi_barrier(MPI_COMM_WORLD, ierr)
 		!	call mpi_reduce(rdriftENAMax(1), rdriftENAMaxR(1), 1, &
@@ -2290,32 +2290,11 @@ contains
 		if (rank == 0) then
 			if (n == 1) then
 				call cpu_time(S83End)
-				write(S83string, '(i10)')  nint(S83End)
-				write(*, *) trim('%% 8.1- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S83string)) // &
+				write(S83string, '(F10.4)')  S83End
+				write(*, *) trim('%% 8.1- REAL-TIME= ' // adjustl(S83string)) // &
 					trim(' s. INITIAL PARTICLE COUNTS COMPLETE %%')
 			end if
 		end if
-
-		!if (rank == 0) then
-		!	do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-		!		if (((n /= 1) .and. (nn /= 1) .and. &
-		!			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
-		!			call cpu_time(S83End)
-		!			write(S83string, '(i10)')  nint(S83End)
-		!			write(nnstring, '(I5)') nn
-		!			write(Timestring, '(I5)') nint(Time(1))
-		!			write(pdriftmaxstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%pdriftionMaxRT(1)
-		!			write(pdriftmeanstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%pdriftionMeanRT(1)
-		!			write(*, *) trim('** RANK= ' // adjustl(rankstring)) // &
-		!				trim(', MAX ITERATIVE L-SHELL DRIFT [RE]= ' // adjustl(pdriftmaxstring)) // &
-		!				trim(', MEAN ITERATIVE L-SHELL DRIFT [RE]= ' // adjustl(pdriftmeanstring)) // &
-		!				trim(', REAL-TIME= ' // adjustl(S83string)) // &
-		!				trim(' s., SIM-TIME= ' // adjustl(Timestring)) // &
-		!				trim(' s., STATISTICAL TIME-STEP= ' // adjustl(nnstring))
-		!		end if
-		!	end do
-		!end if
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------

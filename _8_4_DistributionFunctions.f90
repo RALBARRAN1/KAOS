@@ -41,9 +41,8 @@ contains
 		if (rank == 0) then
 			if (n == 1) then
 				call cpu_time(S84End)
-				write(S84string, '(i10)')  nint(S84End)
-				write(*, *) trim('%% 8.2- RANK= ' // adjustl(rankstring)) // &
-					trim(', REAL-TIME= ' // adjustl(S84string)) // &
+				write(S84string, '(F10.4)')  S84End
+				write(*, *) trim('%% 8.2- REAL-TIME= ' // adjustl(S84string)) // &
 					trim(' s. INITIAL DISTRIBUTION FUNCTIONS COMPLETE %%')
 			end if
 		end if
