@@ -24,12 +24,12 @@ contains
 
 		! ----------------------------------------------------
 
-		! DIAGNOSTIC FLAGS FOR STATISTICAL TIME-STEP SIZE:
+		! DIAGNOSTIC FLAGS FOR MASTER TIME-STEP SIZE:
 
 		if (ndatfacG(1) < 3d0) then
 			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ndatfacG= ', ndatfacG(1), &
 				' IS NOT COMPATIBLE WITH KINETIC SOLVER TIME FORMAT FOR SPECIE= ', s, &
-				' , FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', nn, &
+				' , FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', nn, &
 				' IN CONFIGURATION-SPACE GRID GENERATOR B SUBROUTINE' // achar(27) // '[0m.'
 		end if
 
@@ -208,7 +208,7 @@ contains
 			if (nsnormCLBG(1) == 0d0) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 					' ZERO LOWER BOUNDARY DENSITY= ', nsnormCLBG(1), &
-					' FOR SPECIE= ', s, ', AND STATISTICAL TIME-STEP= ', nn, ', FLUX TUBE= ', f, &
+					' FOR SPECIE= ', s, ', AND MASTER TIME-STEP= ', nn, ', FLUX TUBE= ', f, &
 					' IN CONFIGURATION-SPACE GRID GENERATOR B SUBROUTINE' // achar(27) // '[0m.'
 			end if
 		end if

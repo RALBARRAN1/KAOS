@@ -338,6 +338,11 @@ contains
     do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
       if (SpecieT(s)%FluxTubeT(f)%ION2VPERPflagT(1) == 1) then
 
+				allocate(SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3vCTp( &
+					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), &
+					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), &
+					SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1)))
+
         do Vperp1ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp1GT(1), 1
           do Vperp2ind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVperp2GT(1), 1
             do Vparind= 1, SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%NVparGT(1), 1
@@ -391,6 +396,9 @@ contains
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp1GT(1)* &
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVperp2GT(1)* &
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%dVparGT(1)
+
+							SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3vCTp(Vperp1ind, Vperp2ind, Vparind)= &
+								SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(1)
 
               if (SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(1) == 0d0) then
                 SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%V2PerpCellT(Vperp1ind, Vperp2ind, Vparind)%d3vCT(1)= 1d-9

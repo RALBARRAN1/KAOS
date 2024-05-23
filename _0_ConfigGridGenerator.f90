@@ -34,14 +34,14 @@ contains
 		if ((INITIALGRIDflag == 1) .and. (nn /= 1)) then
 			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 				' INCONSISTENT INITIAL GRID FLAG FOR SPECIE= ', s, &
-				' , FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', nn, &
+				' , FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', nn, &
 				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 		end if
 
 		if ((INITIALGRIDflag == 0) .and. (nn == 1)) then
 			write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 				' INCONSISTENT INITIAL GRID FLAG FOR SPECIE= ', s, &
-				' , FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', nn, &
+				' , FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', nn, &
 				' IN CONFIGURATION-SPACE GRID GENERATOR SUBROUTINE' // achar(27) // '[0m.'
 		end if
 
@@ -656,7 +656,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! SET STATISTICAL TIME-STEP WITH NEW GRID:
+		! SET MASTER TIME-STEP WITH NEW GRID:
 
 		! Injection time-step [s] (must be > 2 and excludes initial time-step)
 		! Mean transit time through LB ghost cell

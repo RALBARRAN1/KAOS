@@ -980,6 +980,9 @@ contains
 
 				! ----------------------------------------------------
 
+				! FIXME fix dynamic grid with spinup ON and OFF, correct TeN update in KineticSolver.f90, and Ti update below
+				! Also fix restart files
+
 				if ((SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 1) .or. &
 					((SpecieT(1)%FluxTubeT(1)%SPINUPflagT(1) == 0) .and. &
 					(SpecieT(s)%FluxTubeT(f)%DYNAMICGRIDflagT(1) == 0))) then
@@ -1424,7 +1427,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' lambdaPerppT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1437,7 +1440,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' EtaLHpT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1450,7 +1453,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp1pT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1463,7 +1466,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' XiPerp2pT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1476,7 +1479,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' S0pT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1489,7 +1492,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' OmegaG0pT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1502,7 +1505,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp1pT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1515,7 +1518,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ChiPerp2pT HAS', &
 									' BAD INVERSION, SIZE, OR HAS NaN VALUE ', &
 									' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-									', STATISTICAL TIME-STEP= ', nn, &
+									', MASTER TIME-STEP= ', nn, &
 									', AND Qind= ', Qind, ' IN SIMULATION', &
 									' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 							end if
@@ -1526,7 +1529,7 @@ contains
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' INCONSISTENT XiPerp1 and XiPerp2 VALUES FOR COHERENT ICR HEATING', &
 										' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-										', STATISTICAL TIME-STEP= ', nn, &
+										', MASTER TIME-STEP= ', nn, &
 										', AND Qind= ', Qind, ' IN SIMULATION', &
 										' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 								end if
@@ -1535,7 +1538,7 @@ contains
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' INCONSISTENT ChiPerp1 and ChiPerp2 VALUES FOR COHERENT ICR HEATING', &
 										' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-										', STATISTICAL TIME-STEP= ', nn, &
+										', MASTER TIME-STEP= ', nn, &
 										', AND Qind= ', Qind, ' IN SIMULATION', &
 										' PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
 								end if
@@ -1616,17 +1619,17 @@ contains
 					write(*, *) 'CONFIGURATION-SPACE PARAMETERS:'
 					write(*, *)
 
-					write(paramstring, '(D10.2)') LshellIC
+					write(paramstring, '(F10.4)') LshellIC
 					write(*, *) trim('Initial L-shell [RE]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') phiLshellIC
+					write(paramstring, '(F10.4)') phiLshellIC
 					write(*, *) trim('Initial Invariant Longitude [rads]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
 					write(*, *) trim('Lower Grid Altitude [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1d-3
 					write(*, *) trim('Upper Grid Altitude [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
 					write(*, *) trim('Lower Ion Injection Altitude [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1d-3
 					write(*, *) trim('Upper Ion Initialization Altitude [km]= ' // adjustl(paramstring))
 
 					write(paramstring, '(i10)') Stot
@@ -1642,19 +1645,19 @@ contains
 					write(*, *)
 
 					if (SpecieT(1)%FluxTubeT(1)%ION2VPERPflagT(1) == 1) then
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%Vperp1GLT(1)*1d-3
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%Vperp1GLT(1)*1d-3
 						write(*, *) trim('Lower Vperp1 Limit [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%Vperp2GLT(1)*1d-3
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%Vperp2GLT(1)*1d-3
 						write(*, *) trim('Lower Vperp2 Limit [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
 							SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp1GT(1), 1, 1)%Vperp1GHT(1)*1d-3
 						write(*, *) trim('Upper Vperp1 Limit [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
 							1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVperp2GT(1), 1)%Vperp2GHT(1)*1d-3
 						write(*, *) trim('Upper Vperp2 Limit [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%VparGLT(1)*1d-3
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT(1, 1, 1)%VparGLT(1)*1d-3
 						write(*, *) trim('Lower Vpar Limit [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%V2PerpCellT( &
 							1, 1, SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1))%VparGHT(1)*1d-3
 						write(*, *) trim('Upper Vpar Limit [km/s]= ' // adjustl(paramstring))
 
@@ -1668,17 +1671,17 @@ contains
 					end if
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVparGT(1)
 					write(*, *) trim('Total Number of Ion Vpar Grid Cells= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') Vperp12sigma*1d-3
+					write(paramstring, '(F10.4)') Vperp12sigma*1d-3
 					write(*, *) trim('Vperp1 and Vperp2 Standard Deviation [km/s]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') VperpsigmaFac
+					write(paramstring, '(F10.4)') VperpsigmaFac
 					write(*, *) trim('Number of Linear Vperp1 and Vperp2 Standard Deviations &
 						Spanned by Linear Grid= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') Vperp12NlinRange
 					write(*, *) trim('Number of Vperp1 and Vperp2 Linear Grid Cells Spanning to &
 						Last Standard Deviation= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') Vparsigma*1d-3
+					write(paramstring, '(F10.4)') Vparsigma*1d-3
 					write(*, *) trim('Vpar Standard Deviation [km/s]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') VparsigmaFac
+					write(paramstring, '(F10.4)') VparsigmaFac
 					write(*, *) trim('Number of Linear Vpar Standard Deviations &
 						Spanned by Linear Grid= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') VparNlinRange
@@ -1698,20 +1701,20 @@ contains
 						write(*, *) trim('Total Number of ENA Vq Grid Cells= ' // adjustl(paramstring))
 						write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%QCellT(1)%NVphiGT(1)
 						write(*, *) trim('Total Number of ENA Vphi Grid Cells= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') Vpphisigma*1d-3
+						write(paramstring, '(F10.4)') Vpphisigma*1d-3
 						write(*, *) trim('Vp and Vphi Standard Deviation [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') VpphisigmaFac
+						write(paramstring, '(F10.4)') VpphisigmaFac
 						write(*, *) trim('Number of Linear Vp and Vpphi Standard Deviations &
 							Spanned by Linear Grid= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') VpphiNlinRange
+						write(paramstring, '(F10.4)') VpphiNlinRange
 						write(*, *) trim('Number of Vp and Vphi Linear Grid Cells Spanning to &
 							Last Standard Deviation= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') Vqsigma*1d-3
+						write(paramstring, '(F10.4)') Vqsigma*1d-3
 						write(*, *) trim('Vq Standard Deviation [km/s]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') VqsigmaFac
+						write(paramstring, '(F10.4)') VqsigmaFac
 						write(*, *) trim('Number of Linear Vq Standard Deviations &
 							Spanned by Linear Grid= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') VqNlinRange
+						write(paramstring, '(F10.4)') VqNlinRange
 						write(*, *) trim('Number of Vq Linear Grid Cells Spanning to &
 							Last Standard Deviation= ' // adjustl(paramstring))
 					end if
@@ -1721,20 +1724,20 @@ contains
 					write(*, *) 'TIME PARAMETERS:'
 					write(*, *)
 
-					write(paramstring, '(D10.2)') SpecieT(s)%AT
+					write(paramstring, '(F10.4)') SpecieT(s)%AT
 					write(*, *) trim('Beginning Simulation Time [s]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%BT
+					write(paramstring, '(F10.4)') SpecieT(s)%BT
 					write(*, *) trim('End Simulation Time [s]= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NtT(1)
-					write(*, *) trim('Total Number of Base Time-Steps= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%hT
-					write(*, *) trim('Base Time-Step Duration [s]= ' // adjustl(paramstring))
+					write(*, *) trim('Total Number of Computational Time-Steps= ' // adjustl(paramstring))
+					write(paramstring, '(F10.4)') SpecieT(s)%hT
+					write(*, *) trim('Computational Time-Step Duration [s]= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NNtT(1)
-					write(*, *) trim('Total Number of Statistical Time-Steps (constant)= ' // adjustl(paramstring))
+					write(*, *) trim('Total Number of Master Time-Steps (constant)= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%ndatfacGT(1)
-					write(*, *) trim('Initial Number of Base Time-Steps per Statistical Time-Step= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ndatfacGT(1)*SpecieT(s)%hT
-					write(*, *) trim('Initial Statistical Time-Step Duration [s]= ' // adjustl(paramstring))
+					write(*, *) trim('Initial Number of Computational Time-Steps per Master Time-Step= ' // adjustl(paramstring))
+					write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%ndatfacGT(1)*SpecieT(s)%hT
+					write(*, *) trim('Initial Master Time-Step Duration [s]= ' // adjustl(paramstring))
 
 					write(*, *)
 					write(*, *) '----------------------------------------------------'
@@ -1843,27 +1846,27 @@ contains
 					write(*, *) trim('Ion Initialization LB Grid Cell= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NqUBT(1)
 					write(*, *) trim('Ion Initialization UB Grid Cell= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
 					write(*, *) trim('Ion Initialization Lower Altitude Boundary [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1d-3
 					write(*, *) trim('Ion Initialization Upper Altitude Boundary [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+					write(paramstring, '(F10.4)') (SpecieT(s)%FluxTubeT(f)%rGCGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
 					write(*, *) trim('Ion Initialization Reference Altitude [km]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') ns0IC
+					write(paramstring, '(D10.4)') ns0IC
 					write(*, *) trim('Ion Initialization Reference Density [m^-3]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%TsGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+					write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%TsGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 					write(*, *) trim('Ion Initialization LB Temperature [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%TsPerpGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+					write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%TsPerpGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 					write(*, *) trim('Ion Initialization LB Perpendicular Temperature [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%TsParGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+					write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%TsParGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 					write(*, *) trim('Ion Initialization LB Parallel Temperature [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%TeGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
+					write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%TeGT(1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))
 					write(*, *) trim('Electron Initialization LB Temperature [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') dNTe
-					write(*, *) trim('Additive Increment of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') dNTeEND
-					write(*, *) trim('Additive Increment Cap of Electron Temperature on Statistical Time-steps [K]= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') ns0(1)
+					write(paramstring, '(D10.4)') dNTe
+					write(*, *) trim('Additive Increment of Electron Temperature on Master Time-steps [K]= ' // adjustl(paramstring))
+					write(paramstring, '(D10.4)') dNTeEND
+					write(*, *) trim('Additive Increment Cap of Electron Temperature on Master Time-steps [K]= ' // adjustl(paramstring))
+					write(paramstring, '(i10)') SpecieT(1)%Qindns0GT(1)
 					write(*, *) trim('Reference Density Grid Cell= ' // adjustl(paramstring))
 
 					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
@@ -1873,11 +1876,11 @@ contains
 						write(*, *) 'NEUTRAL OXYGEN INITIALIZATION PARAMETERS:'
 						write(*, *)
 
-						write(paramstring, '(D10.2)') (zns0neutIC- RE)*1d-3
+						write(paramstring, '(F10.4)') (zns0neutIC- RE)*1d-3
 						write(*, *) trim('Neutral Oxygen Initialization Reference Altitude [km]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') ns0neutIC
+						write(paramstring, '(F10.4)') ns0neutIC
 						write(*, *) trim('Neutral Oxygen Initialization Reference Density [m^-3]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') TNeut
+						write(paramstring, '(F10.4)') TNeut
 						write(*, *) trim('Neutral Oxygen Initialization Temperature [K]= ' // adjustl(paramstring))
 
 					end if
@@ -1889,21 +1892,21 @@ contains
 						write(*, *) 'ICR HEATING PARAMETERS:'
 						write(*, *)
 
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%lambdaPerppT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%lambdaPerppT(1, 1)
 						write(*, *) trim('BBELF Wavelength [m]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%EtaLHpT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%EtaLHpT(1, 1)
 						write(*, *) trim('BBELF Wave Power LHP Fraction= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%XiPerp1pT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%XiPerp1pT(1, 1)
 						write(*, *) trim('BBELF Wave Power Fraction Along Vperp1= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%XiPerp2pT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%XiPerp2pT(1, 1)
 						write(*, *) trim('BBELF Wave Power Fraction Along Vperp2= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%S0pT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%S0pT(1, 1)
 						write(*, *) trim('Wave Spectral Energy Density [(V^2/m^2)/Hz]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%OmegaG0pT(1, 1)/(2d0*pi)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%OmegaG0pT(1, 1)/(2d0*pi)
 						write(*, *) trim('Reference Ion Cyclotron Frequency [Hz]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%ChiPerp1pT(1, 1)
 						write(*, *) trim('Wave Spectral Index Along Vperp1= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(1, 1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%ChiPerp2pT(1, 1)
 						write(*, *) trim('Wave Spectral Index Along Vperp2= ' // adjustl(paramstring))
 
 					end if
@@ -1917,11 +1920,11 @@ contains
 
 						write(paramstring, '(i10)') Eparlim
 						write(*, *) trim('Computational Time-step of Activated Potential Drop= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') PhiPar0p
+						write(paramstring, '(F10.4)') PhiPar0p
 						write(*, *) trim('Reference Parallel Potential Drop [V]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') dPhiPar0p
+						write(paramstring, '(F10.4)') dPhiPar0p
 						write(*, *) trim('Reference Parallel Potential Distance [m]= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%PhiPar0BT
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%PhiPar0BT
 						write(*, *) trim('Reference Parallel Electric Field [V/m]= ' // adjustl(paramstring))
 
 					end if
@@ -1943,9 +1946,9 @@ contains
 						write(paramstring, '(i10)') M2ParMAfilterPt
 						write(*, *) trim('Parallel Energy Moment Moving Average Point= ' // adjustl(paramstring))
 					end if
-					write(paramstring, '(D10.2)') IonNoiseLimitNph
+					write(paramstring, '(F10.4)') IonNoiseLimitNph
 					write(*, *) trim('Minimum Phase-Space Ion Macroparticle Number= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%IonNoiseLimitT(1)
+					write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%IonNoiseLimitT(1)
 					write(*, *) trim('Ion Noise Limit= ' // adjustl(paramstring))
 
 					if (SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) then
@@ -1955,9 +1958,9 @@ contains
 						write(*, *) 'ENA LIMITS:'
 						write(*, *)
 
-						write(paramstring, '(D10.2)') ENANoiseLimitNph
+						write(paramstring, '(F10.4)') ENANoiseLimitNph
 						write(*, *) trim('Minimum Phase-Space ENA Macroparticle Number= ' // adjustl(paramstring))
-						write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%ENANoiseLimitT(1)
+						write(paramstring, '(F10.4)') SpecieT(s)%FluxTubeT(f)%ENANoiseLimitT(1)
 						write(*, *) trim('ENA Noise Limit= ' // adjustl(paramstring))
 
 					end if
@@ -1977,9 +1980,8 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S1End)
-					write(S1string, '(i10)')  nint(S1End)
-					write(*, *) trim('%% 1- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S1string)) // &
+					write(S1string, '(F10.4)')  S1End
+					write(*, *) trim('%% REAL-TIME= ' // adjustl(S1string)) // &
 						trim(' s. SIMULATION PARAMETERIZATION COMPLETE %%')
 				end if
 			end do

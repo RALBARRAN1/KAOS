@@ -70,14 +70,14 @@ contains
 					write(*, *)
 					write(paramstring, '(i10)') sum(SpecieT(s)%FluxTubeT(f)%NsFARpT(:))
 					write(*, *) trim('Cluster Total Initial Ion Macro-particle Number= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(1)
+					write(paramstring, '(i10)') nint(SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(1))
 					write(*, *) trim('Cluster LB Nominal Injection Macro-particle Number= ' // adjustl(paramstring))
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(1)
+					write(paramstring, '(i10)') nint(SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(1))
 					write(*, *) trim('Cluster UB Nominal Injection Macro-particle Number= ' // adjustl(paramstring))
 					write(paramstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsT(1)
 					write(*, *) trim('Root Rank Total Initial Ion Macro-particle Number= ' // adjustl(paramstring))
 
-					write(paramstring, '(D10.2)') SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)
+					write(paramstring, '(D10.4)') SpecieT(s)%FluxTubeT(f)%nsnormfacT(1)
 					write(*, *) trim('Macro-particle Normalization Constant= ' // adjustl(paramstring))
 				end if
 			end do
@@ -90,9 +90,8 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S2End)
-					write(S2string, '(i10)')  nint(S2End)
-					write(*, *) trim('%% 2- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S2string)) // &
+					write(S2string, '(F10.4)')  S2End
+					write(*, *) trim('%% 2- REAL-TIME= ' // adjustl(S2string)) // &
 						trim(' s. DENSITY PROFILE A COMPLETE %%')
 				end if
 			end do
