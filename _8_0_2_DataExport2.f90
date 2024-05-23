@@ -33,10 +33,9 @@ contains
 			write(sstring, '(I5)') s
 			write(fstring, '(I5)') f
 
-			expstring= adjustl(adjustr(rankstring) &
-				// '_' // adjustl(adjustr(nnstring) &
+			expstring= adjustl(adjustr(nnstring) &
 				// '_' // adjustl(adjustr(sstring) &
-				// '_' // adjustl(adjustr(fstring) // '_'))))
+				// '_' // adjustl(adjustr(fstring) // '_')))
 
 			TimeTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TimeTfort.bin')))
 			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
@@ -94,6 +93,13 @@ contains
 			write(expint) SpecieT(s)%FluxTubeT(f)%thetaGCGT(nn, :)
 			close(expint)
 
+			d3xCGTfile= adjustl(adjustr(expstring) // adjustl(adjustr('d3xCGTfort.bin')))
+			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+				adjustl(adjustr(d3xCGTfile))), &
+				status= 'replace', form= 'unformatted', access= 'stream')
+			write(expint) SpecieT(s)%FluxTubeT(f)%d3xCGT(nn, :)
+			close(expint)
+
 			TsGTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TsGTfort.bin')))
 			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
 				adjustl(adjustr(TsGTfile))), &
@@ -125,11 +131,10 @@ contains
 						write(fstring, '(I5)') f
 						write(Qindstring, '(I5)') Qind
 
-						expstring= adjustl(adjustr(rankstring) // '_' // &
-							adjustl(adjustr(nnstring) // '_' // &
+						expstring= adjustl(adjustr(nnstring) // '_' // &
 							adjustl(adjustr(sstring) // '_' // &
 							adjustl(adjustr(fstring) // '_' // &
-							adjustl(adjustr(Qindstring) // '_')))))
+							adjustl(adjustr(Qindstring) // '_'))))
 
 						TeNTfile= adjustl(adjustr(expstring) // adjustl(adjustr('TeNTfort.bin')))
 						open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
@@ -144,6 +149,14 @@ contains
 							adjustl(adjustr(N2PerpphRTfile))), status= 'replace', &
 							form= 'unformatted', access= 'stream')
 						write(expint) SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%N2PerpphRTp(:, :, :, nn)
+						close(expint)
+
+						d3vCTpfile= adjustl(adjustr(expstring) // &
+							adjustl(adjustr('d3vCTpfort.bin')))
+						open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
+							adjustl(adjustr(d3vCTpfile))), status= 'replace', &
+							form= 'unformatted', access= 'stream')
+						write(expint) SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%d3vCTp(:, :, :)
 						close(expint)
 
 					end do
@@ -162,11 +175,10 @@ contains
 						write(fstring, '(I5)') f
 						write(Qindstring, '(I5)') Qind
 
-						expstring= adjustl(adjustr(rankstring) // '_' // &
-							adjustl(adjustr(nnstring) // '_' // &
+						expstring= adjustl(adjustr(nnstring) // '_' // &
 							adjustl(adjustr(sstring) // '_' // &
 							adjustl(adjustr(fstring) // '_' // &
-							adjustl(adjustr(Qindstring) // '_')))))
+							adjustl(adjustr(Qindstring) // '_'))))
 
 						NphRTfile= adjustl(adjustr(expstring) // &
 							adjustl(adjustr('NphRTfort.bin')))
@@ -190,11 +202,10 @@ contains
 				write(fstring, '(I5)') f
 				write(Qindstring, '(I5)') Qind
 
-				expstring= adjustl(adjustr(rankstring) // '_' // &
-					adjustl(adjustr(nnstring) // '_' // &
+				expstring= adjustl(adjustr(nnstring) // '_' // &
 					adjustl(adjustr(sstring) // '_' // &
 					adjustl(adjustr(fstring) // '_' // &
-					adjustl(adjustr(Qindstring) // '_')))))
+					adjustl(adjustr(Qindstring) // '_'))))
 
 				NphENARTfile= adjustl(adjustr(expstring) // &
 					adjustl(adjustr('NphENARTfort.bin')))
@@ -219,10 +230,9 @@ contains
 				write(sstring, '(I5)') s
 				write(fstring, '(I5)') f
 
-				expstring= adjustl(adjustr(rankstring) // '_' // &
-					adjustl(adjustr(nnstring) // '_' // &
+				expstring= adjustl(adjustr(nnstring) // '_' // &
 					adjustl(adjustr(sstring) // '_' // &
-					adjustl(adjustr(fstring) // '_'))))
+					adjustl(adjustr(fstring) // '_')))
 
 				M0phRTfile= adjustl(adjustr(expstring) // &
 					adjustl(adjustr('M0phRTfort.bin')))
@@ -245,10 +255,9 @@ contains
 		!			write(sstring, '(I5)') s
 		!			write(fstring, '(I5)') f
 
-		!			expstring= adjustl(adjustr(rankstring) // '_' // &
-		!				adjustl(adjustr(nnstring) // '_' // &
+		!			expstring= adjustl(adjustr(nnstring) // '_' // &
 		!				adjustl(adjustr(sstring) // '_' // &
-		!				adjustl(adjustr(fstring) // '_'))))
+		!				adjustl(adjustr(fstring) // '_')))
 
 		!			M0phENARTfile= adjustl(adjustr(expstring) // &
 		!				adjustl(adjustr('M0phENARTfort.bin')))
@@ -273,10 +282,9 @@ contains
 					write(sstring, '(I5)') s
 					write(fstring, '(I5)') f
 
-					expstring= adjustl(adjustr(rankstring) // '_' // &
-						adjustl(adjustr(nnstring) // '_' // &
+					expstring= adjustl(adjustr(nnstring) // '_' // &
 						adjustl(adjustr(sstring) // '_' // &
-						adjustl(adjustr(fstring) // '_'))))
+						adjustl(adjustr(fstring) // '_')))
 
 					M1Perp1phRTfile= adjustl(adjustr(expstring) // &
 						adjustl(adjustr('M1Perp1phRTfort.bin')))
@@ -307,10 +315,9 @@ contains
 					write(sstring, '(I5)') s
 					write(fstring, '(I5)') f
 
-					expstring= adjustl(adjustr(rankstring) // '_' // &
-						adjustl(adjustr(nnstring) // '_' // &
+					expstring= adjustl(adjustr(nnstring) // '_' // &
 						adjustl(adjustr(sstring) // '_' // &
-						adjustl(adjustr(fstring) // '_'))))
+						adjustl(adjustr(fstring) // '_')))
 
 					M1PerpphRTfile= adjustl(adjustr(expstring) // &
 						adjustl(adjustr('M1PerpphRTfort.bin')))
@@ -334,10 +341,9 @@ contains
 				write(sstring, '(I5)') s
 				write(fstring, '(I5)') f
 
-				expstring= adjustl(adjustr(rankstring) // '_' // &
-					adjustl(adjustr(nnstring) // '_' // &
+				expstring= adjustl(adjustr(nnstring) // '_' // &
 					adjustl(adjustr(sstring) // '_' // &
-					adjustl(adjustr(fstring) // '_'))))
+					adjustl(adjustr(fstring) // '_')))
 
 				M1ParphRTfile= adjustl(adjustr(expstring) // &
 					adjustl(adjustr('M1ParphRTfort.bin')))
@@ -358,10 +364,9 @@ contains
 				write(sstring, '(I5)') s
 				write(fstring, '(I5)') f
 
-				expstring= adjustl(adjustr(rankstring) // '_' // &
-					adjustl(adjustr(nnstring) // '_' // &
+				expstring= adjustl(adjustr(nnstring) // '_' // &
 					adjustl(adjustr(sstring) // '_' // &
-					adjustl(adjustr(fstring) // '_'))))
+					adjustl(adjustr(fstring) // '_')))
 
 				M0FiltAvrgRTfile= adjustl(adjustr(expstring) // &
 					adjustl(adjustr('M0FiltAvrgRTfort.bin')))
@@ -414,10 +419,9 @@ contains
 			write(sstring, '(I5)') s
 			write(fstring, '(I5)') f
 
-			expstring= adjustl(adjustr(rankstring) // '_' // &
-				adjustl(adjustr(nnstring) // '_' // &
+			expstring= adjustl(adjustr(nnstring) // '_' // &
 				adjustl(adjustr(sstring) // '_' // &
-				adjustl(adjustr(fstring) // '_'))))
+				adjustl(adjustr(fstring) // '_')))
 
 			sigmaIonNeutRTfile= adjustl(adjustr(expstring) // &
 				adjustl(adjustr('sigmaIonNeutRTfort.bin')))
@@ -447,10 +451,9 @@ contains
 				write(sstring, '(I5)') s
 				write(fstring, '(I5)') f
 
-				expstring= adjustl(adjustr(rankstring) // '_' // &
-					adjustl(adjustr(nnstring) // '_' // &
+				expstring= adjustl(adjustr(nnstring) // '_' // &
 					adjustl(adjustr(sstring) // '_' // &
-					adjustl(adjustr(fstring) // '_'))))
+					adjustl(adjustr(fstring) // '_')))
 
 				M2phRTfile= adjustl(adjustr(expstring) // &
 					adjustl(adjustr('M2phRTfort.bin')))
@@ -519,10 +522,9 @@ contains
 		!			write(sstring, '(I5)') s
 		!			write(fstring, '(I5)') f
 
-		!			expstring= adjustl(adjustr(rankstring) // '_' // &
-		!				adjustl(adjustr(nnstring) // '_' // &
+		!			expstring= adjustl(adjustr(nnstring) // '_' // &
 		!				adjustl(adjustr(sstring) // '_' // &
-		!				adjustl(adjustr(fstring) // '_'))))
+		!				adjustl(adjustr(fstring) // '_')))
 
 		!			M1PphENARTfile= adjustl(adjustr(expstring) // &
 		!				adjustl(adjustr('M1PphENARTfort.bin')))
@@ -546,10 +548,9 @@ contains
 		!			write(sstring, '(I5)') s
 		!			write(fstring, '(I5)') f
 
-		!			expstring= adjustl(adjustr(rankstring) // '_' // &
-		!				adjustl(adjustr(nnstring) // '_' // &
+		!			expstring= adjustl(adjustr(nnstring) // '_' // &
 		!				adjustl(adjustr(sstring) // '_' // &
-		!				adjustl(adjustr(fstring) // '_'))))
+		!				adjustl(adjustr(fstring) // '_')))
 
 		!			M1QphENARTfile= adjustl(adjustr(expstring) // &
 		!				adjustl(adjustr('M1QphENARTfort.bin')))
@@ -573,10 +574,9 @@ contains
 		!			write(sstring, '(I5)') s
 		!			write(fstring, '(I5)') f
 
-		!			expstring= adjustl(adjustr(rankstring) // '_' // &
-		!				adjustl(adjustr(nnstring) // '_' // &
+		!			expstring= adjustl(adjustr(nnstring) // '_' // &
 		!				adjustl(adjustr(sstring) // '_' // &
-		!				adjustl(adjustr(fstring) // '_'))))
+		!				adjustl(adjustr(fstring) // '_')))
 
 		!			M1PHIphENARTfile= adjustl(adjustr(expstring) // &
 		!				adjustl(adjustr('M1PHIphENARTfort.bin')))
@@ -600,10 +600,9 @@ contains
 		!			write(sstring, '(I5)') s
 		!			write(fstring, '(I5)') f
 
-		!			expstring= adjustl(adjustr(rankstring) // '_' // &
-		!				adjustl(adjustr(nnstring) // '_' // &
+		!			expstring= adjustl(adjustr(nnstring) // '_' // &
 		!				adjustl(adjustr(sstring) // '_' // &
-		!				adjustl(adjustr(fstring) // '_'))))
+		!				adjustl(adjustr(fstring) // '_')))
 
 		!			M2phENARTfile= adjustl(adjustr(expstring) // &
 		!				adjustl(adjustr('M2phENARTfort.bin')))
@@ -650,10 +649,9 @@ contains
 			write(sstring, '(I5)') s
 			write(fstring, '(I5)') f
 
-			expstring= adjustl(adjustr(rankstring) // '_' // &
-				adjustl(adjustr(nnstring) // '_' // &
+			expstring= adjustl(adjustr(nnstring) // '_' // &
 				adjustl(adjustr(sstring) // '_' // &
-				adjustl(adjustr(fstring) // '_'))))
+				adjustl(adjustr(fstring) // '_')))
 
 			EAInertialRTfile= adjustl(adjustr(expstring) // &
 				adjustl(adjustr('EAInertialRTfort.bin')))
@@ -817,36 +815,11 @@ contains
 					write(nnstring, '(I5)') nn
 					write(sstring, '(I5)') s
 					write(fstring, '(I5)') f
-					write(Timestring, '(I5)') nint(Time(1))
-					write(SDE2string, '(i10)')  nint(SDE2End)
-					write(*, *) trim('-- INITIAL DATA EXPORT COMPLETE: STATISTICAL TIME-STEP= ' &
+					write(Timestring, '(F10.4)') Time(1)
+					write(SDE2string, '(F10.4)')  SDE2End
+					write(*, *) trim('-- INITIAL DATA EXPORT COMPLETE: MASTER TIME-STEP= ' &
 						// adjustl(nnstring)) // &
-						trim(', RANK= ' // adjustl(rankstring)) // &
-						trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
-						trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
-						trim(', SIM-TIME= ' // adjustl(Timestring)) // &
-						trim(', REAL-TIME= ' // adjustl(SDE2string)) // &
-						trim(' s.')
-				end if
-			end if
-		end if
-
-		if (((n /= 1) .and. (nn /= 1)) .and. &
-			(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
-			((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
-			(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
-			if (SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) then
-				if (rank == 0) then
-					call cpu_time(SDE2End)
-					write(nnstring, '(I5)') nn
-					write(sstring, '(I5)') s
-					write(fstring, '(I5)') f
-					write(Timestring, '(I5)') nint(Time(1))
-					write(SDE2string, '(i10)')  nint(SDE2End)
-					write(*, *) trim('-- DATA EXPORT COMPLETE: STATISTICAL TIME-STEP= ' &
-						// adjustl(nnstring)) // &
-						trim(', RANK= ' // adjustl(rankstring)) // &
-						trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
+						trim(', SPECIE= ' // adjustl(sstring)) // &
 						trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
 						trim(', SIM-TIME= ' // adjustl(Timestring)) // &
 						trim(' s., REAL-TIME= ' // adjustl(SDE2string)) // &
@@ -854,6 +827,29 @@ contains
 				end if
 			end if
 		end if
+
+		!if (((n /= 1) .and. (nn /= 1)) .and. &
+		!	(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
+		!	((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
+		!	(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
+		!	if (SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1) then
+		!		if (rank == 0) then
+		!			call cpu_time(SDE2End)
+		!			write(nnstring, '(I5)') nn
+		!			write(sstring, '(I5)') s
+		!			write(fstring, '(I5)') f
+		!			write(Timestring, '(F10.4)') (Time(1)/3600d0)
+		!			write(SDE2string, '(F10.4)')  (SDE2End/3600d0)
+		!			write(*, *) trim('-- DATA EXPORT COMPLETE: MASTER TIME-STEP= ' &
+		!				// adjustl(nnstring)) // &
+		!				trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
+		!				trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
+		!				trim(', SIM-TIME= ' // adjustl(Timestring)) // &
+		!				trim(' hrs., REAL-TIME= ' // adjustl(SDE2string)) // &
+		!				trim(' hrs.')
+		!		end if
+		!	end if
+		!end if
 
 		! ----------------------------------------------------
 		! ----------------------------------------------------

@@ -221,9 +221,8 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S6End)
-					write(S6string, '(i10)')  nint(S6End)
-					write(*, *) trim('%% 6- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S6string)) // &
+					write(S6string, '(F10.4)')  S6End
+					write(*, *) trim('%% 6- REAL-TIME= ' // adjustl(S6string)) // &
 						trim(' s. VELOCITY DISTRIBUTION COMPLETE %%')
 				end if
 			end do

@@ -468,14 +468,14 @@ contains
 		if (size(LBoutfluxIonMsk) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' LBoutfluxIonMsk SIZE= ', &
         size(LBoutfluxIonMsk), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
 		if (size(UBoutfluxIonMsk) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' UBoutfluxIonMsk SIZE= ', &
         size(UBoutfluxIonMsk), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
@@ -483,7 +483,7 @@ contains
 			if (size(LBreplenishIonMsk) /= NsTK(1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' LBreplenishIonMsk SIZE= ', &
 					size(LBreplenishIonMsk), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 					nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 			end if
 		end if
@@ -491,7 +491,7 @@ contains
 			if (size(UBreplenishIonMsk) /= NsTK(1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' UBreplenishIonMsk SIZE= ', &
 					size(UBreplenishIonMsk), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 					nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 			end if
 		end if
@@ -500,14 +500,14 @@ contains
 			if (size(LBoutfluxENAMsk) /= NsTK(1)) then
 	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' LBoutfluxENAMsk SIZE= ', &
 	        size(LBoutfluxENAMsk), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 	        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 	    end if
 
 			if (size(UBoutfluxENAMsk) /= NsTK(1)) then
 	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' UBoutfluxENAMsk SIZE= ', &
 	        size(UBoutfluxENAMsk), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 	        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 	    end if
 		end if
@@ -515,42 +515,42 @@ contains
     if (size(AEAmagN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AEAmagN SIZE= ', &
         size(AEAmagN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
 		if (size(AGmagN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AGmagN SIZE= ', &
         size(AGmagN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(AEPmagN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AEPmagN SIZE= ', &
         size(AEPmagN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Qindk1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindk1 SIZE= ', &
         size(Qindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Qindk0) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Qindk0 SIZE= ', &
         size(Qindk0), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vparindk0) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vparindk0 SIZE= ', &
         size(Vparindk0), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
@@ -559,28 +559,28 @@ contains
 			if (size(Vperp1indk0) /= NsTK(1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1indk0 SIZE= ', &
 					size(Vperp1indk0), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 					nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
 			if (size(Vperp1indk0) /= NsTK(1)) then
 	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1indk0 SIZE= ', &
 	        size(Vperp1indk0), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 	        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 	    end if
 
 			if (size(Vperp2indk1) /= NsTK(1)) then
 	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2indk1 SIZE= ', &
 	        size(Vperp2indk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 	        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 	    end if
 
 			if (size(Vperp2indk1) /= NsTK(1)) then
 	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2indk1 SIZE= ', &
 	        size(Vperp2indk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 	        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 	    end if
 
@@ -589,14 +589,14 @@ contains
 			if (size(Vperpindk0) /= NsTK(1)) then
 				write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperpindk0 SIZE= ', &
 					size(Vperpindk0), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+					' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 					nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 			end if
 
 			if (size(Vperpindk1) /= NsTK(1)) then
 	      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperpindk1 SIZE= ', &
 	        size(Vperpindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+	        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
 	        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
 	    end if
 
@@ -605,294 +605,294 @@ contains
     if (size(Vparindk1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vparindk1 SIZE= ', &
         size(Vparindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vpindk1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vpindk1 SIZE= ', &
         size(Vpindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vqindk1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vqindk1 SIZE= ', &
         size(Vqindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vphiindk1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vphiindk1 SIZE= ', &
         size(Vphiindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(VxN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VxN SIZE= ', &
         size(VxN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(VyN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VyN SIZE= ', &
         size(VyN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(VzN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VzN SIZE= ', &
         size(VzN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(xN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xN SIZE= ', &
         size(xN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(yN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' yN SIZE= ', &
         size(yN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(zN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zN SIZE= ', &
         size(zN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vperp1N) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1N SIZE= ', &
         size(Vperp1N), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vperp2N) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2N SIZE= ', &
         size(Vperp2N), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(VperpN) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpN SIZE= ', &
         size(VperpN), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(pk4) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pk4 SIZE= ', &
         size(pk4), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(qk4) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qk4 SIZE= ', &
         size(qk4), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(phik4) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phik4 SIZE= ', &
         size(phik4), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(rk4) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rk4 SIZE= ', &
         size(rk4), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(thetak4) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetak4 SIZE= ', &
         size(thetak4), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
 		if (size(ellk4) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellk4 SIZE= ', &
         size(ellk4), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(ENAflag) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENAflag SIZE= ', &
         size(ENAflag), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(ENAflagN0ind) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENAflagN0ind SIZE= ', &
         size(ENAflagN0ind), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(ENAflagN1ind) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ENAflagN1ind SIZE= ', &
         size(ENAflagN1ind), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(AEAmag) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AEAmag SIZE= ', &
         size(AEAmag), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
 		if (size(AGmag) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AGmag SIZE= ', &
         size(AGmag), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(AEPmag) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' AEPmag SIZE= ', &
         size(AEPmag), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(x) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' x SIZE= ', &
         size(x), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(y) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' y SIZE= ', &
         size(y), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(z) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' z SIZE= ', &
         size(z), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vperp1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1 SIZE= ', &
         size(Vperp1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vperp2) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2 SIZE= ', &
         size(Vperp2), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vperp) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp SIZE= ', &
         size(Vperp), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vx) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vx SIZE= ', &
         size(Vx), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vy) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vy SIZE= ', &
         size(Vy), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vz) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vz SIZE= ', &
         size(Vz), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vphi) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vphi SIZE= ', &
         size(Vphi), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(Vp) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vp SIZE= ', &
         size(Vp), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(pdriftion) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pdriftion SIZE= ', &
         size(pdriftion), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(qdriftion) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qdriftion SIZE= ', &
         size(qdriftion), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(phidriftion) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phidriftion SIZE= ', &
         size(phidriftion), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(rdriftENA) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rdriftENA SIZE= ', &
         size(rdriftENA), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(thetadriftENA) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetadriftENA SIZE= ', &
         size(thetadriftENA), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 
     if (size(phidriftENA) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phidriftENA SIZE= ', &
         size(phidriftENA), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
-        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND STATISTICAL TIME-STEP= ', &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if
 

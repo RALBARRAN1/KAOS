@@ -430,9 +430,8 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S5End)
-					write(S5string, '(i10)')  nint(S5End)
-					write(*, *) trim('%% 5- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S5string)) // &
+					write(S5string, '(F10.4)')  S5End
+					write(*, *) trim('%% 5- REAL-TIME= ' // adjustl(S5string)) // &
 						trim(' s. DIPOLE POLYNOMIAL SOLVER COMPLETE %%')
 				end if
 			end do

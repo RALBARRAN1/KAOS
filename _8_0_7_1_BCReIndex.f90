@@ -63,7 +63,7 @@ contains
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCinteger(:))
     Vphiindk1(:)= pack(Vphiindk1(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCinteger(:))
-    VxN(:)= pack(VxN(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
+		VxN(:)= pack(VxN(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCreal(:))
     VyN(:)= pack(VyN(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCreal(:))

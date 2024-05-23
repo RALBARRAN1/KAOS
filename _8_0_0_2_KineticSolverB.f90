@@ -51,7 +51,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! UPDATE TIME PARAMETER ON STATISTICAL TIME-STEP:
+			! UPDATE TIME PARAMETER ON MASTER TIME-STEP:
 
 			nnloopKS0: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (nn > SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
@@ -490,7 +490,7 @@ contains
 						if (Qindk1(j) /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' LB INJECTED PARTICLE= ', j, &
 								', Qindk1= ', Qindk1(j), ' NOT IN LOWER GRID CELL FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-								', AND STATISTICAL TIME-STEP= ', nn, ' IN KINETIC SOLVER B SUBROUTINE' &
+								', AND MASTER TIME-STEP= ', nn, ' IN KINETIC SOLVER B SUBROUTINE' &
 								// achar(27) // '[0m.'
 						end if
 					end do
@@ -1075,7 +1075,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! Compute ambipolar and parallel electric fields
+			! Compute ambipolar and parallel electric fields for AEAmagN, AGmagN, AEPmagN
 			call AmbipolarEfieldSub
 			call GravfieldSub
 			call PotentialStructureSub
@@ -1096,7 +1096,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! EXPORT INTERMEDIARY KINETIC DATA:
+			! EXPORT INTERMEDIARY DATA:
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n /= 1) .and. (nn /= 1)) .and. &
@@ -1109,7 +1109,7 @@ contains
 				end if
 			end do
 
-			! Export injection data on injection time-step
+			! Export BC data on injection time-step
 			if ((SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1)  .and. &
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
@@ -1122,10 +1122,9 @@ contains
 						write(sstring, '(I5)') s
 						write(fstring, '(I5)') f
 
-						expstring= adjustl(adjustr(rankstring) &
-							// '_' // adjustl(adjustr(nnstring) &
+						expstring= adjustl(adjustr(nnstring) &
 							// '_' // adjustl(adjustr(sstring) &
-							// '_' // adjustl(adjustr(fstring) // '_'))))
+							// '_' // adjustl(adjustr(fstring) // '_')))
 
 						NsnTfile= adjustl(adjustr(expstring) // adjustl(adjustr('NsnTfort.bin')))
 						open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
@@ -1222,7 +1221,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! EXPORT FINAL KINETIC DATA:
+			! EXPORT FINAL DATA:
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if (((n /= 1) .and. (nn /= 1)) .and. &
@@ -1233,7 +1232,7 @@ contains
 				end if
 			end do
 
-			! Export injection data on injection time-step
+			! Export BC data on injection time-step
 			if ((SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1)  .and. &
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
@@ -1246,10 +1245,9 @@ contains
 						write(sstring, '(I5)') s
 						write(fstring, '(I5)') f
 
-						expstring= adjustl(adjustr(rankstring) &
-							// '_' // adjustl(adjustr(nnstring) &
+						expstring= adjustl(adjustr(nnstring) &
 							// '_' // adjustl(adjustr(sstring) &
-							// '_' // adjustl(adjustr(fstring) // '_'))))
+							// '_' // adjustl(adjustr(fstring) // '_')))
 
 						NsnTfile= adjustl(adjustr(expstring) // adjustl(adjustr('NsnTfort.bin')))
 						open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
@@ -1346,7 +1344,7 @@ contains
 
 			! ----------------------------------------------------
 
-			! PRINT OUT STATISTICAL TIME-STEP:
+			! PRINT OUT MASTER TIME-STEP:
 
 			do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 				if ((n /= 1) .and. (nn /= 1) .and. &
@@ -1357,56 +1355,33 @@ contains
 						write(nnstring, '(I5)') nn
 						write(sstring, '(I5)') s
 						write(fstring, '(I5)') f
-						write(Timestring, '(D10.2)') (Time(1)/3600d0)
-						write(KS0string, '(D10.2)')  (KS0End/3600d0)
-						write(Lshellstring, '(D10.2)')  Lshell(1)
-						write(rLBstring, '(D10.2)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
-						write(rUBstring, '(D10.2)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1e-3
-						write(phiLshellstring, '(D10.2)')  phiLshell(1)
+						write(Timestring, '(F10.4)') (Time(1)/3600d0)
+						write(KS0string, '(F10.4)')  (KS0End/3600d0)
+						write(Lshellstring, '(F10.4)')  Lshell(1)
+						write(rLBstring, '(F10.4)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+						write(rUBstring, '(F10.4)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1e-3
+						write(phiLshellstring, '(F10.4)')  phiLshell(1)
+						write(nsnormCLBGTstring, '(i10)')  nint(SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn))
 						write(ndatfacstring, '(i10)')  SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)
-						write(*, *) trim('** COMPLETE: STATISTICAL TIME-STEP= ' &
-							// adjustl(nnstring)) // &
-							trim(', RANK= ' // adjustl(rankstring)) // &
-							trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
+
+						write(*, *) trim('** COMPLETE: MASTER TIME-STEP= ' // adjustl(nnstring)) // &
+							trim(', SPECIE= ' // adjustl(sstring)) // &
 							trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
-							trim(', SIM-TIME= ' // adjustl(Timestring)) // &
-							trim(' hrs., REAL-TIME= ' // adjustl(KS0string)) // &
-							trim(' hrs., TOTAL PARTICLE NUMBER= ' // adjustl(Nsstring)) // &
-							trim(', LB altitude [km]= ' // adjustl(rLBstring)) // &
-							trim(', UB altitude [km]= ' // adjustl(rUBstring)) // &
-							trim(', L-shell [RE]= ' // adjustl(Lshellstring)) // &
-							trim(', Invariant Longitude [rads]= ' // adjustl(phiLshellstring)) // &
-							trim(', ndatfac = ' // adjustl(ndatfacstring))
+							trim(', SIM-TIME [hrs]= ' // adjustl(Timestring)) // &
+							trim(', REAL-TIME [hrs]= ' // adjustl(KS0string))
+
+						write(*, *) trim('	TOTAL PARTICLE #= ' // adjustl(Nsstring)) // &
+							trim(', LB PARTICLE #= ' // adjustl(nsnormCLBGTstring)) // &
+							trim(', # OF COMPUTATIONAL TIME-STEPS PER MASTER TIME-STEP= ' // adjustl(ndatfacstring))
+
+						write(*, *) trim('	L-shell [RE]= ' // adjustl(Lshellstring)) // &
+							trim(', Magnetic Longitude [rads]= ' // adjustl(phiLshellstring)) // &
+							trim(', LB [km]= ' // adjustl(rLBstring)) // &
+							trim(', UB [km]= ' // adjustl(rUBstring))
+
 					end if
 				end if
 			end do
-
-			! ----------------------------------------------------
-
-			! PRINT OUT INJECTION TIME-STEP:
-
-			!do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-			!	if ((n /= 1) .and. (nn /= 1) .and. &
-			!		(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
-			!		if (rank == 0) then
-			!			call cpu_time(KS0End)
-			!			write(Nsstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)
-			!			write(nnstring, '(I5)') nn
-			!			write(sstring, '(I5)') s
-			!			write(fstring, '(I5)') f
-			!			write(Timestring, '(I5)') nint(Time(1))
-			!			write(KS0string, '(i10)')  nint(KS0End)
-			!			write(*, *) trim('** COMPLETE: INJECTION TIME-STEP= ' &
-			!				// adjustl(nnstring)) // &
-			!				trim(', RANK= ' // adjustl(rankstring)) // &
-			!				trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
-			!				trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
-			!				trim(', SIM-TIME= ' // adjustl(Timestring)) // &
-			!				trim(' s., REAL-TIME= ' // adjustl(KS0string)) // &
-			!				trim(' s., TOTAL PARTICLE NUMBER= ' // adjustl(Nsstring))
-			!		end if
-			!	end if
-			!end do
 
 			! ----------------------------------------------------
 

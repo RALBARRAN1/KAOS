@@ -96,7 +96,7 @@ contains
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qindk0(j)), ' AND qGHGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qindk0(j)), 'FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
+							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', MASTER TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
 					end if
@@ -108,7 +108,7 @@ contains
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qindk0(j)), ' AND qGHGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qindk0(j)), 'FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
+							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', MASTER TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
 					end if
@@ -160,7 +160,7 @@ contains
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qindk0(j)), ' AND qGHGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qindk0(j)), 'FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
+							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', MASTER TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
 					end if
@@ -172,7 +172,7 @@ contains
 							SpecieT(s)%FluxTubeT(f)%q0T(j), ' VALUE OUT OF Q GRID WHERE qGLGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGLGT(nn, Qindk0(j)), ' AND qGHGT= ', &
 							SpecieT(s)%FluxTubeT(f)%qGHGT(nn, Qindk0(j)), ' FOR SPECIE= ', s, &
-							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', STATISTICAL TIME-STEP= ', nn, &
+							', FLUX TUBE= ', f, ', Qindk0= ', Qindk0(j), ', MASTER TIME-STEP= ', nn, &
 							', AND PARTICLE= ', j, ' IN KINETIC SOLVER A SUBROUTINE' &
 							// achar(27) // '[0m.'
 					end if
@@ -448,10 +448,9 @@ contains
 						write(sstring, '(I5)') s
 						write(fstring, '(I5)') f
 
-						expstring= adjustl(adjustr(rankstring) &
-							// '_' // adjustl(adjustr(nnstring) &
+						expstring= adjustl(adjustr(nnstring) &
 							// '_' // adjustl(adjustr(sstring) &
-							// '_' // adjustl(adjustr(fstring) // '_'))))
+							// '_' // adjustl(adjustr(fstring) // '_')))
 
 						NsnTfile= adjustl(adjustr(expstring) // adjustl(adjustr('NsnTfort.bin')))
 						open(unit= expint, file= adjustl(adjustr(dataexportdir) // &
@@ -548,28 +547,43 @@ contains
 
   		! ----------------------------------------------------
 
-  		! PRINT OUT STATISTICAL TIME-STEP:
+  		! PRINT OUT MASTER TIME-STEP:
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
   			if ((n == 1) .and. (nn == 1)) then
-  				if (rank == 0) then
-  					call cpu_time(KS0End)
-  					write(nnstring, '(I5)') nn
-  					write(sstring, '(I5)') s
-  					write(fstring, '(I5)') f
-  					write(Timestring, '(I5)') nint(Time(1))
-  					write(KS0string, '(i10)')  nint(KS0End)
-  					write(*, *) trim('** COMPLETE: STATISTICAL TIME-STEP= ' &
-  						// adjustl(nnstring)) // &
-  						trim(', RANK= ' // adjustl(rankstring)) // &
-  						trim(', PARTICLE SPECIE= ' // adjustl(sstring)) // &
-  						trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
-  						trim(', SIM-TIME= ' // adjustl(Timestring)) // &
-  						trim(' s., REAL-TIME= ' // adjustl(KS0string)) // &
-  						trim(' s.')
-  				end if
-  			end if
-  		end do
+					if (rank == 0) then
+						call cpu_time(KS0End)
+						write(Nsstring, '(i10)') SpecieT(s)%FluxTubeT(f)%NsnRRT(nn)
+						write(nnstring, '(I5)') nn
+						write(sstring, '(I5)') s
+						write(fstring, '(I5)') f
+						write(Timestring, '(F10.4)') (Time(1)/3600d0)
+						write(KS0string, '(F10.4)')  (KS0End/3600d0)
+						write(Lshellstring, '(F10.4)')  Lshell(1)
+						write(rLBstring, '(F10.4)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))- RE)*1d-3
+						write(rUBstring, '(F10.4)')  (SpecieT(s)%FluxTubeT(f)%rGCGT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))- RE)*1e-3
+						write(phiLshellstring, '(F10.4)')  phiLshell(1)
+						write(nsnormCLBGTstring, '(i10)')  nint(SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn))
+						write(ndatfacstring, '(i10)')  SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)
+
+						write(*, *) trim('** COMPLETE: MASTER TIME-STEP= ' // adjustl(nnstring)) // &
+							trim(', SPECIE= ' // adjustl(sstring)) // &
+							trim(', FLUX-TUBE= ' // adjustl(fstring)) // &
+							trim(', SIM-TIME [hrs]= ' // adjustl(Timestring)) // &
+							trim(', REAL-TIME [hrs]= ' // adjustl(KS0string))
+
+						write(*, *) trim('	TOTAL PARTICLE #= ' // adjustl(Nsstring)) // &
+							trim(', LB PARTICLE #= ' // adjustl(nsnormCLBGTstring)) // &
+							trim(', # OF COMPUTATIONAL TIME-STEPS PER MASTER TIME-STEP= ' // adjustl(ndatfacstring))
+
+						write(*, *) trim('	L-shell [RE]= ' // adjustl(Lshellstring)) // &
+							trim(', Magnetic Longitude [rads]= ' // adjustl(phiLshellstring)) // &
+							trim(', LB [km]= ' // adjustl(rLBstring)) // &
+							trim(', UB [km]= ' // adjustl(rUBstring))
+
+					end if
+				end if
+			end do
 
   		! ----------------------------------------------------
 

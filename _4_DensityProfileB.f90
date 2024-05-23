@@ -163,9 +163,8 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S4End)
-					write(S4string, '(i10)')  nint(S4End)
-					write(*, *) trim('%% 4- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S4string)) // &
+					write(S4string, '(F10.4)')  S4End
+					write(*, *) trim('%% 4- REAL-TIME= ' // adjustl(S4string)) // &
 						trim(' s. DENSITY PROFILE B COMPLETE %%')
 				end if
 			end do

@@ -33,8 +33,8 @@ contains
 			write(sstring, '(I5)') s
 			write(fstring, '(I5)') f
 
-			expstring= adjustl(adjustr(rankstring) // '_' // adjustl(adjustr(sstring) &
-				// '_' // adjustl(adjustr(fstring) // '_')))
+			expstring= adjustl(adjustr(sstring) &
+				// '_' // adjustl(adjustr(fstring) // '_'))
 
 			nsnormfacTfile= adjustl(adjustr(expstring) // adjustl(adjustr('nsnormfacTfort.bin')))
 			open(unit= expint, file= adjustl(adjustr(dataexportdir) // &

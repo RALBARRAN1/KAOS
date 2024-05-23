@@ -357,9 +357,8 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S7End)
-					write(S7string, '(i10)')  nint(S7End)
-					write(*, *) trim('%% 7- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S7string)) // &
+					write(S7string, '(F10.4)')  S7End
+					write(*, *) trim('%% 7- REAL-TIME= ' // adjustl(S7string)) // &
 						trim(' s. INITIAL CONDITIONS COMPLETE %%')
 				end if
 			end do
