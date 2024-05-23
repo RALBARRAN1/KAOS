@@ -30,10 +30,6 @@ call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
 
 ! ----------------------------------------------------
 
-write(rankstring, '(i10)')  rank ! Convert current rank number to character
-
-! ----------------------------------------------------
-
 ! INITIALIZE ALL SIMULATION SUBROUTINES:
 
 call SimParameterizationSub
@@ -50,11 +46,10 @@ if (rank == 0) then
 	do s= 1, Stot, 1
 		do f= 1, SpecieT(s)%NfT(1), 1
 			write(*, *)
-			call cpu_time(TotEnd) ! End Total CPU time
-			write(ToTsGTring, '(i10)')  nint(TotEnd)
-			write(*, *) trim('%%%%%% RANK= ' // adjustl(rankstring)) // &
-				trim(', TOTAL CPU TIME= ' // adjustl(ToTsGTring)) // &
-				trim(' s. KAOS SIMULATION COMPLETE %%%%%%')
+			call cpu_time(TotEnd)
+			write(ToTsGTring, '(F10.4)')  TotEnd/3600d0
+			write(*, *) trim('%%%%%% TOTAL CPU TIME= ' // adjustl(ToTsGTring)) // &
+				trim(' hrs. KAOS SIMULATION COMPLETE %%%%%%')
 		end do
 	end do
 end if

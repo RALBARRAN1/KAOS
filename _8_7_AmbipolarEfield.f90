@@ -134,7 +134,7 @@ contains
 											(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)* &
 											SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)), &
 											' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', Qind= ', Qind, &
-											', AND STATISTICAL TIME-STEP= ', nn, &
+											', AND MASTER TIME-STEP= ', nn, &
 											' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' &
 		 									// achar(27) // '[0m.'
 								end if
@@ -1309,7 +1309,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' EAInertialRT= ', SpecieT(s)%FluxTubeT(f)%EAInertialRT(nn, Qind), &
 									' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1321,7 +1321,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' EAPressureRT= ', SpecieT(s)%FluxTubeT(f)%EAPressureRT(nn, Qind), &
 									' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1333,7 +1333,7 @@ contains
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' EAmagRT= ', SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, Qind), &
 									' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -1343,7 +1343,7 @@ contains
 									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 										' EAmagRT= ', SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, Qind), &
 										' IS NOT CONSTANT IN TIME FOR SPECIE= ', s, &
-										', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+										', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 										' TIME-STEP= ', nn, ' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' &
 										// achar(27) // '[0m.'
 								end if
@@ -1446,7 +1446,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE ALL PARTICLE AMBIPOLAR ELECTRIC FORCE ACCELERATION MAGNITUDES ON STATISTICAL TIME-STEPS:
+		! COMPUTE ALL PARTICLE AMBIPOLAR ELECTRIC FORCE ACCELERATION MAGNITUDES ON MASTER TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -1498,10 +1498,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1552,10 +1552,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1606,10 +1606,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1647,10 +1647,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1693,10 +1693,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1746,10 +1746,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1799,10 +1799,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1839,10 +1839,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1899,10 +1899,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -1953,10 +1953,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2007,10 +2007,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2048,10 +2048,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2094,10 +2094,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2147,10 +2147,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2200,10 +2200,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2240,10 +2240,10 @@ contains
 
 											if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+													' MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 													', EAmagInterp= ', EAmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN AMBIPOLAR ELECTRIC FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -2289,7 +2289,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE ALL PARTICLE AMBIPOLAR ELECTRIC FORCE ACCELERATION MAGNITUDES ON NON-STATISTICAL TIME-STEPS:
+		! COMPUTE ALL PARTICLE AMBIPOLAR ELECTRIC FORCE ACCELERATION MAGNITUDES ON NON-MASTER TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -2341,7 +2341,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2392,7 +2392,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2443,7 +2443,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2483,7 +2483,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2540,7 +2540,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2591,7 +2591,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2642,7 +2642,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -2682,7 +2682,7 @@ contains
 
 										if ((AEAmagN(j) == 0) .and. (EAmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
+												' NON-MASTER TIME-STEP HAS ZERO AEAmagN= ', AEAmagN(j), &
 												', EAmagInterp= ', EAmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &

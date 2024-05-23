@@ -74,7 +74,7 @@ contains
 
   	! ----------------------------------------------------
 
-  	! CONVECT ALL FLUX-TUBES ON STATISTICAL TIME-STEPS:
+  	! UPDATE GRID WITH CONVECTION:
 
 		! ----------------------------------------------------
 
@@ -84,8 +84,6 @@ contains
   				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
 
   				! ----------------------------------------------------
-
-					! UPDATE GRID WITH CONVECTION:
 
   				INITIALGRIDflag= 0
 
@@ -104,8 +102,8 @@ contains
   					qGA(1)= qGAIC ! Lower boundary q value
   					qGB(1)= qGBIC ! Upper boundary q value
 
-  					Lshell(1)= Lshell(1) - 0.5 ! L-shell [RE]
-  					phiLshell(1)= phiLshell(1) + 0.5 ! invariant longitude [rads]
+  					Lshell(1)= Lshell(1)+ 0d0 ! L-shell [RE]
+  					phiLshell(1)= phiLshell(1)+ 0d0 ! invariant longitude [rads]
 
   				end if
 
@@ -150,6 +148,10 @@ contains
 					SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)= ndatfacG(1)
 					SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn)= nsnormCLBG(1)
 					SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(nn)= nsnormCUBG(1)
+
+					! ----------------------------------------------------
+
+					! RE-INDEX CONFIGURATION SPACE GRID FOR A NON-COMPUTATIONAL LOWER BOUNDARY GHOST CELL:
 
 					do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
@@ -223,27 +225,35 @@ contains
 
 		! UPDATE ION POSITIONS AND VELOCITIES WITH CONVECTION AND BETATRON ACCELERATION:
 
+		! ----------------------------------------------------
+
 		if (SpecieT(s)%FluxTubeT(f)%CONVECTIONflagT(1) == 1) then
-		  convnloop3: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+		  convnloopxv: do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
 		    if ((n /= 1) .and. (nn /= 1) .and. &
 		      (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
+
+					! ----------------------------------------------------
 
 		      do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
 
 		        ! ----------------------------------------------------
 
 		        ! UPDATE ION POSITIONS:
-		        ! Note: On statistical time-steps use old values of AEAmagN, AGmagN, AEPmagN
+		        ! Note: On MASTER time-steps use old values of AEAmagN, AGmagN, AEPmagN
 		        ! (which are overridden on next computational time-step)
 
+						! ----------------------------------------------------
+
+						! Compute magnetic moments before convection
+						! with current Vperp value and Bmag
 		        call rsub(rConv(1), xN(j), yN(j), zN(j))
 		        call thetasub(thetaConv(1), zN(j), rConv(1))
 		        call qsub(qNp(1), rConv(1), thetaConv(1))
 		        call ellsub(ellConv(1), thetaConv(1))
 		        call Bmagsub(BmagConv(1), rConv(1), ellConv(1))
-
 		        call musub(muConv(1), SpecieT(s)%msT(1), BmagConv(1), VperpN(j))
 
+						! Compute new positions after convection
 		        pNp(1)= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, 1) ! Update L-shell and longitude
 		        phiNp(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)
 
@@ -257,18 +267,139 @@ contains
 		        yN(j)= yfinalRK4(1)
 		        zN(j)= zfinalRK4(1)
 
-		        ! ----------------------------------------------------
+						! ----------------------------------------------------
 
-		        ! UPDATE ION TRANSVERSE VELOCITIES:
-		        ! Note: first adiabatic invariant is mu= ms*(Vperp**2d0)/(2d0*Bmag) s.t. Vperp= sqrt(2*Bmag*mu/ms)
+						! DIAGNOSTIC FLAGS FOR PROPER ARRAY SIZES AND FINITE VALUES:
+
+						if ((isnan(real(rConv(1))) .eqv. .true.) .or. &
+							(size(rConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rConv= ', rConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(thetaConv(1))) .eqv. .true.) .or. &
+							(size(thetaConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaConv= ', thetaConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(qNp(1))) .eqv. .true.) .or. &
+							(size(qNp(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' qNp= ', qNp(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(ellConv(1))) .eqv. .true.) .or. &
+							(size(ellConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellConv= ', ellConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(BmagConv(1))) .eqv. .true.) .or. &
+							(size(BmagConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BmagConv= ', BmagConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(muConv(1))) .eqv. .true.) .or. &
+							(size(muConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' muConv= ', muConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(pNp(1))) .eqv. .true.) .or. &
+							(size(pNp(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' pNp= ', pNp(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(phiNp(1))) .eqv. .true.) .or. &
+							(size(phiNp(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' phiNp= ', phiNp(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(xN(j))) .eqv. .true.) .or. &
+							(size(xN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' xN= ', xN(j), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(yN(j))) .eqv. .true.) .or. &
+							(size(yN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' yN= ', yN(j), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(zN(j))) .eqv. .true.) .or. &
+							(size(zN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' zN= ', zN(j), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						! ----------------------------------------------------
+
+		        ! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
 
 		        if (ENAflag(j) .eqv. .false.) then
+		          if (phiNp(1) /= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)) then
+		            write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+		              ' INCONSISTENT ION phiNp= ', phiNp(1), &
+		              ' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
+		              ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+		              ', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+		              ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+		          end if
+		          if (pNp(1) /= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, 1)) then
+		            write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+		              ' INCONSISTENT ION pNp= ', pNp(1), &
+		              ' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
+		              ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+		              ', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+		              ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+		          end if
+		        end if
+
+		        ! ----------------------------------------------------
+
+		        ! UPDATE ION TRANSVERSE VELOCITIES WITH BETATRON ACCELERATION:
+		        ! Note: first adiabatic invariant is mu= ms*(Vperp**2d0)/(2d0*Bmag) s.t. Vperp= sqrt(2*Bmag*mu/ms)
+						! Note: VxN, VyN, and VzN remain unchanged
+
+						! ----------------------------------------------------
+
+		        if (ENAflag(j) .eqv. .false.) then
+
+							! Compute Vperp values after convection
+							! with new Bmag and conserved magnetic moments and gyro-angles.
 		          call rsub(rConv(1), xN(j), yN(j), zN(j))
 		          call thetasub(thetaConv(1), zN(j), rConv(1))
 		          call ellsub(ellConv(1), thetaConv(1))
 		          call Bmagsub(BmagConv(1), rConv(1), ellConv(1))
 
-		          ! Preserve gyro-angle
+		          ! Compute gyro-angle before convection
 		          if ((Vperp1N(j) > 0d0) .and. (Vperp2N(j) > 0d0)) then
 		            GAConv(1)= atan(abs(Vperp2N(j))/abs(Vperp1N(j)))
 		          end if
@@ -302,7 +433,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp1N= ', Vperp1N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -312,7 +443,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp2N= ', Vperp2N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -333,7 +464,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp1N= ', Vperp1N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -343,7 +474,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp2N= ', Vperp2N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -364,7 +495,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp1N= ', Vperp1N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -374,7 +505,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp2N= ', Vperp2N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -395,7 +526,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp1N= ', Vperp1N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -405,7 +536,7 @@ contains
 		                ' INCORRECT BETATRON SIGN OF Vperp2N= ', Vperp2N(j), &
 		                ' FOR GYRO-ANGLE [rads]= ', GAConv(1), &
 		                ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		                ', STATISTICAL TIME-STEP= ', nn, &
+		                ', MASTER TIME-STEP= ', nn, &
 		                ', AND PARTICLE= ', j, ' CONVECTION SUBROUTINE' &
 		                // achar(27) // '[0m.'
 		            end if
@@ -415,126 +546,84 @@ contains
 		          end if
 		        end if
 
-		        ! ----------------------------------------------------
-
-		        ! UPDATE ION TRANSLATIONAL VELOCITIES:
-
-		        call rsub(rConv(1), xN(j), yN(j), zN(j))
-		        call thetasub(thetaConv(1), zN(j), rConv(1))
-
-		        if (ENAflag(j) .eqv. .false.) then
-		          phiConv(1)= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)
-		        else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
-		          (ENAflag(j) .eqv. .true.)) then
-		          call phisub(phiConv(1), xN(j), yN(j))
-		        end if
-
-		        ! ----------------------------------------------------
-
-		        ! DIAGNOSTIC FLAGS FOR CONSISTENT PHI VALUE:
-
-		        if (ENAflag(j) .eqv. .false.) then
-		          if (phiConv(1) /= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)) then
-		            write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-		              ' INCONSISTENT ION phiConv= ', phiConv(1), &
-		              ' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
-		              ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		              ', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
-		              ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
-		          end if
-		          if (phiNp(1) /= SpecieT(s)%FluxTubeT(f)%phiGCGT(nn, 1)) then
-		            write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-		              ' INCONSISTENT ION phiNp= ', phiNp(1), &
-		              ' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
-		              ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		              ', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
-		              ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
-		          end if
-		          if (pNp(1) /= SpecieT(s)%FluxTubeT(f)%pGCGT(nn, 1)) then
-		            write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-		              ' INCONSISTENT ION pNp= ', pNp(1), &
-		              ' AND phiGCGT VALUE= ', SpecieT(s)%FluxTubeT(f)%phiGCGT(nnind, 1), &
-		              ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		              ', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
-		              ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
-		          end if
-		        end if
-
-		        ! ----------------------------------------------------
-
-		        call ellsub(ellConv(1), thetaConv(1))
-
-		        ! ----------------------------------------------------
-
-		        ! RE-ALIGN VELOCITY VECTOR INTO LOCAL DIPOLE COORDINATES:
-
-		        ! FIXME Take sign of Vpar and magnitude and project on to Vx, Vy, Vz
-
-		        VparConv(1)= 3d0*cos(thetaConv(1))*sin(thetaConv(1))*(VxN(j)* &
-		          cos(phiConv(1))+ VyN(j)*sin(phiConv(1)))/sqrt(ellConv(1))+ &
-		          VzN(j)*(3d0*(cos(thetaConv(1))**2d0)- 1d0)/sqrt(ellConv(1))
-
-		        ! ----------------------------------------------------
-
-		        if (ENAflag(j) .eqv. .false.) then
-		          VpConv(1)= 0d0
-		          VphiConv(1)= 0d0
-		        else if ((SpecieT(s)%FluxTubeT(f)%QEXCHANGEflagT(1) == 1) .and. &
-		          (ENAflag(j) .eqv. .true.)) then
-		          VpConv(1)= abs((1d0- 3d0*(cos(thetaConv(1))**2d0))*(VxN(j)* &
-		            cos(phiConv(1))+ VyN(j)*sin(phiConv(1)))/sqrt(ellConv(1))+ 3d0*VzN(j)* &
-		            cos(thetaConv(1))*sin(thetaConv(1))/sqrt(ellConv(1)))
-		          VphiConv(1)= -VxN(j)*sin(phiConv(1))+ VyN(j)*cos(phiConv(1))
-		        end if
-
-		        ! ----------------------------------------------------
-
-		        ! COMPUTE NEW FIELD-ALIGNED CARTESIAN VELOCITY COMPONENTS:
-
-		        VxN(j)= cos(phiConv(1))*(3d0*VparConv(1)*cos(thetaConv(1))*sin(thetaConv(1))+ &
-		          VpConv(1)*(1d0- 3d0*(cos(thetaConv(1))**2d0)))/sqrt(ellConv(1))- &
-		          VphiConv(1)*sin(phiConv(1))
-		        VyN(j)= sin(phiConv(1))*(3d0*VparConv(1)*cos(thetaConv(1))*sin(thetaConv(1))+ &
-		          VpConv(1)*(1d0- 3d0*(cos(thetaConv(1))**2d0)))/sqrt(ellConv(1))+ &
-		          VphiConv(1)*cos(phiConv(1))
-		        VzN(j)= VparConv(1)*(3d0*(cos(thetaConv(1))**2d0)- 1d0)/sqrt(ellConv(1))+ &
-		          3d0*VpConv(1)*cos(thetaConv(1))*sin(thetaConv(1))/sqrt(ellConv(1))
-
-		        ! ----------------------------------------------------
+						! ----------------------------------------------------
 
 		        ! DIAGNOSTIC FLAGS FOR PROPER ARRAY SIZES AND FINITE VALUES:
 
-		        if ((isnan(real(VxN(j))) .eqv. .true.) .or. &
-		          (size(VxN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
-		          write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VxN= ', VxN(j), &
-		            ' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		            ', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
-		            ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
-		        end if
+						if ((isnan(real(rConv(1))) .eqv. .true.) .or. &
+							(size(rConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' rConv= ', rConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
 
-		        if ((isnan(real(VyN(j))) .eqv. .true.) .or. &
-		          (size(VyN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
-		          write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VyN= ', VyN(j), &
-		            ' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		            ', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
-		            ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
-		        end if
+						if ((isnan(real(thetaConv(1))) .eqv. .true.) .or. &
+							(size(thetaConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' thetaConv= ', thetaConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
 
-		        if ((isnan(real(VzN(j))) .eqv. .true.) .or. &
-		          (size(VzN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
-		          write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VzN= ', VzN(j), &
-		            ' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
-		            ', STATISTICAL TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
-		            ' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
-		        end if
+						if ((isnan(real(ellConv(1))) .eqv. .true.) .or. &
+							(size(ellConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ellConv= ', ellConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(BmagConv(1))) .eqv. .true.) .or. &
+							(size(BmagConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' BmagConv= ', BmagConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(GAConv(1))) .eqv. .true.) .or. &
+							(size(GAConv(:)) /= 1)) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' GAConv= ', GAConv(1), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(VperpN(j))) .eqv. .true.) .or. &
+							(size(VperpN(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VperpN= ', VperpN(j), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(Vperp1N(j))) .eqv. .true.) .or. &
+							(size(Vperp1N(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp1N= ', Vperp1N(j), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
+
+						if ((isnan(real(Vperp2N(j))) .eqv. .true.) .or. &
+							(size(Vperp2N(:)) /= SpecieT(s)%FluxTubeT(f)%NsT(1))) then
+							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vperp2N= ', Vperp2N(j), &
+								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+								', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+								' IN CONVECTION SUBROUTINE' // achar(27) // '[0m.'
+						end if
 
 		        ! ----------------------------------------------------
 
 		      end do
 
-		      exit convnloop3
+					! ----------------------------------------------------
+
+		      exit convnloopxv
+
 		    end if
-		  end do convnloop3
+		  end do convnloopxv
 		end if
 
 		! ----------------------------------------------------

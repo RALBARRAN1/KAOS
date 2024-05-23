@@ -100,7 +100,7 @@ contains
 											' INTEGRAND HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', Vphiind= ', Vphiind, &
-											', AND STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											', AND MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' Q-COMPONENT ENA MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -135,7 +135,7 @@ contains
 											' INCONSISTENT INTEGRAND VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', Vphiind= ', Vphiind, &
-											', AND STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											', AND MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' Q-COMPONENT ENA MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -166,7 +166,7 @@ contains
 											' INCONSISTENT INTEGRAND AND g0phENART VALUE FOR SPECIE= ', &
 											s, ', FLUX TUBE= ', f, ', Qind= ', Qind, ', Vpind= ', &
 											Vpind, ', Vqind= ', Vqind, ', Vphiind= ', Vphiind, &
-											', AND STATISTICAL TIME-STEP= ', nn, ' IN FIRST', &
+											', AND MASTER TIME-STEP= ', nn, ' IN FIRST', &
 											' Q-COMPONENT ENA MOMENT SUBROUTINE' &
 											// achar(27) // '[0m.'
 									end if
@@ -198,7 +198,7 @@ contains
 							(SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind) /= 0)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' INCONSISTENT M1QphENART and NqENART VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN FIRST Q-COMPONENT ENA MOMENT', &
 								' SUBROUTINE' // achar(27) // '[0m.'
 						end if
@@ -207,7 +207,7 @@ contains
 							(SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind) /= 0)) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' INCONSISTENT M1QphENART and FphENARTp SUMMATION FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN FIRST Q-COMPONENT ENA MOMENT', &
 								' SUBROUTINE' // achar(27) // '[0m.'
 						end if
@@ -218,7 +218,7 @@ contains
 							(SpecieT(s)%FluxTubeT(f)%M1QphENART(nn, Qind) /= 0))) then
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' INCONSISTENT M1QphENART and INTEGRAND SUMMATION FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN FIRST Q-COMPONENT ENA MOMENT', &
 								' SUBROUTINE' // achar(27) // '[0m.'
 						end if

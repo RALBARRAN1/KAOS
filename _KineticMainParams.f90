@@ -28,12 +28,12 @@ character(50) :: monthstring, daystring, yearstring, hourstring, minutestring, s
 ! Define all MPI variables
 integer(4) status(MPI_STATUS_SIZE)
 integer(4) :: len, ierr, rank
-character(10) :: rankstring
 
 ! Define all running indices
 integer(kind= dp) :: s, f, Qind, FAindIC, Vperp1ind, Vperp2ind, Vperpind, Vparind, Vpind, Vqind, Vphiind, &
 	j, n, nn, jj, jnn, rr, MAfilterQind1, MAfilterQind2, nnind, INITIALGRIDflag
-character(50) :: Nsstring, rLBstring, rUBstring, Lshellstring, phiLshellstring, ndatfacstring, &
+character(50) :: Nsstring, rLBstring, rUBstring, Lshellstring, phiLshellstring, &
+	nsnormCLBGTstring, ndatfacstring, &
 	sstring, fstring, Qindstring, Vperp1indstring, &
 	Vperp2indstring, Vperpindstring, Vparindstring, &
 	Vpindstring, Vqindstring, Vphiindstring, nnstring, jstring, expstring, &
@@ -179,7 +179,7 @@ real(kind= dp), dimension(:), allocatable :: BCreal
 integer(kind= dp), dimension(:), allocatable :: BCinteger
 logical(kind= dp), dimension(:), allocatable :: BClogical
 real(kind= dp), dimension(1) :: rConv, thetaConv, ellConv, BmagConv, &
-	muConv, GAConv, phiConv, VparConv, VpConv, VphiConv
+	muConv, GAConv
 
 ! ----------------- 8_1 KINETIC RK4 UPDATE -----------------
 
@@ -201,8 +201,7 @@ real(kind= dp), dimension(1) :: rk1, pk1, qk1, Rperpk1, &
 	AGxk1p, AGyk1p, AGzk1p, AGxk1, AGyk1, AGzk1, AGpark1, AGpk1, AGphik1, &
 	AEAxk1p, AEAyk1p, AEAzk1p, AEAxk1, AEAyk1, AEAzk1, AEApark1, AEApk1, AEAphik1, AEAmagSk1, AGmagSk1, AEPmagSk1, &
 	AEPxk1p, AEPyk1p, AEPzk1p, AEPxk1, AEPyk1, AEPzk1, AEPpark1, AEPpk1, AEPphik1, &
-	Axk1, Ayk1, Azk1, Vr, Vtheta, EpsilonPar, &
-	EpsilonPerp, alpha, VxR, VyR, VzR, lambdaPerp, EtaLH, XiPerp1, XiPerp2, S0, OmegaG0, ChiPerp1, &
+	Axk1, Ayk1, Azk1, VxR, VyR, VzR, lambdaPerp, EtaLH, XiPerp1, XiPerp2, S0, OmegaG0, ChiPerp1, &
 	ChiPerp2, GammaPerp1, GammaPerp2, SigmaPerp, DPerp1, DPerp2, DVPerp1icr, DVPerp2icr, DVPerpicr, &
 	SUMdsICR, epsPerp, tauPerp
 integer(kind= dp), dimension(:), allocatable :: Qindk1, Qindk0, Vparindk1, Vperpindk1, Vperp1indk1, Vperp2indk1, &
@@ -347,7 +346,7 @@ integer(4) :: expint ! Data export file unit
 character(50) :: RNtest1file, RNtest2file, NsnTfile, NsnRRTfile, NqLBoutfluxIonRTfile, LBoutfluxIonRTfile, &
 	NqUBoutfluxIonRTfile, UBoutfluxIonRTfile, NqLBoutfluxENARTfile, LBoutfluxENARTfile, &
 	NqUBoutfluxENARTfile, UBoutfluxENARTfile, LBNetDensityTfile, UBNetDensityTfile, &
-	nsnormfacTfile, TimeTfile, TeNTfile, N2PerpphRTfile, NphRTfile, NphENARTfile, M0phRTfile, M0phENARTfile, &
+	nsnormfacTfile, TimeTfile, TeNTfile, N2PerpphRTfile, d3vCTpfile, NphRTfile, NphENARTfile, M0phRTfile, M0phENARTfile, &
 	M1PerpphRTfile, M1Perp1phRTfile, M1Perp2phRTfile, M1ParphRTfile, sigmaIonNeutRTfile, nuIonNeutRTfile, &
 	M2phRTfile, M2PerpphRTfile, M2Perp1phRTfile, M2Perp2phRTfile, M2ParphRTfile, M1PphENARTfile, &
 	M1QphENARTfile, M1PHIphENARTfile, M2phENARTfile, M2PphENARTfile, M2QphENARTfile, M2PHIphENARTfile, &
@@ -356,7 +355,7 @@ character(50) :: RNtest1file, RNtest2file, NsnTfile, NsnRRTfile, NqLBoutfluxIonR
 	nsnormCLBGTfile, nsnormCUBGTfile, DensityOutputRTfile, TemperatureOutputRTfile, &
 	EAInertialOutputRTfile, EAPressureOutputRTfile, EAmagOutputRTfile, &
 	LBREPLENISHflagTfile, UBREPLENISHflagTfile, ndatfacGTfile, ns0GTfile, qGCGTfile, pGCGTfile, &
-	rGCGTfile, phiGCGTfile, thetaGCGTfile, TsGTfile, NqLBTfile, NqUBTfile
+	rGCGTfile, phiGCGTfile, thetaGCGTfile, d3xCGTfile, TsGTfile, NqLBTfile, NqUBTfile
 
 ! ----------------- ALL DERIVED DATA TYPES -----------------
 
@@ -432,6 +431,7 @@ type QCelltype ! Config-space grid cell derived data type: rank 1, indices [s, f
 		VqGp1T, VqGp2T, VqGpT, dVpGpT, dVphiGpT, dVqGpT
 	real(kind= dp), dimension(:, :, :), allocatable :: Vperp1GT, Vperp2GT, VpGT, VqGT, VphiGT, VparGT
 	real(kind= dp), dimension(:), allocatable :: TeNT
+	real(kind= dp), dimension(:, :, :), allocatable :: d3vCTp
 	! Particle Counts:
 	real(kind= dp), dimension(:), allocatable :: NqT, NqENAT, NqRT, NqENART
 	real(kind= dp), dimension(:, :, :), allocatable :: NphReNormT, NphReNormRT

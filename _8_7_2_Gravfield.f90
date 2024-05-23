@@ -75,7 +75,7 @@ contains
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' EGmagRT= ', SpecieT(s)%FluxTubeT(f)%EGmagRT(nn, Qind), &
 								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN GRAVITATIONAL FIELD SUBROUTINE' &
 								// achar(27) // '[0m.'
 						end if
@@ -84,7 +84,7 @@ contains
 							if (SpecieT(s)%FluxTubeT(f)%EGmagRT(nn, Qind) == 0d0) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO EGmagRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN GRAVITATIONAL FIELD SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -125,7 +125,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE ALL PARTICLE GRAVITATIONAL FORCE ACCELERATION MAGNITUDES ON STATISTICAL TIME-STEPS:
+		! COMPUTE ALL PARTICLE GRAVITATIONAL FORCE ACCELERATION MAGNITUDES ON MASTER TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -167,10 +167,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -211,10 +211,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -255,10 +255,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -286,10 +286,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -322,10 +322,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -365,10 +365,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -408,10 +408,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -438,10 +438,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -488,10 +488,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -532,10 +532,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -576,10 +576,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -607,10 +607,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -643,10 +643,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -686,10 +686,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -729,10 +729,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -759,10 +759,10 @@ contains
 
 											if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 													', EGmagInterp= ', EGmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN GRAVITATIONAL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -808,7 +808,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE ALL PARTICLE GRAVITATIONAL FORCE ACCELERATION MAGNITUDES ON NON-STATISTICAL TIME-STEPS:
+		! COMPUTE ALL PARTICLE GRAVITATIONAL FORCE ACCELERATION MAGNITUDES ON NON-MASTER TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -850,7 +850,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -891,7 +891,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -932,7 +932,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -962,7 +962,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1009,7 +1009,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1050,7 +1050,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1091,7 +1091,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1121,7 +1121,7 @@ contains
 
 										if ((AGmagN(j) <= 0) .and. (EGmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AGmagN= ', AGmagN(j), &
 												', EGmagInterp= ', EGmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &

@@ -52,7 +52,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! GET NEW GRID PARAMETERS, INJECTION DENSITIES, AND TRANSLATED IONS IN EXB ON STATISTICAL TIME-STEPS:
+					! GET NEW GRID PARAMETERS, INJECTION DENSITIES, AND TRANSLATED IONS IN EXB ON MASTER TIME-STEPS:
 					! Note: Everything after this section has operations in nn in (nn)
 					! Note: xN in -> xN out
 
@@ -164,7 +164,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! COMPUTE PARTICLE LOSS AND LOWER/UPPER BOUNDARY INJECTION ON STATISTICAL TIME-STEPS:
+					! COMPUTE PARTICLE LOSS AND LOWER/UPPER BOUNDARY INJECTION ON MASTER TIME-STEPS:
 
 					call BoundaryConditionsSub
 
@@ -199,17 +199,18 @@ contains
 
 					! ----------------------------------------------------
 
-					! RUN KINETIC CODE (3D CARTESIAN RK4) AT INITIAL TIME, ON STATISTICAL TIME-STEPS AND ALL OTHER TIME:
+					! RUN KINETIC CODE (3D CARTESIAN RK4) AT INITIAL TIME, ON MASTER TIME-STEPS AND ALL OTHER TIME:
 					! Note: All moments at nn are computed for grid parameters at (nn)
 					! Note: xN in -> x -> xN out by KineticRK4Solver.f90
-
+					! Note: AEAmagN, AGmagN, AEPmagN go in and out of below functions
+					
 					call KineticSolverASub
 					call KineticSolverBSub
 
 					! ----------------------------------------------------
 
-					! END KAOS AT LAST STATISTICAL TIME-STEP:
-					! Note: Last computational time-step may exceed last statistical time.
+					! END KAOS AT LAST MASTER TIME-STEP:
+					! Note: Last computational time-step may exceed last MASTER time.
 
 					if (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1- 1))) then
 						exit ComputationalTimeStepLoop
@@ -231,10 +232,9 @@ contains
 			do f= 1, SpecieT(s)%NfT(1), 1
 				if (rank == 0) then
 					call cpu_time(S8End)
-					write(S8string, '(i10)')  nint(S8End)
-					write(*, *) trim('%% 8- RANK= ' // adjustl(rankstring)) // &
-						trim(', REAL-TIME= ' // adjustl(S8string)) // &
-						trim(' s. KINETIC SOLVER COMPLETE %%')
+					write(S8string, '(F10.4)')  S8End/3600d0
+					write(*, *) trim('%% 8- REAL-TIME= ' // adjustl(S8string)) // &
+						trim(' hrs. KINETIC SOLVER COMPLETE %%')
 				end if
 			end do
 		end do

@@ -106,7 +106,7 @@ contains
 							write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 								' EPmagRT= ', SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind), &
 								' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, &
-								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+								', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 								' TIME-STEP= ', nn, ' IN PARALLEL FIELD SUBROUTINE' &
 								// achar(27) // '[0m.'
 						end if
@@ -115,7 +115,7 @@ contains
 							if (SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, Qind) == 0d0) then
 								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
 									' ZERO EPmagRT VALUE FOR SPECIE= ', s, &
-									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND STATISTICAL', &
+									', FLUX TUBE= ', f, ', Qind= ', Qind, ', AND MASTER', &
 									' TIME-STEP= ', nn, ' IN PARALLEL FIELD SUBROUTINE' &
 									// achar(27) // '[0m.'
 							end if
@@ -156,7 +156,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE ALL PARTICLE PARALLEL FORCE ACCELERATION MAGNITUDES ON STATISTICAL TIME-STEPS:
+		! COMPUTE ALL PARTICLE PARALLEL FORCE ACCELERATION MAGNITUDES ON MASTER TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -198,10 +198,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -242,10 +242,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -286,10 +286,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -317,10 +317,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -353,10 +353,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -396,10 +396,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -439,10 +439,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -469,10 +469,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -519,10 +519,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -563,10 +563,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -607,10 +607,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -638,10 +638,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -674,10 +674,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -717,10 +717,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -760,10 +760,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -790,10 +790,10 @@ contains
 
 											if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 												write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-													' STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+													' MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 													', EPmagInterp= ', EPmagInterp(1), &
 													' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
-													f, ', Q GRID CELL= ', Qind, ', STATISTICAL TIME-STEP= ', nn, &
+													f, ', Q GRID CELL= ', Qind, ', MASTER TIME-STEP= ', nn, &
 													', AND PARTICLE= ', j, &
 													' IN PARALLEL FIELD SUBROUTINE' // achar(27) // '[0m.'
 											end if
@@ -839,7 +839,7 @@ contains
 
 		! ----------------------------------------------------
 
-		! COMPUTE ALL PARTICLE PARALLEL FORCE ACCELERATION MAGNITUDES ON NON-STATISTICAL TIME-STEPS:
+		! COMPUTE ALL PARTICLE PARALLEL FORCE ACCELERATION MAGNITUDES ON NON-MASTER TIME-STEPS:
 
 		! ----------------------------------------------------
 
@@ -881,7 +881,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -922,7 +922,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -963,7 +963,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -993,7 +993,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1040,7 +1040,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1081,7 +1081,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1122,7 +1122,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &
@@ -1152,7 +1152,7 @@ contains
 
 										if ((AEPmagN(j) <= 0) .and. (EPmagInterp(1) /= 0d0)) then
 											write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-												' NON-STATISTICAL TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
+												' NON-MASTER TIME-STEP HAS NEGATIVE OR ZERO AEPmagN= ', AEPmagN(j), &
 												', EPmagInterp= ', EPmagInterp(1), &
 												' VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', &
 												f, ', Q GRID CELL= ', Qind, ', TIME-STEP= ', n, &

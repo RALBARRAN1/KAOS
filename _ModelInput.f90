@@ -64,16 +64,16 @@ integer(kind= dp), parameter :: ION2VPERPflag= 1
 
 ! ----------------- BOUNDARY CONDITIONS FLAGS -----------------
 
-! Set lower boundary ion injection on statistical time-steps (leave =1)
+! Set lower boundary ion injection on master time-steps (leave =1)
 integer(kind= dp), parameter :: LBCONDITIONflag= 1
 
-! Replenish lower boundary ion density on statistical time-steps (leave =0)
+! Replenish lower boundary ion density on master time-steps (leave =0)
 integer(kind= dp), parameter :: LBREPLENISHflag= 0
 
-! Set upper boundary ion injection on statistical time-steps (leave =0)
+! Set upper boundary ion injection on master time-steps (leave =0)
 integer(kind= dp), parameter :: UBCONDITIONflag= 0
 
-! Replenish uppwer boundary ion density on statistical time-steps (leave =0)
+! Replenish uppwer boundary ion density on master time-steps (leave =0)
 integer(kind= dp), parameter :: UBREPLENISHflag= 0
 
 ! Set initial velocities of injected ions equal to zero (leave =0)
@@ -112,9 +112,9 @@ integer(kind= dp), parameter :: EAPRESSUREflag= 1
 integer(kind= dp), parameter :: EPARflag= 0
 
 ! Set flux-tube convection:
-integer(kind= dp), parameter :: CONVECTIONflag= 1
+integer(kind= dp), parameter :: CONVECTIONflag= 0
 
-! Set dynamic configuration-space and statistical time-step:
+! Set dynamic configuration-space and master time-step:
 integer(kind= dp), parameter :: DYNAMICGRIDflag= 0
 
 ! ----------------- ION MOMENT FLAGS -----------------
@@ -198,10 +198,10 @@ real(kind= dp), parameter :: TNeutIC= 848d0 ! O neutral temperature [K] from NRL
 integer(kind= dp), parameter :: NqLB= 1d0 ! Leave =1 (change q ranges to adjust)
 integer(kind= dp), parameter :: NqUB= 25d0
 
-real(kind= dp), parameter :: nsnormfacIC= 5d17 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
+real(kind= dp), parameter :: nsnormfacIC= 5d16 !8d14 ! Macro-particle normalization factor (inversely proportional to number of particles)
 
-real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on statistical time-step [K]
-real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on statistical time-step [K]
+real(kind= dp), parameter :: dNTe= 0d0 ! Additive increment of Te on master time-step [K]
+real(kind= dp), parameter :: dNTeEND= 3d10 ! Additive increment of Te Cap on master time-step [K]
 
 real(kind= dp), parameter :: ns0IC= 1d8 ! Initial ion reference density at LB ghost cell (Qindns0) [m-3]
 
