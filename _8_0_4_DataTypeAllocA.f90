@@ -59,7 +59,7 @@ contains
 
 		end if
 
-		allocate(VxN(NsTK(1)), VyN(NsTK(1)), VzN(NsTK(1)), xN(NsTK(1)), yN(NsTK(1)), zN(NsTK(1)), &
+		allocate(VparConvSign(NsTK(1)), VxN(NsTK(1)), VyN(NsTK(1)), VzN(NsTK(1)), xN(NsTK(1)), yN(NsTK(1)), zN(NsTK(1)), &
 			Vperp1N(NsTK(1)), Vperp2N(NsTK(1)), VperpN(NsTK(1)))
 		allocate(pk4(NsTK(1)), phik4(NsTK(1)), ellk4(NsTK(1)), qk4(NsTK(1)), rk4(NsTK(1)), thetak4(NsTK(1)))
 		allocate(ENAflag(NsTK(1)), ENAflagN0ind(NsTK(1)), ENAflagN1ind(NsTK(1)))

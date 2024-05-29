@@ -20,9 +20,6 @@ use FirstParIonMoment
 use SecondIonMoment
 use SecondPerpIonMoment
 use SecondParIonMoment
-use AmbipolarEfield
-use Gravfield
-use PotentialStructure
 use ZerothENAMoment
 use FirstPENAMoment
 use FirstQENAMoment
@@ -211,11 +208,11 @@ contains
 						ENAflag(j)= .false.
 						ENAflagN0ind(j)= n
 						AEAmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))* &
-							abs(SpecieT(s)%FluxTubeT(f)%EAmagRT(nn- 1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))
+							abs(SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))
 						AGmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))* &
-							abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(nn- 1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))
+							abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))
 						AEPmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))* &
-							abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))
+							abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, SpecieT(s)%FluxTubeT(f)%NqLBT(1))))
 
 						! ----------------------------------------------------
 
@@ -510,11 +507,11 @@ contains
 						ENAflag(j)= .false.
 						ENAflagN0ind(j)= n
 						AEAmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))* &
-							abs(SpecieT(s)%FluxTubeT(f)%EAmagRT(nn- 1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))
+							abs(SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))
 						AGmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))* &
-							abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(nn- 1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))
+							abs(SpecieT(s)%FluxTubeT(f)%EGmagRT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))
 						AEPmag(j)= abs((SpecieT(s)%qsT(1)/SpecieT(s)%msT(1))* &
-							abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn- 1, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))
+							abs(SpecieT(s)%FluxTubeT(f)%EPmagRT(nn, SpecieT(s)%FluxTubeT(f)%NqUBT(1))))
 
 						! ----------------------------------------------------
 
@@ -1072,13 +1069,6 @@ contains
 					end if
 				end do
 			end if
-
-			! ----------------------------------------------------
-
-			! Compute ambipolar and parallel electric fields for AEAmagN, AGmagN, AEPmagN
-			call AmbipolarEfieldSub
-			call GravfieldSub
-			call PotentialStructureSub
 
 			! ----------------------------------------------------
 

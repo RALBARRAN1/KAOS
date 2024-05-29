@@ -63,6 +63,8 @@ contains
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCinteger(:))
     Vphiindk1(:)= pack(Vphiindk1(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCinteger(:))
+		VparConvSign(:)= pack(VparConvSign(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
+			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCreal(:))
 		VxN(:)= pack(VxN(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
 			.and. (UBoutfluxIonMsk(:) .eqv. .false.)), BCreal(:))
     VyN(:)= pack(VyN(:), ((LBoutfluxIonMsk(:) .eqv. .false.) &
@@ -173,6 +175,7 @@ contains
 				.and. (UBoutfluxENAMsk(:) .eqv. .false.)), BCinteger(:))
       Vphiindk1(:)= pack(Vphiindk1(:), ((LBoutfluxENAMsk(:) .eqv. .false.) &
 				.and. (UBoutfluxENAMsk(:) .eqv. .false.)), BCinteger(:))
+			VparConvSign(:)= pack(VparConvSign(:), ((LBoutfluxENAMsk(:) .eqv. .false.) .and. (UBoutfluxENAMsk(:) .eqv. .false.)), BCreal(:))
       VxN(:)= pack(VxN(:), ((LBoutfluxENAMsk(:) .eqv. .false.) .and. (UBoutfluxENAMsk(:) .eqv. .false.)), BCreal(:))
       VyN(:)= pack(VyN(:), ((LBoutfluxENAMsk(:) .eqv. .false.) .and. (UBoutfluxENAMsk(:) .eqv. .false.)), BCreal(:))
       VzN(:)= pack(VzN(:), ((LBoutfluxENAMsk(:) .eqv. .false.) .and. (UBoutfluxENAMsk(:) .eqv. .false.)), BCreal(:))
@@ -274,6 +277,7 @@ contains
       Vpindk1(:)= pack(Vpindk1(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCinteger(:))
       Vqindk1(:)= pack(Vqindk1(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCinteger(:))
       Vphiindk1(:)= pack(Vphiindk1(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCinteger(:))
+			VparConvSign(:)= pack(VparConvSign(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
       VxN(:)= pack(VxN(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
       VyN(:)= pack(VyN(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
       VzN(:)= pack(VzN(:), ((LBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
@@ -349,6 +353,7 @@ contains
       Vpindk1(:)= pack(Vpindk1(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCinteger(:))
       Vqindk1(:)= pack(Vqindk1(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCinteger(:))
       Vphiindk1(:)= pack(Vphiindk1(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCinteger(:))
+			VparConvSign(:)= pack(VparConvSign(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
       VxN(:)= pack(VxN(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
       VyN(:)= pack(VyN(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))
       VzN(:)= pack(VzN(:), ((UBreplenishIonMsk(:) .eqv. .false.)), BCreal(:))

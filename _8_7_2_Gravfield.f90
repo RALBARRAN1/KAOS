@@ -139,7 +139,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Northern Magnetic Hemisphere
+					! Compute Gravitational field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -460,7 +460,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Southern Magnetic Hemisphere
+					! Compute Gravitational field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -824,7 +824,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Northern Magnetic Hemisphere
+					! Compute Gravitational field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn- 1, 1) <= 0) then
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -983,7 +983,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Gravitational field for Southern Magnetic Hemisphere
+					! Compute Gravitational field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn- 1, 1) > 0) then
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -1175,7 +1175,7 @@ contains
      	!	(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
      	!	do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
      	!		if (rank == 0) then
-     	!			if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0) then
+     	!			if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0) then
    						!write(*, *) 'EGmagRT s, f, nn, Qind= ', s, f, nn, Qind, &
    						!	SpecieT(s)%FluxTubeT(f)%EGmagRT(nn, Qind)
      	!			end if

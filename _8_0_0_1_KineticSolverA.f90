@@ -344,18 +344,15 @@ contains
 
 			if ((SpecieT(s)%FluxTubeT(f)%SPINUPflagT(1) == 1) .and. (rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-					if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-						(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
-						if (nn == SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1) then
-							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-								if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
-									write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
-										' SPIN-UP SIMULATION HAS ZERO DENSITY AT FINAL TIME FOR SPECIE= ', &
-										s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER A SUBROUTINE' &
-										// achar(27) // '[0m.'
-								end if
-							end do
-						end if
+					if ((n == 1) .and. (nn == 1)) then
+						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
+							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0) then
+								write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, &
+									' SPIN-UP SIMULATION HAS ZERO DENSITY AT FINAL TIME FOR SPECIE= ', &
+									s, ', FLUX TUBE= ', f, ', AND Qind= ', Qind, ' IN KINETIC SOLVER A SUBROUTINE' &
+									// achar(27) // '[0m.'
+							end if
+						end do
 					end if
 				end do
 			end if
@@ -409,8 +406,7 @@ contains
   		! ----------------------------------------------------
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-  			if (((n == 1) .and. (nn == 1)) .or. ((n /= 1) .and. (nn /= 1) .and. &
-  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
+  			if ((n == 1) .and. (nn == 1)) then
 
   				! ----------------------------------------------------
 
@@ -426,10 +422,7 @@ contains
   		! EXPORT ALL INITIAL KINETIC DATA:
 
   		do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-  			if (((n == 1) .and. (nn == 1)) .and. &
-  				(n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
-  				((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
-  				(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
+  			if ((n == 1) .and. (nn == 1)) then
   				call DataExport1Sub
   				call DataExport2Sub
   			end if
@@ -439,10 +432,7 @@ contains
 			if ((SpecieT(s)%FluxTubeT(f)%FLUIDIONEXPORTflagT(1) == 1)  .and. &
 				(rank == 0)) then
 				do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
-	  			if (((n == 1) .and. (nn == 1)) .and. &
-	  				(n /= sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))) .and. &
-	  				((n /= SpecieT(s)%FluxTubeT(f)%NtT(1)) .and. &
-	  				(nn /= SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1))) then
+	  			if ((n == 1) .and. (nn == 1)) then
 
 						write(nnstring, '(I5)') nn
 						write(sstring, '(I5)') s

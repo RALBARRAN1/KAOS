@@ -13,6 +13,9 @@ use DataTypeAllocB
 use IonNeutralCollisions
 use BoundaryConditions
 use Convection
+use AmbipolarEfield
+use Gravfield
+use PotentialStructure
 use KineticSolverA
 use KineticSolverB
 
@@ -199,11 +202,26 @@ contains
 
 					! ----------------------------------------------------
 
+					! COMPUTE AMBIPOLAR, GRAVITATIONAL, AND POTENTIAL STRUCTURE ACCELERATIONS
+					! Note: AEAmagN, AGmagN, AEPmagN go out of below functions
+					! Note: Use M0(nn- 1) for AEAmagN calculation
+
+					do nn= 1, SpecieT(s)%FluxTubeT(f)%NNtT(1)+ 1, 1
+		  			if ((n /= 1) .and. (nn /= 1) .and. &
+		  				(n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1)))) then
+							call AmbipolarEfieldSub
+							call GravfieldSub
+							call PotentialStructureSub
+						end if
+					end do
+					
+					! ----------------------------------------------------
+
 					! RUN KINETIC CODE (3D CARTESIAN RK4) AT INITIAL TIME, ON MASTER TIME-STEPS AND ALL OTHER TIME:
 					! Note: All moments at nn are computed for grid parameters at (nn)
 					! Note: xN in -> x -> xN out by KineticRK4Solver.f90
-					! Note: AEAmagN, AGmagN, AEPmagN go in and out of below functions
-					
+					! Note: AEAmagN, AGmagN, AEPmagN go in below functions
+
 					call KineticSolverASub
 					call KineticSolverBSub
 

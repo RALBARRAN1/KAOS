@@ -178,13 +178,13 @@ logical(kind= dp), dimension(:), allocatable :: LBoutfluxIonMskTMP, UBoutfluxIon
 real(kind= dp), dimension(:), allocatable :: BCreal
 integer(kind= dp), dimension(:), allocatable :: BCinteger
 logical(kind= dp), dimension(:), allocatable :: BClogical
-real(kind= dp), dimension(1) :: rConv, thetaConv, ellConv, BmagConv, &
-	muConv, GAConv
+real(kind= dp), dimension(1) :: rConv1, thetaConv1, ellConv1, BmagConv1, muConv1, GAConv1, &
+	rConv2, thetaConv2, ellConv2, BmagConv2, muConv2, VparConv2, VpConv2, VphiConv2
 
 ! ----------------- 8_1 KINETIC RK4 UPDATE -----------------
 
-real(kind= dp), dimension(:), allocatable :: xN, yN, zN, VxN, VyN, VzN, &
-	xNTMP, yNTMP, zNTMP, VxNTMP, VyNTMP, VzNTMP
+real(kind= dp), dimension(:), allocatable :: xN, yN, zN, VparConvSign, VxN, VyN, VzN, &
+	xNTMP, yNTMP, zNTMP, VparConvSignTMP, VxNTMP, VyNTMP, VzNTMP
 real(kind= dp), dimension(1) :: thetak1, phik1, ellk1
 real(kind= dp), dimension(1) :: k1Vx, k1Vy, k1Vz, xk2, yk2, zk2, &
 	k2Vx, k2Vy, k2Vz, k3Vx, k3Vy, k3Vz, xk4, yk4, zk4, k4Vx, k4Vy, k4Vz, &

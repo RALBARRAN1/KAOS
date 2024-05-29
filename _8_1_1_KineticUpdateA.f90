@@ -984,7 +984,7 @@ contains
 		! FIXME put this particle counter before ion particle counts
 		! FIXME employ following order in KineticSolver.f90:
 		! 1- Convection, 2- particle counter and EA calculation, 3- RK4update, 4- Boundary Conditions
-		 
+
 		if (ENAflag(j) .eqv. .false.) then
 			Vp(j)= 0d0
 			Vphi(j)= 0d0

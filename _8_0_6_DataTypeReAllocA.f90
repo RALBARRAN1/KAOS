@@ -58,7 +58,7 @@ contains
 
 		end if
 
-		allocate(VxNTMP(NsTK(1)- dNsTK(1)), VyNTMP(NsTK(1)- dNsTK(1)), &
+		allocate(VparConvSignTMP(NsTK(1)- dNsTK(1)), VxNTMP(NsTK(1)- dNsTK(1)), VyNTMP(NsTK(1)- dNsTK(1)), &
       VzNTMP(NsTK(1)- dNsTK(1)), xNTMP(NsTK(1)- dNsTK(1)), &
       yNTMP(NsTK(1)- dNsTK(1)), zNTMP(NsTK(1)- dNsTK(1)), &
 			Vperp1NTMP(NsTK(1)- dNsTK(1)), Vperp2NTMP(NsTK(1)- dNsTK(1)), &
@@ -124,6 +124,7 @@ contains
     Vpindk1TMP(:)= Vpindk1(:)
     Vqindk1TMP(:)= Vqindk1(:)
     Vphiindk1TMP(:)= Vphiindk1(:)
+		VparConvSignTMP(:)= VparConvSign(:)
     VxNTMP(:)= VxN(:)
     VyNTMP(:)= VyN(:)
     VzNTMP(:)= VzN(:)
@@ -196,7 +197,7 @@ contains
 
 		end if
 
-		deallocate(VxN, VyN, VzN, xN, yN, zN, &
+		deallocate(VparConvSign, VxN, VyN, VzN, xN, yN, zN, &
 			Vperp1N, Vperp2N, VperpN)
 		deallocate(pk4, phik4, qk4, rk4, thetak4, ellk4)
 		deallocate(ENAflag, ENAflagN0ind, ENAflagN1ind)
@@ -239,7 +240,7 @@ contains
 
 		end if
 
-		allocate(VxN(NsTK(1)), VyN(NsTK(1)), VzN(NsTK(1)), xN(NsTK(1)), yN(NsTK(1)), zN(NsTK(1)), &
+		allocate(VparConvSign(NsTK(1)), VxN(NsTK(1)), VyN(NsTK(1)), VzN(NsTK(1)), xN(NsTK(1)), yN(NsTK(1)), zN(NsTK(1)), &
 			Vperp1N(NsTK(1)), Vperp2N(NsTK(1)), VperpN(NsTK(1)))
 		allocate(pk4(NsTK(1)), phik4(NsTK(1)), qk4(NsTK(1)), rk4(NsTK(1)), thetak4(NsTK(1)), ellk4(NsTK(1)))
 		allocate(ENAflag(NsTK(1)), ENAflagN0ind(NsTK(1)), ENAflagN1ind(NsTK(1)))
@@ -297,6 +298,7 @@ contains
         Vpindk1(j)= Vpindk1TMP(j)
         Vqindk1(j)= Vqindk1TMP(j)
         Vphiindk1(j)= Vphiindk1TMP(j)
+				VparConvSign(j)= VparConvSignTMP(j)
         VxN(j)= VxNTMP(j)
         VyN(j)= VyNTMP(j)
         VzN(j)= VzNTMP(j)
@@ -378,6 +380,7 @@ contains
         Vpindk1(j)= Vpindk1TMP(j)
         Vqindk1(j)= Vqindk1TMP(j)
         Vphiindk1(j)= Vphiindk1TMP(j)
+				VparConvSign(j)= VparConvSignTMP(j)
         VxN(j)= VxNTMP(j)
         VyN(j)= VyNTMP(j)
         VzN(j)= VzNTMP(j)
@@ -453,7 +456,7 @@ contains
 
 		end if
 
-		deallocate(VxNTMP, VyNTMP, VzNTMP, xNTMP, yNTMP, zNTMP, Vperp1NTMP, Vperp2NTMP, VperpNTMP)
+		deallocate(VparConvSignTMP, VxNTMP, VyNTMP, VzNTMP, xNTMP, yNTMP, zNTMP, Vperp1NTMP, Vperp2NTMP, VperpNTMP)
 		deallocate(pk4TMP, phik4TMP, qk4TMP, rk4TMP, thetak4TMP, ellk4TMP)
 		deallocate(ENAflagTMP, ENAflagN0indTMP, ENAflagN1indTMP)
     deallocate(AEAmagTMP, AGmagTMP, AEPmagTMP, xTMP, yTMP, zTMP, Vperp1TMP, Vperp2TMP, VperpTMP, VparTMP, &
@@ -626,6 +629,13 @@ contains
     if (size(Vphiindk1) /= NsTK(1)) then
       write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' Vphiindk1 SIZE= ', &
         size(Vphiindk1), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
+        ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
+        nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
+    end if
+
+		if (size(VparConvSign) /= NsTK(1)) then
+      write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' VparConvSign SIZE= ', &
+        size(VparConvSign), ' DOES NOT EQUAL PRIOR TOTAL PARTICLE NUMBER= ', NsTK(1)- dNsTK(1), &
         ' FOR SPECIE= ', s, ', FLUX TUBE= ', f, ', AND MASTER TIME-STEP= ', &
         nn, ' IN DATA TYPE RE-ALLOCATION A SUBROUTINE' // achar(27) // '[0m.'
     end if

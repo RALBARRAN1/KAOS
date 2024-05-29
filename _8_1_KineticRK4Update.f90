@@ -274,6 +274,13 @@ contains
 			cos(phiN(1))+ VyNp(1)*sin(phiN(1)))/sqrt(ellN(1))+ &
 			VzNp(1)*(3d0*(cos(thetaN(1))**2d0)- 1d0)/sqrt(ellN(1))
 
+		if (VparNp(1) < 0d0) then
+			VparConvSign(j)= -1d0
+		end if
+		if (VparNp(1) >= 0d0) then
+			VparConvSign(j)= 1d0
+		end if
+
 		! ----------------------------------------------------
 
 		if (ENAflag(j) .eqv. .false.) then

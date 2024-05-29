@@ -44,7 +44,7 @@ contains
 
 						MAfilterPt(1)= M0MAfilterPt
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-							SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)
+							SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind)
 						end do
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							call MomentFilterSub
@@ -68,7 +68,7 @@ contains
 
 						MAfilterPt(1)= M1ParMAfilterPt
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-							SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)
+							SpecieT(s)%FluxTubeT(f)%MomentFiltInT(nn, Qind)= SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind)
 						end do
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							call MomentFilterSub
@@ -112,19 +112,19 @@ contains
 
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 
-							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0) then
+							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) == 0d0) then
 								SpecieT(s)%FluxTubeT(f)%LambdaDRT(nn, Qind)= 0d0
 							else
 								SpecieT(s)%FluxTubeT(f)%LambdaDRT(nn, Qind)= &
 									sqrt((epsilon0*kB*SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn))/ &
-									(SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)*SpecieT(s)%qsT(1)**2d0))
+									(SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind)*SpecieT(s)%qsT(1)**2d0))
 							end if
 
 							! ----------------------------------------------------
 
 							! ENSURE FLUX-TUBE GRID SEPARATION IS LARGER THAN DEBYE LENGTH:
 
-							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) then
+							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) then
 								if ((SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)* &
 									SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)) < &
 									SpecieT(s)%FluxTubeT(f)%LambdaDRT(nn, Qind)) then
@@ -165,7 +165,7 @@ contains
 									SpecieT(s)%FluxTubeT(f)%EAPressureRT(nn, Qind)= EAPressureR(1)
 								end if
 							end if
-							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) == 0d0) then
+							if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) == 0d0) then
 								EAInertialR(1)= 0d0
 								EAPressureR(1)= 0d0
 
@@ -185,23 +185,23 @@ contains
 							! ----------------------------------------------------
 
 							! Compute Five-Point Left Endpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAINERTIALflagT(1) == 1)) then
 								if ((n == 1) .and. (nn == 1)) then
 
 									EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
-										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
+										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
 										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 										(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 										((abs(-25d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 4)))/ &
+										M1ParphRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind+ 4)))/ &
 										(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)))
 
 									EAInertialR(1)= EAInertialR1(1)+ EAInertialR2(1)
@@ -214,18 +214,18 @@ contains
 										if (SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 1) then
 
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
-												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind)- &
+												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 2, Qind))/ &
 												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 												((abs(-25d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 4)))/ &
+												M1ParphRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind+ 4)))/ &
 												(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)))
 
 										end if
@@ -295,23 +295,23 @@ contains
 							end if
 
 							! Compute Five-Point Right Endpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAINERTIALflagT(1) == 1)) then
 								if ((n == 1) .and. (nn == 1)) then
 
 									!EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
-									!	abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
+									!	abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
 									!	(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									!EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-									!	abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+									!	abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 									!	(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 									!	((abs(-25d0*SpecieT(s)%FluxTubeT(f)% &
-									!	M1ParphRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-									!	M1ParphRT(nn, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-									!	M1ParphRT(nn, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-									!	M1ParphRT(nn, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-									!	M1ParphRT(nn, Qind- 4)))/ &
+									!	M1ParphRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+									!	M1ParphRT(nn- 1, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+									!	M1ParphRT(nn- 1, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+									!	M1ParphRT(nn- 1, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+									!	M1ParphRT(nn- 1, Qind- 4)))/ &
 									!	(-12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)))
 
 									!EAInertialR(1)= EAInertialR1(1)+ EAInertialR2(1)
@@ -326,18 +326,18 @@ contains
 										if (SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 1) then
 
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
-												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind)- &
+												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 2, Qind))/ &
 												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 												((abs(-25d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 4)))/ &
+												M1ParphRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind- 4)))/ &
 												(-12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)))
 
 										end if
@@ -409,20 +409,20 @@ contains
 							end if
 
 							! Compute Three-Point Midpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1) .or. (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 1)) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAINERTIALflagT(1) == 1)) then
 								if ((n == 1) .and. (nn == 1)) then
 
 									EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
-										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
+										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
 										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 										(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 										((abs(SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind- 1)))/ &
+										M1ParphRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind- 1)))/ &
 										(2d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)))
 
 									EAInertialR(1)= EAInertialR1(1)+ EAInertialR2(1)
@@ -435,15 +435,15 @@ contains
 										if (SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 1) then
 
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
-												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind)- &
+												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 2, Qind))/ &
 												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 												((abs(SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 1)))/ &
+												M1ParphRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind- 1)))/ &
 												(2d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind)))
 
 										end if
@@ -504,23 +504,23 @@ contains
 							end if
 
 							! Compute Five-Point Midpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1)) &
 								.and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 1) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAINERTIALflagT(1) == 1)) then
 								if ((n == 1) .and. (nn == 1)) then
 
 									EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))* &
-										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))/ &
+										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
 										(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 									EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+										abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 										(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 										(abs(SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-										M1ParphRT(nn, Qind+ 2)))/ &
+										M1ParphRT(nn- 1, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+										M1ParphRT(nn- 1, Qind+ 2)))/ &
 										(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 
 									EAInertialR(1)= EAInertialR1(1)+ EAInertialR2(1)
@@ -533,17 +533,17 @@ contains
 										if (SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 1) then
 
 											EAInertialR1(1)= (melec/SpecieT(s)%qsT(1))*&
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind)- &
-												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))/ &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind)- &
+												SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 2, Qind))/ &
 												(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn)*SpecieT(s)%hT)
 											EAInertialR2(1)= (melec/SpecieT(s)%qsT(1))* &
-												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn, Qind))* &
+												abs(SpecieT(s)%FluxTubeT(f)%M1ParphRT(nn- 1, Qind))* &
 												(1d0/(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 												(abs(SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-												M1ParphRT(nn, Qind+ 2)))/ &
+												M1ParphRT(nn- 1, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+												M1ParphRT(nn- 1, Qind+ 2)))/ &
 												(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 
 										end if
@@ -624,7 +624,7 @@ contains
 							! ----------------------------------------------------
 
 							! Compute Five-Point Left Endpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAPRESSUREflagT(1) == 1)) then
 
@@ -633,35 +633,35 @@ contains
 
 										EAPressureR1(1)= (1d0/abs(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 											(kB*SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)/ &
-											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)))
+											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind)))
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
 											EAPressureR2(1)= (abs(-25d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 4)))/ &
+												M0phRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind+ 4)))/ &
 												(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 										end if
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 												EAPressureR2(1)= -((-25d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 4)))/ &
+													M0phRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 4)))/ &
 													(-12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 												EAPressureR2(1)= -((-25d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 4)))/ &
+													M0phRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 4)))/ &
 													(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 										end if
@@ -797,7 +797,7 @@ contains
 							end if
 
 							! Compute Five-Point Right Endpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAPRESSUREflagT(1) == 1)) then
 
@@ -806,35 +806,35 @@ contains
 
 										EAPressureR1(1)= (1d0/abs(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 											(kB*SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)/ &
-											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)))
+											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind)))
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
 											EAPressureR2(1)= (abs(-25d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 4)))/ &
+												M0phRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind- 4)))/ &
 												(-12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 										end if
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 												EAPressureR2(1)= -((-25d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 4)))/ &
+													M0phRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 4)))/ &
 													(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 												EAPressureR2(1)= -((-25d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 4)))/ &
+													M0phRT(nn- 1, Qind)+ 48d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 1)- 36d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 2)+ 16d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 3)- 3d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 4)))/ &
 													(-12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 										end if
@@ -970,7 +970,7 @@ contains
 							end if
 
 							! Compute Three-Point Midpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1) .or. (Qind == SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 1)) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAPRESSUREflagT(1) == 1)) then
 
@@ -979,26 +979,26 @@ contains
 
 										EAPressureR1(1)= (1d0/abs(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 											(kB*SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)/ &
-											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)))
+											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind)))
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
 											EAPressureR2(1)= (abs(SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 1)))/ &
+												M0phRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind- 1)))/ &
 												(2d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 										end if
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 												EAPressureR2(1)= -((SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 1)))/ &
+													M0phRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 1)))/ &
 													(-2d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 												EAPressureR2(1)= -((SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 1)))/ &
+													M0phRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 1)))/ &
 													(2d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 										end if
@@ -1107,7 +1107,7 @@ contains
 							end if
 
 							! Compute Five-Point Midpoint Derivative
-							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+							if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 								.and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1)) &
 								.and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1) .and. (Qind /= SpecieT(s)%FluxTubeT(f)%NqUBT(1)- 1) &
 								.and. (SpecieT(s)%FluxTubeT(f)%EAPRESSUREflagT(1) == 1)) then
@@ -1117,32 +1117,32 @@ contains
 
 										EAPressureR1(1)= (1d0/abs(SpecieT(s)%FluxTubeT(f)%hqCGT(nn, Qind)))* &
 											(kB*SpecieT(s)%FluxTubeT(f)%QCellT(Qind)%TeNT(nn)/ &
-											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind)))
+											(SpecieT(s)%qsT(1)*SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind)))
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 0) then
 											EAPressureR2(1)= (abs(SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-												M0phRT(nn, Qind+ 2)))/ &
+												M0phRT(nn- 1, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+												M0phRT(nn- 1, Qind+ 2)))/ &
 												(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 										end if
 
 										if (SpecieT(s)%FluxTubeT(f)%EAMBSIGNflagT(1) == 1) then
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then ! S. Magnetic Hemisphere
 												EAPressureR2(1)= -((SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 2)))/ &
+													M0phRT(nn- 1, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 2)))/ &
 													(-12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 											if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then ! N. Magnetic Hemisphere
 												EAPressureR2(1)= -((SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
-													M0phRT(nn, Qind+ 2)))/ &
+													M0phRT(nn- 1, Qind- 2)- 8d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind- 1)+ 8d0*SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 1)- SpecieT(s)%FluxTubeT(f)% &
+													M0phRT(nn- 1, Qind+ 2)))/ &
 													(12d0*SpecieT(s)%FluxTubeT(f)%dqCGT(nn, Qind))
 											end if
 										end if
@@ -1275,7 +1275,7 @@ contains
 						! Cutoff boundary self-consistent ambipolar field values:
 						if (SpecieT(1)%FluxTubeT(1)%EAMBSELFCONSISTflagT(1) == 1) then
 							do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
-								if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0d0) &
+								if ((SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0d0) &
 									.and. ((Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)) .or. &
 									(Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 1) .or. (Qind == SpecieT(s)%FluxTubeT(f)%NqLBT(1)+ 2)) &
 									.and. (SpecieT(s)%FluxTubeT(f)%EAPRESSUREflagT(1) == 1)) then
@@ -1460,7 +1460,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Ambipolar E field for Northern Magnetic Hemisphere
+					! Compute Ambipolar E field for Southern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) <= 0) then
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -1861,7 +1861,7 @@ contains
 
 					! ----------------------------------------------------
 
-					! Compute Ambipolar E field for Southern Magnetic Hemisphere
+					! Compute Ambipolar E field for Northern Magnetic Hemisphere
 					if (SpecieT(s)%FluxTubeT(f)%qGLGT(nn, 1) > 0) then
 						do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 							do j= 1, SpecieT(s)%FluxTubeT(f)%NsT(1), 1
@@ -2736,7 +2736,7 @@ contains
 		!		 (n == sum(SpecieT(s)%FluxTubeT(f)%ndatfacGT(1:nn- 1))))) then
 		!		 do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
 		!			 if (rank == 0) then
-		!				 if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn, Qind) /= 0) then
+		!				 if (SpecieT(s)%FluxTubeT(f)%M0phRT(nn- 1, Qind) /= 0) then
 		!					 write(*, *) 'EAmagRT s, f, nn, Qind= ', s, f, nn, Qind, &
 		!						 SpecieT(s)%FluxTubeT(f)%EAmagRT(nn, Qind)
 		!				 end if

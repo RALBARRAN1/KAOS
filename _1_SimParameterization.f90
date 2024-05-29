@@ -1124,6 +1124,34 @@ contains
 
 				! ----------------------------------------------------
 
+				! DIAGNOSTIC FLAGS FOR PROPER ARRAY SIZES AND FINITE VALUES:
+
+				if (isnan(real(SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn))) .eqv. .true.) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' ndatfacGT= ', &
+						SpecieT(s)%FluxTubeT(f)%ndatfacGT(nn), &
+						' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+						', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+						' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if (isnan(real(SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn))) .eqv. .true.) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' nsnormCLBGT= ', &
+						SpecieT(s)%FluxTubeT(f)%nsnormCLBGT(nn), &
+						' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+						', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+						' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				if (isnan(real(SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(nn))) .eqv. .true.) then
+					write(*, *) achar(27) // '[33m ERROR: RANK= ', rank, ' nsnormCUBGT= ', &
+						SpecieT(s)%FluxTubeT(f)%nsnormCUBGT(nn), &
+						' HAS BAD SIZE OR HAS NaN VALUE FOR SPECIE= ', s, ', FLUX TUBE= ', f, &
+						', MASTER TIME-STEP= ', nn, ', AND PARTICLE= ', j, &
+						' IN SIMULATION PARAMETERIZATION SUBROUTINE' // achar(27) // '[0m.'
+				end if
+
+				! ----------------------------------------------------
+
 				! RE-INDEX CONFIGURATION SPACE GRID FOR A NON-COMPUTATIONAL LOWER BOUNDARY GHOST CELL:
 
 				do Qind= SpecieT(s)%FluxTubeT(f)%NqLBT(1), SpecieT(s)%FluxTubeT(f)%NqUBT(1), 1
